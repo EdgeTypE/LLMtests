@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sherlock Holmes — Consulting Detective</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --parchment: #f4e8d1;
+            --parchment-dark: #e8d5b0;
+            --ink: #1a1410;
+            --ink-light: #2c2218;
+            --deep-red: #6b1d1d;
+            --burgundy: #4a1010;
+            --brass: #8b7332;
+            --brass-light: #c4a44a;
+            --shadow: rgba(0, 0, 0, 0.7);
+            --noir-bg: #0d0a07;
+            --noir-surface: #14100c;
+            --smoke: rgba(255, 255, 255, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
+            background-color: var(--noir-bg);
+            color: #d4c5b0;
+            line-height: 1.8;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* --- Noise Texture Overlay --- */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.035;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 200px 200px;
+        }
+
+        /* --- Scrollbar --- */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--noir-bg);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--brass);
+            border-radius: 0;
+        }
+
+        /* --- Typography --- */
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.4s ease;
+            background: transparent;
+        }
+
+        nav.scrolled {
+            background: rgba(13, 10, 7, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(139, 115, 50, 0.2);
+            padding: 0.9rem 3rem;
+        }
+
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            color: var(--brass-light);
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+
+        .nav-logo span {
+            color: var(--parchment);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #c4b89e;
+            text-decoration: none;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--brass-light);
+            transition: width 0.35s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--brass-light);
+        }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* --- HERO --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 2rem;
+            background: radial-gradient(ellipse at center, rgba(26, 20, 16, 0.3) 0%, var(--noir-bg) 70%);
+        }
+
+        .hero-vignette {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(ellipse at center, transparent 40%, var(--noir-bg) 85%);
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            max-width: 800px;
+        }
+
+        .hero-ornament {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            color: var(--brass);
+            opacity: 0.6;
+            line-height: 1;
+            margin-bottom: 1rem;
+            letter-spacing: 0.3em;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 7vw, 6rem);
+            font-weight: 900;
+            color: var(--parchment);
+            line-height: 1.05;
+            margin-bottom: 1.2rem;
+            letter-spacing: 0.03em;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--brass-light);
+            display: block;
+            font-size: 0.45em;
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            margin-top: 0.3rem;
+        }
+
+        .hero-tagline {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-style: italic;
+            color: #a89878;
+            margin-bottom: 2.5rem;
+            letter-spacing: 0.04em;
+        }
+
+        .hero-divider {
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--brass), transparent);
+            margin: 0 auto 2.5rem;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            padding: 1rem 2.8rem;
+            border: 1.5px solid var(--brass);
+            color: var(--brass-light);
+            text-decoration: none;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--brass);
+            transition: left 0.5s ease;
+            z-index: -1;
+        }
+
+        .hero-cta:hover {
+            color: var(--ink);
+        }
+        .hero-cta:hover::before {
+            left: 0;
+        }
+
+        /* --- SECTION STYLES --- */
+        section {
+            padding: 7rem 3rem;
+            position: relative;
+        }
+
+        .section-tag {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--brass);
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: clamp(2.2rem, 4vw, 3.5rem);
+            color: var(--parchment);
+            margin-bottom: 1rem;
+            line-height: 1.15;
+        }
+
+        .section-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-style: italic;
+            color: #9a8a6e;
+            margin-bottom: 3rem;
+            letter-spacing: 0.03em;
+        }
+
+        .section-divider {
+            width: 60px;
+            height: 3px;
+            background: var(--deep-red);
+            margin-bottom: 3rem;
+        }
+
+        /* --- ABOUT SECTION --- */
+        #about {
+            background: var(--noir-surface);
+            position: relative;
+        }
+
+        #about::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(139, 115, 50, 0.3), transparent);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            align-items: center;
+        }
+
+        .about-text p {
+            margin-bottom: 1.5rem;
+            color: #b8a88e;
+            font-size: 1rem;
+        }
+
+        .about-text p:first-of-type::first-letter {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.8rem;
+            float: left;
+            line-height: 0.75;
+            margin-right: 0.4rem;
+            color: var(--deep-red);
+            font-weight: 900;
+        }
+
+        .about-card {
+            background: rgba(20, 16, 12, 0.8);
+            border: 1px solid rgba(139, 115, 50, 0.2);
+            padding: 2.5rem;
+            position: relative;
+        }
+
+        .about-card::before {
+            content: '221B';
+            position: absolute;
+            top: -1.2rem;
+            right: 1.5rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 900;
+            color: rgba(196, 164, 74, 0.08);
+            line-height: 1;
+        }
+
+        .about-card h3 {
+            color: var(--brass-light);
+            margin-bottom: 1.2rem;
+            font-size: 1.3rem;
+            letter-spacing: 0.05em;
+        }
+
+        .about-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .about-card li {
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: #a09078;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .about-card li::before {
+            content: '◆';
+            color: var(--deep-red);
+            font-size: 0.5rem;
+        }
+
+        /* --- CASES SECTION --- */
+        #cases {
+            background: var(--noir-bg);
+        }
+
+        .cases-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .case-card {
+            background: var(--noir-surface);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            cursor: default;
+            overflow: hidden;
+        }
+
+        .case-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--deep-red);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .case-card:hover::after {
+            transform: scaleX(1);
+        }
+
+        .case-card:hover {
+            border-color: rgba(139, 115, 50, 0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .case-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: rgba(196, 164, 74, 0.1);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .case-card h3 {
+            color: var(--parchment);
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            letter-spacing: 0.03em;
+        }
+
+        .case-card p {
+            color: #9a8a6e;
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .case-tag {
+            display: inline-block;
+            margin-top: 1rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--brass);
+            border: 1px solid rgba(139, 115, 50, 0.3);
+            padding: 0.3rem 0.8rem;
+        }
+
+        /* --- SKILLS SECTION --- */
+        #skills {
+            background: var(--noir-surface);
+            position: relative;
+        }
+
+        #skills::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(139, 115, 50, 0.3), transparent);
+        }
+
+        .skills-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .skill-item {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.35s ease;
+        }
+
+        .skill-item:hover {
+            border-color: rgba(139, 115, 50, 0.4);
+            background: rgba(255, 255, 255, 0.015);
+        }
+
+        .skill-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .skill-item h4 {
+            color: var(--parchment);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.04em;
+        }
+
+        .skill-item p {
+            color: #8a7a62;
+            font-size: 0.82rem;
+            line-height: 1.6;
+        }
+
+        /* --- QUOTE SECTION --- */
+        #quote {
+            background: var(--noir-bg);
+            text-align: center;
+            padding: 9rem 2rem;
+            position: relative;
+        }
+
+        .quote-mark {
+            font-family: 'Playfair Display', serif;
+            font-size: 10rem;
+            line-height: 0.2;
+            color: rgba(196, 164, 74, 0.08);
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .quote-text {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+            font-style: italic;
+            color: var(--parchment);
+            max-width: 700px;
+            margin: 1rem auto 2rem;
+            line-height: 1.4;
+            letter-spacing: 0.02em;
+        }
+
+        .quote-author {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            color: var(--brass);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background: var(--noir-surface);
+            border-top: 1px solid rgba(139, 115, 50, 0.2);
+            padding: 4rem 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer-address {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: #9a8a6e;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-address strong {
+            color: var(--brass-light);
+            font-weight: 700;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #7a6a52;
+            text-decoration: none;
+            font-size: 0.85rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--brass-light);
+        }
+
+        .footer-copy {
+            font-size: 0.75rem;
+            color: #5a4a38;
+            letter-spacing: 0.06em;
+        }
+
+        /* --- PIPE ANIMATION --- */
+        .pipe-glow {
+            position: absolute;
+            width: 2px;
+            height: 60px;
+            background: linear-gradient(to bottom, transparent, rgba(196, 164, 74, 0.5), transparent);
+            animation: pipeFlicker 3s ease-in-out infinite;
+        }
+
+        @keyframes pipeFlicker {
+            0%, 100% {
+                opacity: 0.3;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 900px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .cases-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .skills-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            nav {
+                padding: 1rem 1.5rem;
+            }
+            .nav-links {
+                gap: 1.2rem;
+            }
+            .nav-links a {
+                font-size: 0.85rem;
+            }
+            section {
+                padding: 4rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .cases-grid {
+                grid-template-columns: 1fr;
+            }
+            .skills-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .nav-links {
+                display: none;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            section {
+                padding: 3rem 1rem;
+            }
+        }
+
+        /* --- FADE-IN ANIMATIONS --- */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fade-in-delay-1 {
+            transition-delay: 0.15s;
+        }
+        .fade-in-delay-2 {
+            transition-delay: 0.3s;
+        }
+        .fade-in-delay-3 {
+            transition-delay: 0.45s;
+        }
+        .fade-in-delay-4 {
+            transition-delay: 0.6s;
+        }
+
+        /* --- MOBILE NAV TOGGLE --- */
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            z-index: 101;
+        }
+
+        .nav-toggle span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--brass-light);
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 550px) {
+            .nav-toggle {
+                display: block;
+            }
+            .nav-links.active {
+                display: flex;
+                flex-direction: column;
+                position: fixed;
+                top: 0;
+                right: 0;
+                width: 70%;
+                height: 100vh;
+                background: rgba(13, 10, 7, 0.98);
+                backdrop-filter: blur(12px);
+                padding: 6rem 2rem;
+                gap: 2rem;
+                z-index: 100;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <a href="#" class="nav-logo">S<span>herlock</span> H<span>olmes</span></a>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+            <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#about">About</a></li>
+            <li><a href="#cases">Cases</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#quote">Wisdom</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-vignette"></div>
+        <div class="hero-content fade-in">
+            <div class="hero-ornament">&#9758;</div>
+            <h1>Sherlock Holmes<em>Consulting Detective</em></h1>
+            <p class="hero-tagline">"When you have eliminated the impossible, whatever remains, however improbable, must be the truth."</p>
+            <div class="hero-divider"></div>
+            <a href="#about" class="hero-cta">Enter 221B</a>
+        </div>
+        <div class="pipe-glow" style="top: 30%; left: 8%;"></div>
+        <div class="pipe-glow" style="top: 50%; right: 10%; animation-delay: 1.5s;"></div>
+    </section>
+
+    <!-- About -->
+    <section id="about">
+        <div class="about-grid">
+            <div class="about-text fade-in">
+                <p class="section-tag">The Man Behind the Magnifying Glass</p>
+                <h2 class="section-title">A Mind Like No Other</h2>
+                <div class="section-divider"></div>
+                <p>Sherlock Holmes is the world's first and only consulting detective — a title he invented for himself. Residing at 221B Baker Street, London, he takes on cases that leave Scotland Yard utterly bewildered. His methods, rooted in meticulous observation and razor-sharp deduction, have solved mysteries that seemed destined to remain forever unsolved.</p>
+                <p>From the chemical composition of cigar ash to the distinctive wear patterns on a suspect's shoes, no detail escapes his notice. He is a master of disguise, an accomplished violinist, and a formidable pugilist — though he rarely needs to throw a punch when his intellect alone can disarm the most cunning adversary.</p>
+                <p>Alongside his trusted friend and chronicler, Dr. John Watson, Holmes has faced the darkest corners of Victorian London's criminal underworld, always emerging with the truth in hand.</p>
+            </div>
+            <div class="about-card fade-in fade-in-delay-2">
+                <h3>The Detective's Dossier</h3>
+                <ul>
+                    <li>Residence: 221B Baker Street, London</li>
+                    <li>Occupation: Consulting Detective</li>
+                    <li>Companion: Dr. John H. Watson</li>
+                    <li>Brother: Mycroft Holmes</li>
+                    <li>Nemesis: Professor Moriarty</li>
+                    <li>Vices: Tobacco, cocaine (7% solution)</li>
+                    <li>Instrument: Stradivarius violin</li>
+                    <li>Network: Baker Street Irregulars</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cases -->
+    <section id="cases">
+        <div class="cases-container">
+            <p class="section-tag fade-in">The Chronicles</p>
+            <h2 class="section-title fade-in">Famous Cases</h2>
+            <p class="section-subtitle fade-in">A selection of mysteries from the annals of 221B Baker Street</p>
+            <div class="cases-grid">
+                <div class="case-card fade-in fade-in-delay-1">
+                    <div class="case-number">01</div>
+                    <h3>A Study in Scarlet</h3>
+                    <p>The case that introduced Holmes and Watson to the world. A murdered man found in an abandoned house, with the word <em>RACHE</em> scrawled in blood upon the wall — and not a single wound upon the body.</p>
+                    <span class="case-tag">First Appearance</span>
+                </div>
+                <div class="case-card fade-in fade-in-delay-2">
+                    <div class="case-number">02</div>
+                    <h3>The Hound of the Baskervilles</h3>
+                    <p>A legendary spectral hound haunts the moors of Devonshire, terrorizing the Baskerville family. Holmes must separate superstition from reality before the ancient curse claims its final victim.</p>
+                    <span class="case-tag">Supernatural Mystery</span>
+                </div>
+                <div class="case-card fade-in fade-in-delay-3">
+                    <div class="case-number">03</div>
+                    <h3>The Final Problem</h3>
+                    <p>The ultimate confrontation at Reichenbach Falls. Holmes faces his intellectual equal — Professor James Moriarty, the Napoleon of crime — in a struggle that can only end with one of them plummeting into the abyss.</p>
+                    <span class="case-tag">Moriarty</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills">
+        <div class="skills-container">
+            <p class="section-tag fade-in">The Methods</p>
+            <h2 class="section-title fade-in">Areas of Expertise</h2>
+            <p class="section-subtitle fade-in">The singular skills that make the world's greatest detective</p>
+            <div class="skills-grid">
+                <div class="skill-item fade-in fade-in-delay-1">
+                    <span class="skill-icon">&#128270;</span>
+                    <h4>Deductive Reasoning</h4>
+                    <p>From a single glance, reconstructing an entire sequence of events with unerring precision.</p>
+                </div>
+                <div class="skill-item fade-in fade-in-delay-2">
+                    <span class="skill-icon">&#9878;</span>
+                    <h4>Forensic Chemistry</h4>
+                    <p>Pioneering blood detection, chemical analysis, and the study of poisons long before modern forensics.</p>
+                </div>
+                <div class="skill-item fade-in fade-in-delay-3">
+                    <span class="skill-icon">&#127929;</span>
+                    <h4>Violin &amp; Music</h4>
+                    <p>A gifted violinist who plays to sharpen his mind, often composing in the dead of night while deep in thought.</p>
+                </div>
+                <div class="skill-item fade-in fade-in-delay-4">
+                    <span class="skill-icon">&#127917;</span>
+                    <h4>Master of Disguise</h4>
+                    <p>Able to transform into anyone — from an elderly clergyman to a drunken groom — to infiltrate any circle.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quote -->
+    <section id="quote">
+        <div class="quote-mark fade-in">&#8220;</div>
+        <p class="quote-text fade-in">The world is full of obvious things which nobody by any chance ever observes.</p>
+        <p class="quote-author fade-in fade-in-delay-2">&mdash; Sherlock Holmes</p>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p class="footer-address"><strong>221B</strong> Baker Street, London &mdash; The Residence of Mr. Sherlock Holmes</p>
+        <div class="footer-links">
+            <a href="#about">Biography</a>
+            <a href="#cases">Case Files</a>
+            <a href="#skills">Expertise</a>
+            <a href="#quote">Quotations</a>
+        </div>
+        <p class="footer-copy">The game is always afoot. &copy; 1895 &mdash; Present</p>
+    </footer>
+
+    <script>
+        // --- Navbar scroll effect ---
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 60) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // --- Mobile nav toggle ---
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.getElementById('navLinks');
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // --- Intersection Observer for fade-in animations ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // --- Smooth parallax for pipe glows ---
+        document.addEventListener('mousemove', (e) => {
+            const glows = document.querySelectorAll('.pipe-glow');
+            const x = (e.clientX / window.innerWidth - 0.5) * 20;
+            const y = (e.clientY / window.innerHeight - 0.5) * 20;
+            glows.forEach((glow, i) => {
+                const factor = (i + 1) * 0.6;
+                glow.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
+            });
+        });
+    </script>
+</body>
+</html>

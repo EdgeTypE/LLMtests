@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SHERLOCK HOLMES · consulting detective</title>
+  <!-- Fonts: distinctive editorial + refined serif -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- RESET & VARIABLES ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #f7f2eb;
+      --paper: #fcf9f5;
+      --ink: #1a1714;
+      --deepblue: #1e3a8a;
+      --accent: #b8860b;    /* dark goldenrod, victorian touch */
+      --border: #2b231d;
+      --shadow: rgba(26, 23, 20, 0.15);
+      --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+      --display: 'Playfair Display', 'Didot', 'Bodoni', serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--ink);
+      font-family: var(--serif);
+      line-height: 1.6;
+      padding: 2rem 1.5rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 40px,
+        rgba(30, 58, 138, 0.02) 40px,
+        rgba(30, 58, 138, 0.02) 41px
+      );
+    }
+
+    /* ---------- brutalist container ---------- */
+    .holmes-wrapper {
+      max-width: 1100px;
+      width: 100%;
+      background: var(--paper);
+      border: 1px solid var(--border);
+      box-shadow: 12px 12px 0 var(--shadow);
+      padding: 2.5rem 2.8rem;
+      position: relative;
+    }
+
+    /* decorative border detail */
+    .holmes-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 12px; left: 12px; right: -6px; bottom: -6px;
+      border: 1px solid var(--deepblue);
+      z-index: -1;
+      opacity: 0.25;
+    }
+
+    /* ---------- header ---------- */
+    .header {
+      border-bottom: 2px solid var(--ink);
+      padding-bottom: 1.2rem;
+      margin-bottom: 2.2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .title-group h1 {
+      font-family: var(--display);
+      font-size: 3.2rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      line-height: 1;
+      color: var(--ink);
+      text-transform: uppercase;
+      word-break: break-word;
+    }
+
+    .title-group h1 span {
+      color: var(--deepblue);
+      font-style: italic;
+    }
+
+    .title-group .subtitle {
+      font-size: 1.1rem;
+      font-style: italic;
+      color: #4b3f35;
+      margin-top: 0.25rem;
+      border-left: 4px solid var(--accent);
+      padding-left: 1rem;
+    }
+
+    .badge {
+      font-family: var(--display);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--deepblue);
+      border: 1px solid var(--deepblue);
+      padding: 0.3rem 1rem;
+      background: white;
+      white-space: nowrap;
+    }
+
+    /* ---------- layout grid ---------- */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 0.9fr;
+      gap: 2.2rem 3rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 720px) {
+      .holmes-wrapper { padding: 1.8rem 1.2rem; }
+      .header { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+      .title-group h1 { font-size: 2.4rem; }
+      .main-grid { grid-template-columns: 1fr; gap: 1.8rem; }
+    }
+
+    /* ---------- typography & cards ---------- */
+    .v-title {
+      font-family: var(--display);
+      font-size: 1.6rem;
+      font-weight: 700;
+      border-bottom: 1px solid var(--ink);
+      padding-bottom: 0.3rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .v-title small {
+      font-size: 0.9rem;
+      font-weight: 400;
+      font-family: var(--serif);
+      color: #5a4e42;
+      font-style: italic;
+    }
+
+    .deduction-card {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 1.4rem 1.6rem;
+      margin-bottom: 1.2rem;
+      box-shadow: 4px 4px 0 rgba(30, 58, 138, 0.08);
+      transition: box-shadow 0.2s;
+    }
+    .deduction-card:hover {
+      box-shadow: 6px 6px 0 rgba(30, 58, 138, 0.18);
+    }
+
+    .deduction-card .quote {
+      font-style: italic;
+      font-size: 1.05rem;
+      margin-bottom: 0.5rem;
+    }
+    .deduction-card .attribution {
+      text-align: right;
+      font-size: 0.9rem;
+      color: var(--deepblue);
+      font-weight: 600;
+    }
+
+    .v-stat {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      color: var(--deepblue);
+      font-weight: 600;
+      background: #edebe7;
+      padding: 0.2rem 0.6rem;
+      display: inline-block;
+    }
+
+    .evidence-list {
+      list-style: none;
+      padding: 0;
+    }
+    .evidence-list li {
+      padding: 0.45rem 0 0.45rem 1.8rem;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="%231e3a8a" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>') left center no-repeat;
+      background-size: 1rem;
+      border-bottom: 1px dashed #ddd;
+    }
+    .evidence-list li:last-child { border-bottom: none; }
+
+    /* ---------- visualizer: pipe / evidence board ---------- */
+    .visual-clue {
+      margin-top: 2.2rem;
+      border: 1px solid var(--border);
+      background: #faf8f5;
+      padding: 1.2rem 1.6rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem 2rem;
+    }
+
+    .visual-clue .pipe {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .pipe svg { display: block; }
+    .clue-text {
+      font-size: 1rem;
+      font-style: italic;
+      color: #1f2e4a;
+      border-left: 2px solid var(--accent);
+      padding-left: 1rem;
+      flex: 1;
+      min-width: 160px;
+    }
+
+    .btn-221b {
+      background: var(--deepblue);
+      color: white;
+      border: none;
+      padding: 0.5rem 1.6rem;
+      font-family: var(--serif);
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 var(--ink);
+      transition: 0.1s linear;
+    }
+    .btn-221b:hover {
+      background: #0f2b5e;
+      box-shadow: 5px 5px 0 var(--ink);
+      transform: translate(-1px, -1px);
+    }
+    .btn-221b:active {
+      box-shadow: 1px 1px 0 var(--ink);
+      transform: translate(2px, 2px);
+    }
+
+    /* ---------- footer ---------- */
+    .footer-note {
+      margin-top: 2.5rem;
+      border-top: 1px solid var(--border);
+      padding-top: 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      font-size: 0.9rem;
+      color: #3e352d;
+    }
+    .footer-note em {
+      color: var(--deepblue);
+      font-style: italic;
+    }
+
+    /* ---------- responsive fine-tune ---------- */
+    @media (max-width: 480px) {
+      .visual-clue { flex-direction: column; align-items: flex-start; }
+      .badge { align-self: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="holmes-wrapper">
+  <!-- header -->
+  <header class="header">
+    <div class="title-group">
+      <h1>SHERLOCK <span>HOLMES</span></h1>
+      <div class="subtitle">consulting detective · 221B Baker Street</div>
+    </div>
+    <div class="badge">🔍 the game is afoot</div>
+  </header>
+
+  <!-- main grid: left column (deductions) + right (evidence) -->
+  <div class="main-grid">
+    <!-- LEFT: deductions + famous quotes -->
+    <section>
+      <div class="v-title">
+        <span>📜 deductions</span>
+        <small>observations & inferences</small>
+      </div>
+
+      <div class="deduction-card">
+        <div class="quote">“You see, but you do not observe. The distinction is clear.”</div>
+        <div class="attribution">— A Scandal in Bohemia</div>
+      </div>
+
+      <div class="deduction-card">
+        <div class="quote">“When you have eliminated the impossible, whatever remains, however improbable, must be the truth.”</div>
+        <div class="attribution">— The Sign of Four</div>
+      </div>
+
+      <div class="deduction-card">
+        <div class="quote">“There is nothing more deceptive than an obvious fact.”</div>
+        <div class="attribution">— The Boscombe Valley Mystery</div>
+      </div>
+
+      <div style="margin-top: 1rem;">
+        <span class="v-stat">⚡ 7 of 10</span> 
+        <span style="font-size:0.95rem; margin-left:0.5rem;">cases solved before Scotland Yard</span>
+      </div>
+    </section>
+
+    <!-- RIGHT: evidence board -->
+    <section>
+      <div class="v-title">
+        <span>🔬 evidence board</span>
+        <small>clues & particulars</small>
+      </div>
+
+      <ul class="evidence-list">
+        <li><strong>ash</strong> — Trichinopoly cigar, not Havana</li>
+        <li><strong>footprint</strong> — left shoe worn, gravel path, station direction</li>
+        <li><strong>callus</strong> — right thumb, fountain pen, writer by trade</li>
+        <li><strong>smell</strong> — turpentine & oil, visited studio this morning</li>
+        <li><strong>scarf</strong> — uneven knot, hurried departure, emotional state</li>
+        <li><strong>newspaper</strong> — today’s edition, folded inside-out, reading on train</li>
+      </ul>
+
+      <div style="margin-top: 1rem; padding: 0.8rem 1rem; background: #edebe7; border-left: 3px solid var(--accent);">
+        <span style="font-weight: 600; font-style: italic;">“I never guess. It is a shocking habit — destructive to the logical faculty.”</span>
+      </div>
+    </section>
+  </div>
+
+  <!-- VISUALIZER: pipe & clue (monochrome + deep blue) -->
+  <div class="visual-clue">
+    <div class="pipe">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 40 L20 28 L28 28 L36 40" stroke="#1e3a8a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <circle cx="16" cy="36" r="3" fill="#1e3a8a" />
+        <circle cx="32" cy="36" r="3" fill="#1e3a8a" />
+        <path d="M20 28 L24 18 L28 28" stroke="#1a1714" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M24 18 L24 12" stroke="#1a1714" stroke-width="2" stroke-dasharray="2 2"/>
+        <circle cx="24" cy="10" r="3" fill="none" stroke="#b8860b" stroke-width="2"/>
+      </svg>
+    </div>
+    <div class="clue-text">
+      “The pipe is a constant companion. The ash alone tells me you travelled from the north.”
+    </div>
+    <button class="btn-221b" id="deduceBtn">⚡ deduce</button>
+  </div>
+
+  <!-- footer -->
+  <div class="footer-note">
+    <span>221B Baker Street · London</span>
+    <span><em>“the game is afoot”</em> — &nbsp;consulting detective</span>
+  </div>
+</div>
+
+<!-- micro interaction: deduce button -->
+<script>
+  (function() {
+    const btn = document.getElementById('deduceBtn');
+    const clues = [
+      '“Your umbrella has been repaired twice — you are frugal, yet you value quality.”',
+      '“The mud on your left boot is a pale clay, unique to the Chelsea embankment.”',
+      '“You are reading a book by Émile Gaboriau, but your French is rusty — you rely on a dictionary.”',
+      '“Your watch chain has a coin from 1889 — a sentimental token, not currency.”',
+      '“You hesitated before shaking hands — you are left-handed, but force yourself to use the right.”',
+      '“The cologne is German, expensive, but applied hastily — a man of habit, not vanity.”',
+      '“Your fingernails are clean, yet the index finger has a faint ink stain — a clerk or writer.”',
+      '“You have a ticket to the opera in your pocket, but you will not attend — prior engagement.”'
+    ];
+    let i = 0;
+    btn.addEventListener('click', function() {
+      const clueText = document.querySelector('.clue-text');
+      if (!clueText) return;
+      const current = clues[i % clues.length];
+      clueText.style.transition = 'opacity 0.15s';
+      clueText.style.opacity = '0.5';
+      setTimeout(() => {
+        clueText.textContent = current;
+        clueText.style.opacity = '1';
+      }, 120);
+      i++;
+      // subtle animation on button
+      btn.style.transform = 'scale(0.96)';
+      setTimeout(() => btn.style.transform = '', 120);
+    });
+  })();
+</script>
+
+<!-- inline style for extra smoothness -->
+<style>
+  .clue-text { transition: opacity 0.2s ease; }
+  .btn-221b { transition: transform 0.1s, box-shadow 0.1s; }
+</style>
+
+</body>
+</html>

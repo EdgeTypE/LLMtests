@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Sherlock Holmes · 221B</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Typography: Victorian character meets modern legibility -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=UnifrakturMaguntia&family=Special+Elite&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Favicon (smoke ring) -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='none' stroke='%23b89b7b' stroke-width='6'/%3E%3Ccircle cx='50' cy='50' r='30' fill='none' stroke='%23b89b7b' stroke-width='3' stroke-dasharray='8 6'/%3E%3Ctext x='50' y='68' font-family='Georgia' font-size='40' fill='%23b89b7b' text-anchor='middle' font-weight='bold'%3E%3F%3C/text%3E%3C/svg%3E">
+</head>
+<body class="victorian-shade">
+    <!-- Atmospheric noise overlay -->
+    <div class="noise"></div>    <!-- Floating smoke elements (pure CSS ambiance) -->    <div class="smoke-container" aria-hidden="true">
+        <div class="smoke"></div>
+        <div class="smoke smoke-delay"></div>
+        <div class="smoke smoke-slow"></div>
+    </div>    <div class="site-wrapper">
+        <header class="hero">
+            <div class="hero-lamp">
+                <i class="fas fa-search magnify-icon" aria-hidden="true"></i>
+            </div>
+            <div class="title-group">
+                <h1 class="hero-title">Sherlock <span class="holmes-break">Holmes</span></h1>
+                <div class="hero-sub">
+                    <span class="brass-plate">221B BAKER STREET</span>
+                    <span class="motto">“When you have eliminated the impossible, whatever remains, however improbable, must be the truth.”</span>
+                </div>
+            </div>
+            <div class="header-ornament">
+                <i class="fas fa-skull" aria-hidden="true"></i>
+                <i class="fas fa-pipe-smoking" aria-hidden="true"></i>
+                <i class="fas fa-violin" aria-hidden="true"></i>
+            </div>
+        </header>        <main class="main-grid">
+            <!-- PROFILE CARD: The man himself -->
+            <section class="v-card profile-card stagger-1">
+                <div class="card-header">
+                    <i class="fas fa-user-secret"></i>
+                    <h2>The Consulting Detective</h2>
+                </div>
+                <div class="profile-content">
+                    <div class="silhouette">
+                        <i class="fas fa-user-tie fa-4x" aria-label="Holmes silhouette"></i>
+                    </div>
+                    <p class="lead"><strong>Master of deduction, chemist, violinist, and the world’s only consulting detective.</strong> Residing at 221B Baker Street with Dr. John Watson, Holmes takes on cases that baffle Scotland Yard.</p>
+                    <ul class="fact-list">
+                        <li><i class="fas fa-flask"></i> Expert in chemistry &amp; anatomy</li>
+                        <li><i class="fas fa-fist-raised"></i> Skilled in boxing, singlestick &amp; bartitsu</li>
+                        <li><i class="fas fa-newspaper"></i> Author of monographs on tobacco ash, tattoos &amp; ciphers</li>
+                        <li><i class="fas fa-city"></i> Employs the Baker Street Irregulars</li>
+                    </ul>
+                </div>
+            </section>            <!-- SKILLS & METHODS (accordion style) -->            <section class="v-card methods-card stagger-2">
+                <div class="card-header">
+                    <i class="fas fa-brain"></i>
+                    <h2>The Science of Deduction</h2>
+                </div>
+                <div class="method-list">
+                    <div class="method-item">
+                        <div class="method-title" data-target="obs">
+                            <i class="fas fa-eye"></i> <span>1. Observe, don't just see</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="method-detail" id="obs">
+                            <p>"You see, but you do not observe." Holmes notices the minutiae: a worn cuff, a splash of mud, the type of cigar ash. Everything tells a story.</p>
+                        </div>
+                    </div>
+                    <div class="method-item">
+                        <div class="method-title" data-target="deduce">
+                            <i class="fas fa-project-diagram"></i> <span>2. Deduce backwards</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="method-detail" id="deduce">
+                            <p>Start from the effect and reason to the cause. If a man has a calloused thumb and ink-stained fingers, he is a writer. Combine with location and attire for a complete portrait.</p>
+                        </div>
+                    </div>
+                    <div class="method-item">
+                        <div class="method-title" data-target="knowledge">
+                            <i class="fas fa-book"></i> <span>3. Curate knowledge ruthlessly</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="method-detail" id="knowledge">
+                            <p>Holmes's "brain attic" holds only useful facts: chemistry, sensational literature, law, and the geography of London. He famously did not know the Earth revolved around the sun — irrelevant to his work.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>            <!-- FAMOUS CASES with interactive hover reveal -->            <section class="v-card cases-card stagger-3">
+                <div class="card-header">
+                    <i class="fas fa-scroll"></i>
+                    <h2>Chronicles of Note</h2>
+                </div>
+                <div class="cases-grid">
+                    <div class="case">
+                        <div class="case-front">
+                            <i class="fas fa-dog"></i>
+                            <h3>The Hound of the Baskervilles</h3>
+                            <span class="case-year">1901</span>
+                        </div>
+                        <div class="case-back">
+                            <p>A demonic hound haunts the moors. Holmes uncovers a scheme of greed and family curse. “Mr. Holmes, they were the footprints of a gigantic hound!”</p>
+                        </div>
+                    </div>
+                    <div class="case">
+                        <div class="case-front">
+                            <i class="fas fa-crown"></i>
+                            <h3>A Scandal in Bohemia</h3>
+                            <span class="case-year">1891</span>
+                        </div>
+                        <div class="case-back">
+                            <p>The woman who outwitted Holmes: Irene Adler. “To Sherlock Holmes she is always THE woman.” A photograph, a clever disguise, and a wedding.</p>
+                        </div>
+                    </div>
+                    <div class="case">
+                        <div class="case-front">
+                            <i class="fas fa-snake"></i>
+                            <h3>The Speckled Band</h3>
+                            <span class="case-year">1892</span>
+                        </div>
+                        <div class="case-back">
+                            <p>A locked-room mystery, a whistle in the night, and a swamp adder. Holmes saves a life minutes before tragedy.</p>
+                        </div>
+                    </div>
+                    <div class="case">
+                        <div class="case-front">
+                            <i class="fas fa-water"></i>
+                            <h3>The Final Problem</h3>
+                            <span class="case-year">1893</span>
+                        </div>
+                        <div class="case-back">
+                            <p>Holmes meets his intellectual equal, Professor Moriarty, at Reichenbach Falls. “The Napoleon of Crime.”</p>
+                        </div>
+                    </div>
+                </div>
+            </section>            <!-- INTERACTIVE DEDUCTION CHALLENGE -->            <section class="v-card quiz-card stagger-4">
+                <div class="card-header">
+                    <i class="fas fa-puzzle-piece"></i>
+                    <h2>Test Your Observation</h2>
+                    <span class="quiz-badge">the game is afoot</span>
+                </div>
+                <div class="quiz-container">
+                    <div class="quiz-question">
+                        <p class="scenario"><i class="fas fa-quote-left"></i> A man enters 221B. His right cuff is shiny but the left is frayed. He has a faint smell of ink and turpentine, and a smudge of ultramarine on his collar. What is his profession? <i class="fas fa-quote-right"></i></p>
+                        <div class="options">
+                            <button class="quiz-option" data-answer="wrong">Bank clerk</button>
+                            <button class="quiz-option" data-answer="wrong">Physician</button>
+                            <button class="quiz-option" data-answer="correct">Artist (painter)</button>
+                            <button class="quiz-option" data-answer="wrong">Journalist</button>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                    <div class="quiz-explanation hidden" id="explainDeduction">
+                        <p><strong>Elementary:</strong> The shiny right cuff suggests he rests his arm on a surface while working (easel). Turpentine and ultramarine (blue pigment) are unmistakable signs of a painter. The frayed left cuff holds the palette. Ink might be from sketching. Well deduced?</p>
+                        <button class="reset-quiz"><i class="fas fa-undo-alt"></i> Try another</button>
+                    </div>
+                    <div class="quiz-success hidden">
+                        <i class="fas fa-check-circle"></i> You have the makings of a detective.
+                    </div>
+                </div>
+            </section>
+        </main>        <!-- FOOTER with quote and network -->        <footer class="footer">
+            <div class="footer-quote">
+                <p>“My name is Sherlock Holmes. It is my business to know what other people do not know.”</p>
+            </div>
+            <div class="footer-meta">
+                <span><i class="fas fa-map-pin"></i> 221B Baker Street, London</span>
+                <span><i class="fas fa-envelope"></i> The game is never over.</span>
+            </div>
+        </footer>
+    </div>    <script src="js/main.js"></script></body>
+</html>
