@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sherlock Holmes — 221B Baker Street</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600&family=IM+Fell+English:ital@0;1&family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=Special+Elite&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Fog Canvas -->
+    <canvas id="fogCanvas"></canvas>
+
+    <!-- Magnifying Glass Cursor -->
+    <div id="magnifier" class="magnifier" aria-hidden="true">
+        <svg viewBox="0 0 64 64" width="64" height="64">
+            <circle cx="26" cy="26" r="18" fill="none" stroke="#c4a35a" stroke-width="3"/>
+            <line x1="39" y1="39" x2="58" y2="58" stroke="#c4a35a" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+    </div>
+
+    <!-- Pipe Smoke Particle -->
+    <div id="smokeParticle" class="smoke-particle" aria-hidden="true"></div>
+
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-inner">
+            <a href="#hero" class="nav-brand">
+                <span class="nav-initials">SH</span>
+                <span class="nav-address">221B</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#about">The Man</a></li>
+                <li><a href="#cases">Cases</a></li>
+                <li><a href="#quotes">Wisdom</a></li>
+                <li><a href="#deduce">Deduce</a></li>
+                <li><a href="#bakerstreet">Visit</a></li>
+            </ul>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="hero" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <p class="hero-eyebrow reveal-stagger">— Consulting Detective —</p>
+            <h1 class="hero-title reveal-stagger">Sherlock<br>Holmes</h1>
+            <div class="hero-divider reveal-stagger"></div>
+            <p class="hero-subtitle reveal-stagger">
+                "When you have eliminated the impossible,<br>
+                whatever remains, however improbable,<br>
+                must be the truth."
+            </p>
+            <p class="hero-attribution reveal-stagger">— The Sign of the Four, 1890</p>
+            <a href="#about" class="hero-scroll reveal-stagger" aria-label="Scroll down">
+                <span class="scroll-arrow">↓</span>
+                <span class="scroll-text">The game is afoot</span>
+            </a>
+        </div>
+        <div class="hero-pipe" aria-hidden="true">
+            <svg viewBox="0 0 200 60" width="200" height="60">
+                <ellipse cx="30" cy="30" rx="20" ry="14" fill="#2a1f14" stroke="#c4a35a" stroke-width="1.5"/>
+                <path d="M50 30 Q90 18 140 20 Q170 21 190 26" fill="none" stroke="#3d2b18" stroke-width="5" stroke-linecap="round"/>
+                <path d="M50 30 Q90 18 140 20 Q170 21 190 26" fill="none" stroke="#5a3d22" stroke-width="2" stroke-linecap="round"/>
+                <ellipse cx="30" cy="30" rx="10" ry="6" fill="#1a1008" opacity="0.8"/>
+                <!-- smoke wisps -->
+                <path d="M18 18 Q10 5 22 -8" fill="none" stroke="#a89878" stroke-width="1.5" opacity="0.4" stroke-linecap="round"/>
+                <path d="M25 14 Q30 0 20 -15" fill="none" stroke="#a89878" stroke-width="1" opacity="0.25" stroke-linecap="round"/>
+                <path d="M32 16 Q40 2 28 -12" fill="none" stroke="#a89878" stroke-width="1.2" opacity="0.3" stroke-linecap="round"/>
+            </svg>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section id="about" class="section about">
+        <div class="section-inner">
+            <div class="about-grid">
+                <div class="about-portrait reveal-left">
+                    <div class="portrait-frame">
+                        <div class="portrait-silhouette">
+                            <svg viewBox="0 0 200 280" width="200" height="280">
+                                <!-- Deerstalker hat -->
+                                <ellipse cx="100" cy="55" rx="55" ry="15" fill="#1a1410"/>
+                                <rect x="60" y="30" width="80" height="30" rx="4" fill="#1a1410"/>
+                                <ellipse cx="100" cy="35" rx="50" ry="20" fill="#221a12"/>
+                                <rect x="55" y="18" width="90" height="18" rx="3" fill="#1a1410"/>
+                                <!-- Head silhouette -->
+                                <ellipse cx="100" cy="100" rx="38" ry="50" fill="#1a1410"/>
+                                <!-- Pipe -->
+                                <ellipse cx="70" cy="115" rx="12" ry="8" fill="#2a1f14" stroke="#c4a35a" stroke-width="1"/>
+                                <line x1="78" y1="115" x2="110" y2="108" stroke="#3d2b18" stroke-width="4" stroke-linecap="round"/>
+                                <!-- Coat collar -->
+                                <path d="M62 130 L55 180 L90 160 Z" fill="#1a1410"/>
+                                <path d="M138 130 L145 180 L110 160 Z" fill="#1a1410"/>
+                                <!-- Body -->
+                                <rect x="55" y="150" width="90" height="120" rx="5" fill="#1a1410"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-text reveal-right">
+                    <h2 class="section-label">The Man Behind the Lens</h2>
+                    <h3 class="section-title">Master of Deduction</h3>
+                    <p class="about-paragraph">
+                        Sherlock Holmes resides at <strong>221B Baker Street</strong>, London, where he operates
+                        as the world's first and only <em>consulting detective</em>. A chemist by training,
+                        a violinist by passion, and a logician by nature — Holmes approaches each case
+                        with a singular devotion to the cold, hard facts.
+                    </p>
+                    <p class="about-paragraph">
+                        His methods are unconventional: the study of <strong>cigarette ash</strong>, the
+                        analysis of <strong>handwriting pressure</strong>, the classification of
+                        <strong>London's soils</strong>. No detail is too minute. No observation
+                        is trivial. As he often remarks to his chronicler, Dr. John Watson:
+                        <em>"You see, but you do not observe."</em>
+                    </p>
+                    <div class="about-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">60+</span>
+                            <span class="stat-label">Published Cases</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">4</span>
+                            <span class="stat-label">Novels</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">56</span>
+                            <span class="stat-label">Short Stories</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">1887</span>
+                            <span class="stat-label">First Appearance</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cases Section -->
+    <section id="cases" class="section cases">
+        <div class="section-inner">
+            <h2 class="section-label reveal-stagger">The Case Files</h2>
+            <h3 class="section-title reveal-stagger">Notable Investigations</h3>
+            <div class="cases-grid">
+                <article class="case-card reveal-card">
+                    <div class="case-number">01</div>
+                    <div class="case-badge">Novel</div>
+                    <h4 class="case-title">The Hound of the Baskervilles</h4>
+                    <p class="case-excerpt">
+                        A phantom hound haunts the moors of Devonshire, and the Baskerville
+                        family is cursed. Holmes sends Watson to investigate while he
+                        conducts his own inquiries in secret.
+                    </p>
+                    <span class="case-year">1902</span>
+                    <div class="case-divider"></div>
+                </article>
+                <article class="case-card reveal-card">
+                    <div class="case-number">02</div>
+                    <div class="case-badge">Short Story</div>
+                    <h4 class="case-title">A Scandal in Bohemia</h4>
+                    <p class="case-excerpt">
+                        The King of Bohemia seeks Holmes's help in retrieving a
+                        compromising photograph from the brilliant and resourceful
+                        Irene Adler — <em>"the woman"</em> who outwitted him.
+                    </p>
+                    <span class="case-year">1891</span>
+                    <div class="case-divider"></div>
+                </article>
+                <article class="case-card reveal-card">
+                    <div class="case-number">03</div>
+                    <div class="case-badge">Short Story</div>
+                    <h4 class="case-title">The Red-Headed League</h4>
+                    <p class="case-excerpt">
+                        A pawnbroker is paid handsomely to copy the Encyclopædia
+                        Britannica — but why? Holmes unravels a scheme involving
+                        a tunnel, a bank vault, and a criminal mastermind.
+                    </p>
+                    <span class="case-year">1891</span>
+                    <div class="case-divider"></div>
+                </article>
+                <article class="case-card reveal-card">
+                    <div class="case-number">04</div>
+                    <div class="case-badge">Novel</div>
+                    <h4 class="case-title">The Sign of the Four</h4>
+                    <p class="case-excerpt">
+                        A mysterious treasure, a one-legged man, and a pact made in
+                        a prison cell. Holmes tracks the truth through the dark
+                        waters of the Thames and the streets of London.
+                    </p>
+                    <span class="case-year">1890</span>
+                    <div class="case-divider"></div>
+                </article>
+                <article class="case-card reveal-card">
+                    <div class="case-number">05</div>
+                    <div class="case-badge">Short Story</div>
+                    <h4 class="case-title">The Speckled Band</h4>
+                    <p class="case-excerpt">
+                        A woman fears for her life after her sister dies mysteriously,
+                        whispering "the speckled band" with her last breath. Holmes
+                        spends a night in a darkened room to solve the riddle.
+                    </p>
+                    <span class="case-year">1892</span>
+                    <div class="case-divider"></div>
+                </article>
+                <article class="case-card reveal-card">
+                    <div class="case-number">06</div>
+                    <div class="case-badge">Novel</div>
+                    <h4 class="case-title">The Final Problem</h4>
+                    <p class="case-excerpt">
+                        Holmes confronts his greatest adversary — Professor James
+                        Moriarty, the Napoleon of crime — in a deadly struggle
+                        at the Reichenbach Falls in Switzerland.
+                    </p>
+                    <span class="case-year">1893</span>
+                    <div class="case-divider"></div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quotes Section -->
+    <section id="quotes" class="section quotes">
+        <div class="quotes-overlay"></div>
+        <div class="section-inner">
+            <h2 class="section-label reveal-stagger">Words of Wisdom</h2>
+            <div class="quotes-carousel" id="quotesCarousel">
+                <div class="quote-slide active" data-index="0">
+                    <blockquote class="quote-text">
+                        "It is a capital mistake to theorize before one has data.
+                        Insensibly one begins to twist facts to suit theories,
+                        instead of theories to suit facts."
+                    </blockquote>
+                    <cite class="quote-source">— A Scandal in Bohemia</cite>
+                </div>
+                <div class="quote-slide" data-index="1">
+                    <blockquote class="quote-text">
+                        "The world is full of obvious things which nobody by any
+                        chance ever observes."
+                    </blockquote>
+                    <cite class="quote-source">— The Hound of the Baskervilles</cite>
+                </div>
+                <div class="quote-slide" data-index="2">
+                    <blockquote class="quote-text">
+                        "There is nothing more deceptive than an obvious fact."
+                    </blockquote>
+                    <cite class="quote-source">— The Boscombe Valley Mystery</cite>
+                </div>
+                <div class="quote-slide" data-index="3">
+                    <blockquote class="quote-text">
+                        "My name is Sherlock Holmes. It is my business to know
+                        what other people do not know."
+                    </blockquote>
+                    <cite class="quote-source">— The Adventure of the Blue Carbuncle</cite>
+                </div>
+                <div class="quote-slide" data-index="4">
+                    <blockquote class="quote-text">
+                        "Education never ends, Watson. It is a series of lessons
+                        with the greatest for the last."
+                    </blockquote>
+                    <cite class="quote-source">— The Adventure of the Red Circle</cite>
+                </div>
+            </div>
+            <div class="quotes-controls">
+                <button class="quote-btn" id="quotePrev" aria-label="Previous quote">←</button>
+                <div class="quote-dots" id="quoteDots"></div>
+                <button class="quote-btn" id="quoteNext" aria-label="Next quote">→</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Deduce Section (Interactive) -->
+    <section id="deduce" class="section deduce">
+        <div class="section-inner">
+            <h2 class="section-label reveal-stagger">Test Your Observation</h2>
+            <h3 class="section-title reveal-stagger">What Would Holmes See?</h3>
+            <p class="deduce-intro reveal-stagger">
+                Holmes could deduce a man's entire history from a single glance.
+                Can you spot the clues? Examine the scene below and draw your conclusions.
+            </p>
+            <div class="deduce-scene reveal-card" id="deduceScene">
+                <div class="scene-room">
+                    <!-- A virtual room with clickable clues -->
+                    <div class="scene-bg">
+                        <svg viewBox="0 0 800 400" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
+                            <!-- Room walls -->
+                            <rect x="0" y="0" width="800" height="400" fill="#1e1812"/>
+                            <rect x="0" y="280" width="800" height="120" fill="#2a1f14"/>
+                            <!-- Floor -->
+                            <rect x="0" y="310" width="800" height="90" fill="#1a1410"/>
+                            <!-- Fireplace -->
+                            <rect x="300" y="120" width="200" height="190" rx="5" fill="#3d2b18" stroke="#5a3d22" stroke-width="2"/>
+                            <rect x="320" y="140" width="160" height="150" rx="3" fill="#1a0e05"/>
+                            <path d="M340 290 Q400 240 460 290" fill="#c44" opacity="0.7"/>
+                            <path d="M350 290 Q400 250 450 290" fill="#e85" opacity="0.5"/>
+                            <!-- Mantle -->
+                            <rect x="290" y="110" width="220" height="15" rx="3" fill="#4a3520"/>
+                            <!-- Clock on mantle -->
+                            <circle cx="400" cy="95" r="20" fill="#c4a35a" stroke="#8a6d3a" stroke-width="2"/>
+                            <circle cx="400" cy="95" r="14" fill="#f5e6c8"/>
+                            <line x1="400" y1="95" x2="400" y2="82" stroke="#1a1410" stroke-width="2"/>
+                            <line x1="400" y1="95" x2="410" y2="95" stroke="#1a1410" stroke-width="1.5"/>
+                            <!-- Desk -->
+                            <rect x="80" y="230" width="200" height="80" rx="3" fill="#4a3520" stroke="#5a3d22" stroke-width="1.5"/>
+                            <rect x="90" y="235" width="180" height="70" rx="2" fill="#3d2b18"/>
+                            <!-- Papers on desk -->
+                            <rect x="100" y="240" width="50" height="35" rx="1" fill="#f5e6c8" transform="rotate(-8, 125, 257)"/>
+                            <rect x="110" y="245" width="40" height="28" rx="1" fill="#e8dcc8" transform="rotate(3, 130, 259)"/>
+                            <!-- Pen on desk -->
+                            <line x1="160" y1="270" x2="200" y2="260" stroke="#1a1410" stroke-width="2"/>
+                            <!-- Bookshelf -->
+                            <rect x="580" y="80" width="180" height="230" rx="3" fill="#3d2b18" stroke="#5a3d22" stroke-width="2"/>
+                            <rect x="590" y="90" width="160" height="30" fill="#4a3520"/>
+                            <rect x="590" y="125" width="160" height="30" fill="#4a3520"/>
+                            <rect x="590" y="160" width="160" height="30" fill="#4a3520"/>
+                            <rect x="590" y="195" width="160" height="30" fill="#4a3520"/>
+                            <rect x="590" y="230" width="160" height="30" fill="#4a3520"/>
+                            <!-- Books on shelves (colored spines) -->
+                            <rect x="595" y="92" width="8" height="26" fill="#6b2d2d" rx="1"/>
+                            <rect x="606" y="92" width="6" height="26" fill="#2d4a6b" rx="1"/>
+                            <rect x="615" y="92" width="10" height="26" fill="#4a6b2d" rx="1"/>
+                            <rect x="628" y="92" width="7" height="26" fill="#6b5a2d" rx="1"/>
+                            <!-- Window -->
+                            <rect x="30" y="60" width="120" height="160" rx="4" fill="#1a2a3a" stroke="#5a3d22" stroke-width="4"/>
+                            <line x1="90" y1="60" x2="90" y2="220" stroke="#5a3d22" stroke-width="3"/>
+                            <line x1="30" y1="140" x2="150" y2="140" stroke="#5a3d22" stroke-width="3"/>
+                            <!-- Moonlight through window -->
+                            <rect x="35" y="65" width="50" height="70" fill="#2a4a6a" opacity="0.5"/>
+                            <!-- Armchair -->
+                            <ellipse cx="680" cy="290" rx="50" ry="30" fill="#3d1a1a" stroke="#5a2a2a" stroke-width="1.5"/>
+                            <rect x="650" y="260" width="60" height="35" rx="5" fill="#3d1a1a" stroke="#5a2a2a" stroke-width="1"/>
+                            <!-- Rug -->
+                            <ellipse cx="350" cy="340" rx="180" ry="40" fill="#4a2020" opacity="0.6"/>
+                            <ellipse cx="350" cy="340" rx="140" ry="28" fill="#5a2828" opacity="0.5"/>
+                            <!-- Newspaper on floor -->
+                            <rect x="460" y="320" width="60" height="40" rx="1" fill="#e8dcc8" transform="rotate(15, 490, 340)" opacity="0.8"/>
+                            <rect x="465" y="325" width="20" height="3" fill="#a89878" transform="rotate(15, 475, 326)" opacity="0.5"/>
+                            <rect x="465" y="332" width="25" height="3" fill="#a89878" transform="rotate(15, 477, 333)" opacity="0.5"/>
+                            <!-- Clickable clue zones -->
+                            <circle cx="130" cy="255" r="18" fill="transparent" class="clue-zone" data-clue="papers" cursor="pointer"/>
+                            <circle cx="400" cy="95" r="22" fill="transparent" class="clue-zone" data-clue="clock" cursor="pointer"/>
+                            <circle cx="630" cy="105" r="20" fill="transparent" class="clue-zone" data-clue="books" cursor="pointer"/>
+                            <circle cx="490" cy="335" r="22" fill="transparent" class="clue-zone" data-clue="newspaper" cursor="pointer"/>
+                            <circle cx="90" cy="140" r="25" fill="transparent" class="clue-zone" data-clue="window" cursor="pointer"/>
+                            <circle cx="360" cy="260" r="20" fill="transparent" class="clue-zone" data-clue="fireplace" cursor="pointer"/>
+                        </svg>
+                    </div>
+                    <!-- Clue markers -->
+                    <div class="clue-marker" data-clue="papers" style="left:16%;top:60%">🔍</div>
+                    <div class="clue-marker" data-clue="clock" style="left:50%;top:20%">🔍</div>
+                    <div class="clue-marker" data-clue="books" style="left:78%;top:22%">🔍</div>
+                    <div class="clue-marker" data-clue="newspaper" style="left:61%;top:82%">🔍</div>
+                    <div class="clue-marker" data-clue="window" style="left:11%;top:30%">🔍</div>
+                    <div class="clue-marker" data-clue="fireplace" style="left:45%;top:60%">🔍</div>
+                </div>
+                <div class="deduce-output" id="deduceOutput">
+                    <p class="deduce-placeholder">Click a magnifying glass to examine a clue…</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Baker Street Section -->
+    <section id="bakerstreet" class="section bakerstreet">
+        <div class="section-inner">
+            <h2 class="section-label reveal-stagger">Visit</h2>
+            <h3 class="section-title reveal-stagger">221B Baker Street</h3>
+            <div class="bakerstreet-grid">
+                <div class="bakerstreet-info reveal-left">
+                    <p class="bakerstreet-paragraph">
+                        The legendary address still stands today as the
+                        <strong>Sherlock Holmes Museum</strong>, faithfully
+                        preserved in the Victorian style of Holmes's era.
+                        Visitors can explore the famous study, examine Holmes's
+                        chemical apparatus, and sit in the very chair where
+                        countless clients told their tales.
+                    </p>
+                    <div class="bakerstreet-details">
+                        <div class="detail-row">
+                            <span class="detail-icon">📍</span>
+                            <span>221B Baker Street, London NW1 6XE</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-icon">🚇</span>
+                            <span>Nearest Tube: Baker Street Station</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-icon">🕰️</span>
+                            <span>Open daily 9:30 AM – 6:00 PM</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bakerstreet-visual reveal-right">
+                    <div class="door-illustration">
+                        <svg viewBox="0 0 220 340" width="220" height="340">
+                            <!-- Door frame -->
+                            <rect x="10" y="10" width="200" height="320" rx="3" fill="#2a1f14" stroke="#5a3d22" stroke-width="3"/>
+                            <!-- Door -->
+                            <rect x="20" y="20" width="180" height="300" rx="2" fill="#1a1410" stroke="#3d2b18" stroke-width="2"/>
+                            <!-- Panels -->
+                            <rect x="35" y="35" width="150" height="80" rx="2" fill="#221a12" stroke="#3d2b18" stroke-width="1"/>
+                            <rect x="35" y="130" width="150" height="80" rx="2" fill="#221a12" stroke="#3d2b18" stroke-width="1"/>
+                            <rect x="35" y="225" width="150" height="55" rx="2" fill="#221a12" stroke="#3d2b18" stroke-width="1"/>
+                            <!-- Number plaque -->
+                            <rect x="55" y="105" width="110" height="22" rx="3" fill="#c4a35a" stroke="#8a6d3a" stroke-width="1"/>
+                            <text x="110" y="120" text-anchor="middle" font-family="'Playfair Display', serif" font-size="14" font-weight="700" fill="#1a1410">221B</text>
+                            <!-- Door knob -->
+                            <circle cx="155" cy="185" r="8" fill="#c4a35a" stroke="#8a6d3a" stroke-width="1.5"/>
+                            <!-- Door knocker -->
+                            <circle cx="110" cy="170" r="12" fill="none" stroke="#c4a35a" stroke-width="3"/>
+                            <circle cx="110" cy="170" r="6" fill="#c4a35a"/>
+                            <!-- Lamp -->
+                            <rect x="170" y="20" width="4" height="30" fill="#3d2b18"/>
+                            <circle cx="172" cy="18" r="10" fill="#f5e6c8" opacity="0.6" stroke="#c4a35a" stroke-width="1.5"/>
+                            <circle cx="172" cy="18" r="5" fill="#ffe" opacity="0.8"/>
+                            <!-- Steps -->
+                            <rect x="0" y="320" width="230" height="10" rx="2" fill="#3d2b18"/>
+                            <rect x="-5" y="330" width="240" height="10" rx="2" fill="#4a3520"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-initials">SH</span>
+                <span class="footer-tagline">The game is never over.</span>
+            </div>
+            <div class="footer-links">
+                <a href="#hero">Home</a>
+                <a href="#about">About</a>
+                <a href="#cases">Cases</a>
+                <a href="#quotes">Quotes</a>
+                <a href="#deduce">Deduce</a>
+            </div>
+            <p class="footer-copy">
+                A tribute to Sir Arthur Conan Doyle's timeless creation.<br>
+                All characters and stories are in the public domain.
+            </p>
+            <p class="footer-credit">Elementary, my dear reader. © 2024</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

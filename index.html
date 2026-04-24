@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LLM Test File Tree</title>
+</head>
+<body>
+    <h1>LLM Test Results</h1>
+    <p>The list below is dynamically generated via the GitHub API.</p>
+    
+    <div id="file-tree">Loading tree...</div>
+
+    <script>
+        const GITHUB_USERNAME = 'edgetype'; 
+        const REPO_NAME = 'llmtests';
+        const BRANCH = 'main';
+
+        async function fetchFileTree() {
+            // Fetch the entire repository tree recursively via GitHub API
+            const url = `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/git/trees/${BRANCH}?recursive=1`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (!data.tree) {
+                    document.getElementById('file-tree').innerText = "Repository not found, API limit exceeded, or the repository is private.";
+                    return;
+                }
+
+                // Filter only HTML files and exclude this root index.html
+                const htmlFiles = data.tree
+                    .filter(file => file.type === 'blob' && file.path.endsWith('.html') && file.path !== 'index.html')
+                    .map(file => file.path);
+
+                const treeData = buildTreeObject(htmlFiles);
+                
+                const treeContainer = document.getElementById('file-tree');
+                treeContainer.innerHTML = ''; // Clear the "Loading tree..." text
+                renderTree(treeData, treeContainer);
+
+            } catch (error) {
+                document.getElementById('file-tree').innerText = "An error occurred: " + error.message;
+            }
+        }
+
+        // Converts flat file paths (ai_1/test/index.html) into a JSON tree object
+        function buildTreeObject(paths) {
+            const root = {};
+            for (const path of paths) {
+                const parts = path.split('/');
+                let current = root;
+                for (let i = 0; i < parts.length; i++) {
+                    const part = parts[i];
+                    if (!current[part]) {
+                        // If it's the last element, assign the full path as value, otherwise create an empty object for the subfolder
+                        current[part] = (i === parts.length - 1) ? path : {}; 
+                    }
+                    current = current[part];
+                }
+            }
+            return root;
+        }
+
+        // Renders the generated object to the screen recursively using HTML <ul> and <li> tags
+        function renderTree(node, container) {
+            const ul = document.createElement('ul');
+            for (const key in node) {
+                const li = document.createElement('li');
+                
+                if (typeof node[key] === 'string') {
+                    // This is a file (leaf node)
+                    const a = document.createElement('a');
+                    a.href = node[key];
+                    a.textContent = key;
+                    li.appendChild(a);
+                } else {
+                    // This is a folder
+                    li.innerHTML = `<strong>📁 ${key}</strong>`;
+                    renderTree(node[key], li); // Recursive call
+                }
+                ul.appendChild(li);
+            }
+            container.appendChild(ul);
+        }
+
+        fetchFileTree();
+    </script>
+</body>
+</html>
