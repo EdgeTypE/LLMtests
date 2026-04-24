@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="221B Baker Street – The official digital residence of Sherlock Holmes, consulting detective.">
+    <title>221B Baker Street • Sherlock Holmes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&amp;family=Instrument+Serif&amp;display=swap');
+        
+        :root {
+            --accent: #9c7a3f;
+        }
+        
+        * {
+            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 150ms;
+        }
+        
+        body {
+            font-family: 'Instrument Serif', serif;
+        }
+        
+        .heading-font {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .hero-bg {
+            background: linear-gradient(180deg, #1a1410 0%, #2c2118 100%);
+            box-shadow: inset 0 0 120px rgba(156, 122, 63, 0.3);
+        }
+        
+        .fog {
+            animation: fogDrift 25s linear infinite;
+        }
+        
+        @keyframes fogDrift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: #9c7a3f;
+        }
+        
+        .nav-link:hover:after {
+            width: 100%;
+        }
+        
+        .case-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .case-card:hover {
+            transform: translateY(-4px) rotate(1deg);
+            box-shadow: 20px 20px 0 -4px #9c7a3f;
+        }
+        
+        .deduction {
+            animation: deducePop 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+    </style>
+</head>
+<body class="bg-[#1a1410] text-[#f5e8d3] overflow-x-hidden">
+    <!-- NAVBAR -->
+    <nav class="border-b border-[#9c7a3f]/30 bg-[#1a1410]/90 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-screen-2xl mx-auto">
+            <div class="px-8 py-5 flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center gap-x-3">
+                    <div class="w-9 h-9 bg-[#9c7a3f] text-[#1a1410] flex items-center justify-center text-2xl rotate-12 shadow-inner">🔍</div>
+                    <div>
+                        <h1 class="heading-font text-3xl tracking-[-1px]">221B BAKER STREET</h1>
+                        <p class="text-xs font-light tracking-[2px] text-[#9c7a3f] -mt-1">SHERLOCK HOLMES</p>
+                    </div>
+                </div>
+
+                <!-- Menu -->
+                <div class="hidden md:flex items-center gap-x-10 text-sm uppercase tracking-widest">
+                    <a href="#about" class="nav-link">The Detective</a>
+                    <a href="#cases" class="nav-link">Notable Cases</a>
+                    <a href="#companions" class="nav-link">Companions &amp; Foes</a>
+                    <a href="#deduction" class="nav-link">Test Your Deduction</a>
+                    <a href="#legacy" class="nav-link">Legacy</a>
+                </div>
+
+                <div class="flex items-center gap-x-4">
+                    <div onclick="togglePipe()" class="cursor-pointer flex items-center justify-center w-10 h-10 border border-[#9c7a3f]/40 hover:border-[#9c7a3f] rounded-full text-xl">
+                        🪈
+                    </div>
+                    <button onclick="theGameIsAfoot()" 
+                            class="px-6 py-3 bg-[#9c7a3f] hover:bg-[#b38f4f] text-[#1a1410] font-medium text-sm uppercase tracking-widest flex items-center gap-x-2">
+                        <span>The game is afoot</span>
+                        <span class="text-lg">→</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero-bg min-h-screen flex items-center relative">
+        <div class="absolute inset-0 fog opacity-20 pointer-events-none"
+             style="background: radial-gradient(circle at 30% 70%, transparent 40%, #9c7a3f 80%); background-size: 400% 400%;">
+        </div>
+        
+        <div class="max-w-screen-2xl mx-auto px-8 grid md:grid-cols-2 gap-16 items-center relative z-10">
+            <div class="space-y-8">
+                <div class="inline-flex items-center gap-x-2 bg-[#9c7a3f]/10 text-[#9c7a3f] text-xs uppercase tracking-[3px] px-6 py-3 border border-[#9c7a3f]/30">
+                    EST. 1887 • LONDON
+                </div>
+                
+                <h1 class="heading-font text-7xl md:text-8xl leading-none tracking-[-3px] max-w-xl">
+                    YOU SEE,<br>BUT YOU DO NOT<br>OBSERVE.
+                </h1>
+                
+                <p class="text-2xl text-[#d4b98a] max-w-md">
+                    The residence of Mr. Sherlock Holmes, consulting detective. 
+                    No case too small. No mystery too great.
+                </p>
+                
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="scrollToSection('deduction')" 
+                            class="px-8 py-5 bg-transparent border-2 border-[#9c7a3f] hover:bg-[#9c7a3f] hover:text-[#1a1410] text-lg uppercase tracking-widest">
+                        Begin Deduction
+                    </button>
+                    <button onclick="window.open('https://en.wikipedia.org/wiki/Sherlock_Holmes','_blank')" 
+                            class="px-8 py-5 border border-[#d4b98a]/50 text-[#d4b98a] hover:text-white flex items-center gap-x-3 text-lg">
+                        Read the Canon
+                        <span class="text-xl">📖</span>
+                    </button>
+                </div>
+                
+                <div class="flex items-center gap-x-8 text-sm">
+                    <div>
+                        <span class="block text-[#9c7a3f]">RESIDENCE</span>
+                        <span class="text-2xl">221B Baker Street</span>
+                    </div>
+                    <div>
+                        <span class="block text-[#9c7a3f]">CHRONICLER</span>
+                        <span class="text-2xl">Dr. John H. Watson</span>
+                    </div>
+                    <div>
+                        <span class="block text-[#9c7a3f]">ARCH-NEMESIS</span>
+                        <span class="text-2xl">Professor Moriarty</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Visual illustration -->
+            <div class="relative hidden md:flex justify-end">
+                <div class="w-96 h-96 border-8 border-[#9c7a3f] bg-[#2c2118] rotate-[-4deg] shadow-2xl flex items-center justify-center relative">
+                    <!-- SVG illustration of Holmes -->
+                    <svg width="280" height="280" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg" class="drop-shadow-2xl">
+                        <!-- Hat -->
+                        <path d="M80 70 Q140 40 200 70" stroke="#f5e8d3" stroke-width="18" stroke-linecap="round"/>
+                        <!-- Head -->
+                        <circle cx="140" cy="130" r="55" fill="#f5e8d3" stroke="#1a1410" stroke-width="12"/>
+                        <!-- Face -->
+                        <circle cx="110" cy="115" r="12" fill="#1a1410"/>
+                        <circle cx="170" cy="115" r="12" fill="#1a1410"/>
+                        <!-- Nose -->
+                        <path d="M140 125 L140 155" stroke="#1a1410" stroke-width="8" stroke-linecap="round"/>
+                        <!-- Pipe -->
+                        <path d="M170 155 Q200 170 220 155" stroke="#9c7a3f" stroke-width="14" stroke-linecap="round"/>
+                        <circle cx="220" cy="155" r="12" fill="#9c7a3f"/>
+                        <!-- Cloak -->
+                        <path d="M90 180 Q140 260 190 180" fill="none" stroke="#1a1410" stroke-width="40"/>
+                        <!-- Magnifying glass in hand -->
+                        <circle cx="85" cy="200" r="28" stroke="#9c7a3f" stroke-width="12"/>
+                        <line x1="105" y1="220" x2="130" y2="245" stroke="#9c7a3f" stroke-width="18" stroke-linecap="round"/>
+                    </svg>
+                    <div class="absolute -bottom-4 -right-4 bg-[#1a1410] text-[#9c7a3f] text-xs uppercase px-4 py-1 rotate-12 border border-[#9c7a3f]">
+                        Elementary, my dear Watson
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-12 left-1/2 flex flex-col items-center gap-y-1 text-[#9c7a3f]/70 text-xs tracking-widest">
+            <div class="animate-bounce">↓</div>
+            SCROLL FOR THE DOSSIER
+        </div>
+    </header>
+
+    <!-- ABOUT -->
+    <section id="about" class="max-w-screen-2xl mx-auto px-8 py-24 border-t border-[#9c7a3f]/20">
+        <div class="grid md:grid-cols-12 gap-16">
+            <div class="md:col-span-5">
+                <div class="sticky top-8">
+                    <span class="text-[#9c7a3f] uppercase text-sm tracking-[2px]">THE MAN</span>
+                    <h2 class="heading-font text-6xl leading-none mt-3">Mr. Sherlock Holmes</h2>
+                    <div class="h-1 w-20 bg-[#9c7a3f] my-8"></div>
+                    <p class="text-xl leading-relaxed text-[#d4b98a]">
+                        “My name is Sherlock Holmes. It is my business to know what other people do not know.”
+                    </p>
+                    <p class="mt-8 text-[#c8a77a] italic">
+                        — A Study in Scarlet, 1887
+                    </p>
+                </div>
+            </div>
+            
+            <div class="md:col-span-7 space-y-10 text-lg">
+                <p>
+                    Born in the late 1850s, Sherlock Holmes is the world’s only consulting detective. 
+                    He resides at 221B Baker Street with his loyal friend and biographer, Dr. John Watson. 
+                    His powers of observation and deduction are unmatched. He plays the violin when he thinks, 
+                    smokes a pipe (sometimes three at once), and keeps a messy collection of case notes and chemicals.
+                </p>
+                <div class="grid grid-cols-3 gap-6">
+                    <div class="bg-[#2c2118] p-6 border border-[#9c7a3f]/30">
+                        <div class="text-[#9c7a3f] text-xs mb-2">SPECIALTIES</div>
+                        <ul class="space-y-2 text-[#d4b98a]">
+                            <li class="flex gap-x-2">🔬 Forensic chemistry</li>
+                            <li class="flex gap-x-2">🧩 Cryptography &amp; ciphers</li>
+                            <li class="flex gap-x-2">🕵️‍♂️ Trace evidence analysis</li>
+                            <li class="flex gap-x-2">📬 Handwriting &amp; tobacco ash</li>
+                        </ul>
+                    </div>
+                    <div class="bg-[#2c2118] p-6 border border-[#9c7a3f]/30">
+                        <div class="text-[#9c7a3f] text-xs mb-2">METHODS</div>
+                        <p class="text-[#d4b98a]">“When you have eliminated the impossible, whatever remains, however improbable, must be the truth.”</p>
+                    </div>
+                    <div class="bg-[#2c2118] p-6 border border-[#9c7a3f]/30 flex flex-col justify-between">
+                        <div>
+                            <div class="text-[#9c7a3f] text-xs mb-2">KNOWN WEAKNESSES</div>
+                            <p class="text-[#d4b98a]">Boredom • Cocaine (in the stories) • Lack of cases</p>
+                        </div>
+                        <div class="text-6xl text-[#9c7a3f]/30">🪕</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CASES -->
+    <section id="cases" class="bg-[#211a16] py-20">
+        <div class="max-w-screen-2xl mx-auto px-8">
+            <div class="flex justify-between items-baseline mb-12">
+                <h2 class="heading-font text-6xl">Notable Cases</h2>
+                <a href="#" onclick="alert('In a real site this would link to the full canon. For now, enjoy the atmosphere.')" 
+                   class="text-[#9c7a3f] flex items-center gap-x-2 hover:gap-x-4 text-sm uppercase">
+                    BROWSE THE FULL ARCHIVE 
+                    <span class="text-2xl">→</span>
+                </a>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Case 1 -->
+                <div class="case-card bg-[#1a1410] border border-[#9c7a3f]/30 p-8 group">
+                    <div class="text-4xl mb-6">🐶</div>
+                    <h3 class="heading-font text-3xl mb-2">The Hound of the Baskervilles</h3>
+                    <p class="text-[#d4b98a] mb-4">A spectral hound haunts the Devon moors. Holmes proves that legends can be manufactured.</p>
+                    <div class="text-xs uppercase text-[#9c7a3f] flex items-center justify-between">
+                        <span>1902</span>
+                        <span class="group-hover:text-white">★★★★★</span>
+                    </div>
+                </div>
+                
+                <!-- Case 2 -->
+                <div class="case-card bg-[#1a1410] border border-[#9c7a3f]/30 p-8 group">
+                    <div class="text-4xl mb-6">❤️</div>
+                    <h3 class="heading-font text-3xl mb-2">A Study in Scarlet</h3>
+                    <p class="text-[#d4b98a] mb-4">The very first case. A murdered man in an empty house. Blood writing on the wall. “Rache.”</p>
+                    <div class="text-xs uppercase text-[#9c7a3f] flex items-center justify-between">
+                        <span>1887</span>
+                        <span class="group-hover:text-white">★★★★☆</span>
+                    </div>
+                </div>
+                
+                <!-- Case 3 -->
+                <div class="case-card bg-[#1a1410] border border-[#9c7a3f]/30 p-8 group">
+                    <div class="text-4xl mb-6">💎</div>
+                    <h3 class="heading-font text-3xl mb-2">The Adventure of the Blue Carbuncle</h3>
+                    <p class="text-[#d4b98a] mb-4">A priceless gem hidden in a Christmas goose. Holmes solves it with a single hat.</p>
+                    <div class="text-xs uppercase text-[#9c7a3f] flex items-center justify-between">
+                        <span>1892</span>
+                        <span class="group-hover:text-white">★★★★★</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- COMPANIONS -->
+    <section id="companions" class="max-w-screen-2xl mx-auto px-8 py-24">
+        <h2 class="heading-font text-6xl text-center mb-16">Companions &amp; Adversaries</h2>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div class="text-center">
+                <div class="mx-auto w-28 h-28 bg-[#2c2118] rounded-2xl flex items-center justify-center text-6xl mb-6 border border-[#9c7a3f]/30">🩺</div>
+                <h4 class="heading-font text-2xl">Dr. John Watson</h4>
+                <p class="text-[#c8a77a]">Loyal friend, biographer, and occasional armed companion.</p>
+            </div>
+            <div class="text-center">
+                <div class="mx-auto w-28 h-28 bg-[#2c2118] rounded-2xl flex items-center justify-center text-6xl mb-6 border border-[#9c7a3f]/30">🧥</div>
+                <h4 class="heading-font text-2xl">Mrs. Hudson</h4>
+                <p class="text-[#c8a77a]">Long-suffering landlady who puts up with bullet holes in the wall.</p>
+            </div>
+            <div class="text-center">
+                <div class="mx-auto w-28 h-28 bg-[#2c2118] rounded-2xl flex items-center justify-center text-6xl mb-6 border border-[#9c7a3f]/30">☠️</div>
+                <h4 class="heading-font text-2xl">Professor James Moriarty</h4>
+                <p class="text-[#c8a77a]">The Napoleon of Crime. Holmes’ intellectual equal and greatest foe.</p>
+            </div>
+            <div class="text-center">
+                <div class="mx-auto w-28 h-28 bg-[#2c2118] rounded-2xl flex items-center justify-center text-6xl mb-6 border border-[#9c7a3f]/30">👦</div>
+                <h4 class="heading-font text-2xl">The Baker Street Irregulars</h4>
+                <p class="text-[#c8a77a]">Street urchins who serve as Holmes’ eyes and ears across London.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- DEDUCTION INTERACTIVE -->
+    <section id="deduction" class="bg-[#211a16] py-20">
+        <div class="max-w-screen-2xl mx-auto px-8">
+            <div class="max-w-2xl mx-auto text-center mb-12">
+                <span class="px-5 py-2 border border-[#9c7a3f] text-[#9c7a3f] text-sm uppercase">INTERACTIVE</span>
+                <h2 class="heading-font text-6xl mt-4">Test Your Powers of Deduction</h2>
+                <p class="text-[#d4b98a] mt-6">Enter three clues. Sherlock will deduce the truth.</p>
+            </div>
+            
+            <div class="max-w-xl mx-auto bg-[#1a1410] p-10 border border-[#9c7a3f]/40 rounded-3xl">
+                <div class="space-y-8">
+                    <div>
+                        <label class="block text-xs uppercase mb-2 text-[#9c7a3f]">Clue 1</label>
+                        <input id="clue1" type="text" placeholder="Left shoe shows unusual wear..." 
+                               class="w-full bg-transparent border border-[#9c7a3f]/30 focus:border-[#9c7a3f] px-5 py-4 text-lg outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase mb-2 text-[#9c7a3f]">Clue 2</label>
+                        <input id="clue2" type="text" placeholder="Faint smell of turpentine..." 
+                               class="w-full bg-transparent border border-[#9c7a3f]/30 focus:border-[#9c7a3f] px-5 py-4 text-lg outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase mb-2 text-[#9c7a3f]">Clue 3</label>
+                        <input id="clue3" type="text" placeholder="Callus on right thumb..." 
+                               class="w-full bg-transparent border border-[#9c7a3f]/30 focus:border-[#9c7a3f] px-5 py-4 text-lg outline-none">
+                    </div>
+                    
+                    <button onclick="performDeduction()" 
+                            class="w-full py-6 text-xl uppercase bg-[#9c7a3f] text-[#1a1410] font-medium tracking-widest">
+                        Deduce
+                    </button>
+                    
+                    <div id="deduction-result" class="min-h-[120px] text-center"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LEGACY -->
+    <section id="legacy" class="max-w-screen-2xl mx-auto px-8 py-24">
+        <div class="grid md:grid-cols-12 gap-y-12 items-center">
+            <div class="md:col-span-7">
+                <h2 class="heading-font text-6xl">A Legacy That Endures</h2>
+                <p class="mt-8 max-w-lg text-xl text-[#d4b98a]">
+                    More than 130 years after his first appearance, Sherlock Holmes remains the most portrayed literary character in film and television. 
+                    From Benedict Cumberbatch to Robert Downey Jr., the deerstalker and pipe continue to fascinate the world.
+                </p>
+                <div class="flex gap-8 mt-12">
+                    <div>
+                        <div class="text-5xl font-light">60+</div>
+                        <div class="uppercase text-xs">Feature films</div>
+                    </div>
+                    <div>
+                        <div class="text-5xl font-light">250+</div>
+                        <div class="uppercase text-xs">Television episodes</div>
+                    </div>
+                    <div>
+                        <div class="text-5xl font-light">∞</div>
+                        <div class="uppercase text-xs">Fan theories</div>
+                    </div>
+                </div>
+            </div>
+            <div class="md:col-span-5 text-right">
+                <blockquote class="text-3xl italic border-l-4 border-[#9c7a3f] pl-8">
+                    “The world is full of obvious things which nobody by any chance ever observes.”
+                </blockquote>
+                <cite class="block mt-6 text-[#9c7a3f]">— Sherlock Holmes</cite>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-black py-12 border-t border-[#9c7a3f]/10">
+        <div class="max-w-screen-2xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center text-sm">
+            <div class="flex items-center gap-x-3">
+                <span class="text-[#9c7a3f]">Built as a digital homage</span>
+                <span class="text-2xl">🔍</span>
+                <span>by Grok • for EdgeTypE</span>
+            </div>
+            
+            <div class="text-[#9c7a3f]/60 text-xs mt-6 md:mt-0">
+                “There is nothing more stimulating than a case that baffles the official police.” 
+                <span class="block text-right">— The Adventure of the Dancing Men</span>
+            </div>
+            
+            <div onclick="window.location.reload()" class="cursor-pointer flex items-center text-xs uppercase mt-6 md:mt-0">
+                RETURN TO BAKER STREET
+                <span class="ml-3 text-xl">🏠</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tailwind script initialization
+        function initializeTailwind() {
+            return {
+                config(userConfig = {}) {
+                    return {
+                        content: [],
+                        theme: {
+                            extend: {}
+                        },
+                        plugins: [],
+                        ...userConfig,
+                    }
+                },
+                theme: {
+                    extend: {}
+                }
+            }
+        }
+        
+        // Run Tailwind
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeTailwind()
+            console.log('%c🔍 221B Baker Street website loaded successfully', 'color:#9c7a3f; font-family:monospace')
+        })
+        
+        // Scroll helper
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' })
+        }
+        
+        // The Game is Afoot button
+        function theGameIsAfoot() {
+            const messages = [
+                "The game is afoot, my dear fellow!",
+                "Come, Watson, come! The game is afoot.",
+                "There is no crime to detect, or at least no crime of the type you imagine.",
+                "Quickly! The hansom is waiting."
+            ]
+            alert(messages[Math.floor(Math.random() * messages.length)])
+        }
+        
+        // Pipe animation
+        function togglePipe() {
+            const pipe = document.createElement('div')
+            pipe.textContent = '💨'
+            pipe.style.position = 'fixed'
+            pipe.style.left = Math.random() * window.innerWidth + 'px'
+            pipe.style.bottom = '100px'
+            pipe.style.fontSize = '40px'
+            pipe.style.zIndex = '9999'
+            pipe.style.opacity = '0'
+            document.body.appendChild(pipe)
+            
+            let y = 100
+            const interval = setInterval(() => {
+                y -= 8
+                pipe.style.transform = `translateY(-${y}px)`
+                pipe.style.opacity = (y / 300).toString()
+                if (y < -300) {
+                    clearInterval(interval)
+                    pipe.remove()
+                }
+            }, 30)
+            
+            setTimeout(() => pipe.remove(), 4000)
+        }
+        
+        // Deduction engine
+        function performDeduction() {
+            const c1 = document.getElementById('clue1').value.trim() || "unusual wear on the left shoe"
+            const c2 = document.getElementById('clue2').value.trim() || "faint smell of turpentine"
+            const c3 = document.getElementById('clue3').value.trim() || "callus on the right thumb"
+            
+            const resultDiv = document.getElementById('deduction-result')
+            
+            resultDiv.innerHTML = `
+                <div class="deduction bg-[#2c2118] border border-[#9c7a3f] p-8 rounded-3xl text-left">
+                    <div class="flex items-center gap-x-4 mb-6">
+                        <span class="text-4xl">🔍</span>
+                        <h3 class="heading-font text-4xl text-[#9c7a3f]">My deduction, Watson…</h3>
+                    </div>
+                    <p class="text-[#d4b98a] text-xl leading-tight">
+                        You have recently visited an art studio. The unusual wear on your left shoe indicates you walked from a gravel path near a train station. 
+                        The callus on your right thumb suggests you are a writer. And that faint smell of turpentine confirms you were painting earlier today.
+                    </p>
+                    <p class="mt-8 text-xs uppercase text-[#9c7a3f]">— Elementary.</p>
+                    <div class="text-[10px] text-[#c8a77a] mt-8 flex justify-between">
+                        <span>Clues processed in 0.004 seconds</span>
+                        <span>Accuracy: 98.7%</span>
+                    </div>
+                </div>
+            `
+            // Random fun variation
+            if (Math.random() > 0.8) {
+                setTimeout(() => {
+                    resultDiv.querySelector('p').innerHTML += `<br><br><span class="text-[#9c7a3f] italic">You also appear to be the one who requested this very website.</span>`
+                }, 1800)
+            }
+        }
+        
+        console.log('%c✅ Sherlock Holmes website ready for your perusal.', 'color:#9c7a3f; font-size:13px')
+    </script>
+</body>
+</html>
