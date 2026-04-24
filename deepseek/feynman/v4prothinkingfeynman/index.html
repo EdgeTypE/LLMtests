@@ -1,0 +1,129 @@
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feynman'ın Defteri — Merakın İzinde</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Courier+Prime&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Chalk dust particles -->
+    <div class="chalk-dust" aria-hidden="true"></div>
+
+    <!-- Header / Blackboard top -->
+    <header class="header">
+        <div class="header-inner">
+            <a href="#" class="logo-link" data-route="home">
+                <h1 class="site-title">Feynman'ın<br>Defteri</h1>
+            </a>
+            <p class="tagline">"Her şey ilginçtir — yeterince yakından bakarsan."</p>
+            <div class="header-doodle">
+                <svg width="120" height="60" viewBox="0 0 120 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 30 Q30 5 50 30 Q70 55 90 30 Q100 18 110 30" stroke="#e8c547" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+                    <circle cx="60" cy="28" r="3" fill="#e8c547" opacity="0.5"/>
+                    <circle cx="60" cy="28" r="8" stroke="#e8c547" stroke-width="0.8" fill="none" opacity="0.4"/>
+                    <text x="55" y="50" font-family="Caveat, cursive" font-size="10" fill="#d4745c" opacity="0.6">~RF</text>
+                </svg>
+            </div>
+        </div>
+        <!-- Mobile menu toggle -->
+        <button class="menu-toggle" id="menuToggle" aria-label="Menüyü aç">
+            <span></span><span></span><span></span>
+        </button>
+    </header>
+
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <nav class="sidebar-nav">
+                <h2 class="sidebar-title">Kategoriler</h2>
+                <ul class="category-list" id="categoryList">
+                    <!-- Filled by JS -->
+                </ul>
+                <div class="sidebar-footer">
+                    <p class="sidebar-quote">"Bilmediğini bilmek,<br>bilginin başlangıcıdır."</p>
+                    <div class="sidebar-doodle">
+                        <svg width="60" height="40" viewBox="0 0 60 40" fill="none">
+                            <path d="M5 35 C15 10, 25 10, 30 20 C35 30, 45 30, 55 15" stroke="#e8c547" stroke-width="1" fill="none" opacity="0.5"/>
+                        </svg>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Overlay for mobile sidebar -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Main content -->
+        <main class="main" id="mainContent">
+            <!-- Home view -->
+            <section id="view-home" class="view active">
+                <div class="welcome-card">
+                    <h2 class="welcome-title">Merhaba, meraklı insan!</h2>
+                    <p class="welcome-text">
+                        Ben <strong>Richard Feynman</strong>. Fizikçiyim, hikaye anlatıcısıyım, bongo çalarım, 
+                        ve her şeyden önce — <em>meraklı bir insanım</em>. Bu defterde bilim, sanat, 
+                        tarih, teknoloji ve aklıma gelen her şey hakkında yazıyorum. 
+                        Karmaşık laflar yok, jargon yok. Sadece gerçek merak ve dürüst sorular.
+                    </p>
+                    <p class="welcome-text">
+                        Bir şeyi gerçekten anlamak istiyorsan, onu birinci sınıf öğrencisine 
+                        anlatabilmelisin. Ben de öyle yapıyorum. Hadi, birlikte keşfedelim.
+                    </p>
+                    <div class="welcome-doodle">
+                        <svg width="200" height="80" viewBox="0 0 200 80" fill="none">
+                            <!-- Simple Feynman diagram -->
+                            <line x1="20" y1="40" x2="80" y2="40" stroke="#f0ead6" stroke-width="1.5"/>
+                            <line x1="80" y1="40" x2="130" y2="20" stroke="#f0ead6" stroke-width="1"/>
+                            <line x1="80" y1="40" x2="130" y2="60" stroke="#f0ead6" stroke-width="1"/>
+                            <line x1="130" y1="20" x2="180" y2="40" stroke="#f0ead6" stroke-width="1.5"/>
+                            <line x1="130" y1="60" x2="180" y2="40" stroke="#f0ead6" stroke-width="1.5"/>
+                            <circle cx="80" cy="40" r="4" fill="#e8c547" opacity="0.7"/>
+                            <circle cx="130" cy="20" r="3" fill="#d4745c" opacity="0.7"/>
+                            <circle cx="130" cy="60" r="3" fill="#a8d8ea" opacity="0.7"/>
+                            <text x="90" y="75" font-family="Caveat, cursive" font-size="9" fill="#f0ead6" opacity="0.5">Bir Feynman diyagramı — elektronlar ve fotonlar dans ediyor</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="section-header">
+                    <h2 class="section-title">Son Yazılar</h2>
+                    <div class="chalk-line"></div>
+                </div>
+                <div class="post-grid" id="recentPosts">
+                    <!-- Filled by JS -->
+                </div>
+            </section>
+
+            <!-- Category view -->
+            <section id="view-category" class="view">
+                <div class="section-header">
+                    <h2 class="section-title" id="categoryTitle">Kategori</h2>
+                    <div class="chalk-line"></div>
+                </div>
+                <button class="back-btn" data-route="home">← Deftere Dön</button>
+                <div class="post-grid" id="categoryPosts">
+                    <!-- Filled by JS -->
+                </div>
+            </section>
+
+            <!-- Single post view -->
+            <section id="view-post" class="view">
+                <button class="back-btn" id="postBackBtn">← Geri</button>
+                <article class="post-full" id="postFull">
+                    <!-- Filled by JS -->
+                </article>
+            </section>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <p>© Feynman'ın Defteri — Merak hiç bitmez. | "Hiçbir şeyi ciddiye alma, ama her şeyi merak et."</p>
+    </footer>
+
+    <script src="js/data.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

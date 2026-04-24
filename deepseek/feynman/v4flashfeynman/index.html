@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feynman'ın Bilim Defteri</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+               ROOT & RESET
+            ============================================================ */
+        :root {
+            --paper: #f5f0e8;
+            --paper-dark: #e8e0d0;
+            --ink: #2c2416;
+            --ink-light: #6b5d4a;
+            --accent: #b8452c;
+            --accent-soft: #d97a5a;
+            --blue: #1e3a8a;
+            --shadow: rgba(44, 36, 22, 0.12);
+            --font-display: 'Caveat', cursive;
+            --font-body: 'Source Serif 4', Georgia, serif;
+            --max-width: 1200px;
+            --header-h: 80px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--paper);
+            color: var(--ink);
+            font-family: var(--font-body);
+            font-weight: 300;
+            line-height: 1.7;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ============================================================
+               NOISE TEXTURE OVERLAY
+            ============================================================ */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9999;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px 256px;
+            opacity: 0.3;
+        }
+
+        /* ============================================================
+               SKETCHY SCROLLBAR
+            ============================================================ */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--paper-dark);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--ink-light);
+            border-radius: 0;
+            border: 2px solid var(--paper);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--ink);
+        }
+
+        /* ============================================================
+               HEADER / NAV
+            ============================================================ */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-h);
+            background: var(--paper);
+            border-bottom: 2px solid var(--ink);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 1000;
+            box-shadow: 0 2px 12px var(--shadow);
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--ink);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.2s;
+        }
+        .logo:hover {
+            color: var(--accent);
+        }
+        .logo-icon {
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            flex-wrap: wrap;
+            max-width: 70%;
+            justify-content: flex-end;
+        }
+
+        .nav-btn {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: transparent;
+            border: none;
+            color: var(--ink-light);
+            padding: 0.4rem 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 0;
+            position: relative;
+            white-space: nowrap;
+        }
+        .nav-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: all 0.25s ease;
+            transform: translateX(-50%);
+        }
+        .nav-btn:hover {
+            color: var(--ink);
+        }
+        .nav-btn:hover::after,
+        .nav-btn.active::after {
+            width: 70%;
+        }
+        .nav-btn.active {
+            color: var(--ink);
+            font-weight: 700;
+        }
+
+        /* ============================================================
+               HERO SECTION (home)
+            ============================================================ */
+        .hero {
+            margin-top: var(--header-h);
+            min-height: calc(100vh - var(--header-h));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 4rem 2rem 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg-sketch {
+            position: absolute;
+            inset: 0;
+            opacity: 0.06;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 20% 30%, var(--ink) 1px, transparent 1px),
+                radial-gradient(circle at 80% 70%, var(--ink) 1px, transparent 1px),
+                radial-gradient(circle at 45% 50%, var(--ink) 0.5px, transparent 0.5px);
+            background-size: 60px 60px, 80px 80px, 40px 40px;
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--ink);
+            max-width: 900px;
+            position: relative;
+            z-index: 1;
+        }
+        .hero h1 .accent {
+            color: var(--accent);
+            text-decoration: underline wavy var(--accent-soft) 2px;
+            text-underline-offset: 8px;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--ink-light);
+            max-width: 650px;
+            margin: 1.5rem auto 2rem;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-cta {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 600;
+            background: var(--ink);
+            color: var(--paper);
+            border: none;
+            padding: 0.8rem 2.4rem;
+            cursor: pointer;
+            transition: all 0.25s;
+            position: relative;
+            z-index: 1;
+            box-shadow: 6px 6px 0 var(--accent);
+        }
+        .hero-cta:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 10px 10px 0 var(--accent);
+        }
+
+        /* ============================================================
+               FEYNMAN QUOTE TICKER
+            ============================================================ */
+        .quote-ticker {
+            background: var(--paper-dark);
+            border-top: 1px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 0.8rem 2rem;
+            overflow: hidden;
+            position: relative;
+        }
+        .quote-ticker-inner {
+            display: flex;
+            gap: 4rem;
+            animation: ticker 30s linear infinite;
+            width: max-content;
+        }
+        .quote-ticker-inner span {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            color: var(--ink);
+            white-space: nowrap;
+        }
+        .quote-ticker-inner span em {
+            color: var(--accent);
+            font-style: normal;
+        }
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ============================================================
+               MAIN CONTENT AREA
+            ============================================================ */
+        .main-content {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 3rem 2rem 5rem;
+        }
+
+        /* ============================================================
+               CATEGORY GRID (home)
+            ============================================================ */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .cat-card {
+            background: var(--paper);
+            border: 2px solid var(--ink);
+            padding: 1.8rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+            box-shadow: 4px 4px 0 var(--shadow);
+        }
+        .cat-card:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 8px 8px 0 var(--shadow);
+            border-color: var(--accent);
+        }
+        .cat-card:active {
+            transform: translate(0, 0);
+            box-shadow: 2px 2px 0 var(--shadow);
+        }
+
+        .cat-card .cat-icon {
+            font-size: 2.2rem;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+        .cat-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--ink);
+        }
+        .cat-card p {
+            font-size: 0.95rem;
+            color: var(--ink-light);
+            margin-top: 0.3rem;
+            font-style: italic;
+        }
+        .cat-card .cat-count {
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            color: var(--accent);
+            margin-top: 0.8rem;
+            display: inline-block;
+            border-bottom: 1px dashed var(--accent-soft);
+        }
+
+        /* ============================================================
+               ARTICLES LIST (category view)
+            ============================================================ */
+        .category-view {
+            display: none;
+        }
+        .category-view.active {
+            display: block;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px dashed var(--ink-light);
+        }
+        .category-header .back-btn {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            background: none;
+            border: none;
+            color: var(--ink-light);
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 0.2rem 0.5rem;
+        }
+        .category-header .back-btn:hover {
+            color: var(--ink);
+        }
+        .category-header h2 {
+            font-family: var(--font-display);
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--ink);
+        }
+        .category-header .cat-icon-lg {
+            font-size: 2rem;
+        }
+
+        .articles-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .article-card {
+            background: var(--paper);
+            border: 1px solid var(--ink-light);
+            padding: 1.5rem 2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        .article-card:hover {
+            border-color: var(--ink);
+            background: var(--paper-dark);
+            transform: translateX(4px);
+        }
+        .article-card:active {
+            transform: translateX(2px);
+        }
+
+        .article-card .art-date {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            color: var(--ink-light);
+        }
+        .article-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--ink);
+        }
+        .article-card p {
+            font-size: 0.95rem;
+            color: var(--ink-light);
+        }
+        .article-card .read-more {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            color: var(--accent);
+            align-self: flex-start;
+            margin-top: 0.3rem;
+        }
+        .article-card .read-more::after {
+            content: ' →';
+            transition: margin 0.2s;
+        }
+        .article-card:hover .read-more::after {
+            margin-left: 6px;
+        }
+
+        /* ============================================================
+               ARTICLE DETAIL VIEW
+            ============================================================ */
+        .article-detail {
+            display: none;
+        }
+        .article-detail.active {
+            display: block;
+        }
+
+        .article-detail .back-link {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            color: var(--ink-light);
+            cursor: pointer;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            transition: color 0.2s;
+            background: none;
+            border: none;
+        }
+        .article-detail .back-link:hover {
+            color: var(--ink);
+        }
+
+        .article-detail article {
+            max-width: 780px;
+            margin: 0 auto;
+        }
+
+        .article-detail .art-meta {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            color: var(--ink-light);
+            margin-bottom: 0.5rem;
+        }
+        .article-detail h1 {
+            font-family: var(--font-display);
+            font-size: 2.8rem;
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--ink);
+            margin-bottom: 1.5rem;
+        }
+        .article-detail .art-body {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--ink);
+        }
+        .article-detail .art-body p {
+            margin-bottom: 1.2rem;
+        }
+        .article-detail .art-body blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: 1.5rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+            color: var(--ink-light);
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+        }
+        .article-detail .art-body .feynman-note {
+            background: var(--paper-dark);
+            border: 1px dashed var(--ink-light);
+            padding: 1.2rem 1.5rem;
+            margin: 1.5rem 0;
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            position: relative;
+        }
+        .article-detail .art-body .feynman-note::before {
+            content: '✏️ Feynman\'ın notu:';
+            display: block;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.3rem;
+        }
+
+        /* ============================================================
+               FOOTER
+            ============================================================ */
+        footer {
+            border-top: 2px solid var(--ink);
+            background: var(--paper-dark);
+            padding: 2rem 2rem 1.5rem;
+            text-align: center;
+        }
+        footer p {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            color: var(--ink-light);
+        }
+        footer .footer-quote {
+            font-size: 1.15rem;
+            color: var(--ink);
+            margin-bottom: 0.5rem;
+        }
+        footer .footer-quote em {
+            color: var(--accent);
+        }
+
+        /* ============================================================
+               RESPONSIVE
+            ============================================================ */
+        @media (max-width: 820px) {
+            header {
+                padding: 0 1rem;
+                height: auto;
+                min-height: 70px;
+                flex-wrap: wrap;
+                gap: 0.3rem;
+            }
+            .logo {
+                font-size: 1.4rem;
+            }
+            nav {
+                max-width: 100%;
+                justify-content: center;
+                padding-bottom: 0.5rem;
+            }
+            .nav-btn {
+                font-size: 0.95rem;
+                padding: 0.3rem 0.6rem;
+            }
+            .hero {
+                padding: 6rem 1.5rem 3rem;
+                min-height: auto;
+            }
+            .hero h1 {
+                font-size: clamp(2rem, 7vw, 3.5rem);
+            }
+            .category-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+            }
+            .article-detail h1 {
+                font-size: 2rem;
+            }
+            .article-card {
+                padding: 1rem 1.2rem;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+            .quote-ticker-inner span {
+                font-size: 0.9rem;
+            }
+            .main-content {
+                padding: 2rem 1rem 3rem;
+            }
+        }
+
+        /* ============================================================
+               UTILITY / ANIMATIONS
+            ============================================================ */
+        .fade-in {
+            animation: fadeIn 0.4s ease forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================
+    HEADER
+    ============================================================ -->
+    <header>
+        <div class="logo" id="logoBtn">
+            <span class="logo-icon">⚛</span>
+            Feynman'ın Defteri
+        </div>
+        <nav id="mainNav">
+            <button class="nav-btn active" data-category="home">Ana Sayfa</button>
+            <button class="nav-btn" data-category="fizik">🔭 Fizik</button>
+            <button class="nav-btn" data-category="tarih">📜 Tarih</button>
+            <button class="nav-btn" data-category="ekonomi">📊 Ekonomi</button>
+            <button class="nav-btn" data-category="teknoloji">💻 Teknoloji</button>
+            <button class="nav-btn" data-category="yapay-zeka">🧠 YZ</button>
+            <button class="nav-btn" data-category="biyoloji">🧬 Biyoloji</button>
+            <button class="nav-btn" data-category="sanat">🎨 Sanat</button>
+            <button class="nav-btn" data-category="psikoloji">🧩 Psikoloji</button>
+        </nav>
+    </header>
+
+    <!-- ============================================================
+    QUOTE TICKER
+    ============================================================ -->
+    <div class="quote-ticker">
+        <div class="quote-ticker-inner" id="tickerInner">
+            <!-- quotes will be injected by JS -->
+        </div>
+    </div>
+
+    <!-- ============================================================
+    MAIN
+    ============================================================ -->
+    <main class="main-content" id="mainContent">
+
+        <!-- HOME VIEW -->
+        <div id="viewHome" class="fade-in">
+            <section class="hero" style="margin-top:0; min-height:auto; padding:2rem 0 3rem;">
+                <div class="hero-bg-sketch"></div>
+                <h1>Merak etmek,<br>anlamanın <span class="accent">ta kendisidir</span>.</h1>
+                <p>
+                    "Bilmiyorum" diyebilmek, bilimin başlangıcıdır. 
+                    Bu defterde fizikten sanata, tarihten yapay zekaya kadar 
+                    aklıma takılan her şeyi karalıyorum. Katılmak ister misin?
+                </p>
+                <button class="hero-cta" onclick="scrollToCategories()">
+                    ↓ Defteri Karıştır
+                </button>
+            </section>
+
+            <div style="text-align:center; margin-bottom:1rem;" id="catSection">
+                <h2 style="font-family:var(--font-display); font-size:2rem; font-weight:700;">
+                    Kategoriler
+                </h2>
+                <p style="color:var(--ink-light); font-style:italic;">
+                    Hangi konuda kafa yoralım?
+                </p>
+            </div>
+
+            <div class="category-grid" id="homeGrid">
+                <!-- filled by JS -->
+            </div>
+        </div>
+
+        <!-- CATEGORY VIEW -->
+        <div id="viewCategory" class="category-view">
+            <div class="category-header">
+                <button class="back-btn" id="catBackBtn">← Geri</button>
+                <span class="cat-icon-lg" id="catIconHeader"></span>
+                <h2 id="catTitleHeader"></h2>
+            </div>
+            <div class="articles-list" id="articlesList">
+                <!-- filled by JS -->
+            </div>
+        </div>
+
+        <!-- ARTICLE DETAIL VIEW -->
+        <div id="viewArticle" class="article-detail">
+            <button class="back-link" id="artBackBtn">← Kategoriye Dön</button>
+            <article id="articleContent">
+                <!-- filled by JS -->
+            </article>
+        </div>
+
+    </main>
+
+    <!-- ============================================================
+    FOOTER
+    ============================================================ -->
+    <footer>
+        <p class="footer-quote">
+            "Bilim, bir şeyi <em>anlamadığını</em> itiraf edebilmektir." 
+            — Richard Feynman
+        </p>
+        <p>⚛ Feynman'ın Bilim Defteri · Merakla yazıldı, merakla okunur.</p>
+    </footer>
+
+    <script>
+        // ============================================================
+        // DATA
+        // ============================================================
+        const CATEGORIES = [
+            { id: 'fizik', icon: '🔭', label: 'Fizik & Astronomi', desc: 'Kuantumdan kara deliklere, ışığın gizeminden evrenin dokusuna.' },
+            { id: 'tarih', icon: '📜', label: 'Tarih', desc: 'Geçmişin tozlu sayfaları, kırık medeniyetler ve unutulmuş dersler.' },
+            { id: 'ekonomi', icon: '📊', label: 'İktisat & Ekonomi', desc: 'Para, piyasalar, krizler ve görünmez elin oyunları.' },
+            { id: 'teknoloji', icon: '💻', label: 'Teknoloji', desc: 'Aletler, icatlar ve insanın kendi kendini aşma hikâyesi.' },
+            { id: 'yapay-zeka', icon: '🧠', label: 'Bilgisayar & YZ', desc: 'Düşünen makineler, algoritmalar ve zekânın sınırları.' },
+            { id: 'biyoloji', icon: '🧬', label: 'Evrim & Genetik', desc: 'Yaşamın kendini yazma şekli: DNA, doğal seçilim, hücreler.' },
+            { id: 'sanat', icon: '🎨', label: 'Sanat', desc: 'Resim, müzik, heykel — hissetmenin ve anlatmanın bin hâli.' },
+            { id: 'psikoloji', icon: '🧩', label: 'Psikoloji', desc: 'Zihnin labirentleri, algı oyunları ve insan olmanın sırrı.' },
+            { id: 'mitoloji', icon: '🏛️', label: 'Mitoloji', desc: 'Tanrılar, kahramanlar ve insanlığın en eski hikâyeleri.' },
+            { id: 'denemeler', icon: '✍️', label: 'Denemeler', desc: 'Rastgele düşünceler, kenar notları, iç dökümleri.' },
+            { id: 'ceviriler', icon: '🌍', label: 'Çeviriler', desc: 'Başka dillerden, başka zamanlardan seçme yazılar.' }
+        ];
+
+        const QUOTES = [
+            '"Bilmiyorum" demekten korkma. İşte bilim orada başlar.',
+            'Doğa, sen ona nasıl soru soracağını öğrenene kadar cevap vermez.',
+            'Fizik, tıpkı seks gibidir: pratik yapmak işe yarayabilir, ama asıl zevk anlamaktan gelir.',
+            'Hayal gücü, bilgiden daha önemlidir. Bilgi sınırlıdır.',
+            'Bir şeyi basitçe açıklayamıyorsan, onu yeterince iyi anlamamışsın demektir.',
+            'Evren yalnızca bir olasılık dansıdır ve biz de bu dansın bir parçasıyız.',
+            'Her şey atomlardan oluşur. Atomlar da titreşir. Yani her şey bir müzik.',
+            'Merak etmekten asla vazgeçme. Her şeyin altında bir hikâye var.'
+        ];
+
+        // Articles database
+        const ARTICLES = {
+            fizik: [
+                { id: 'f1', title: 'Işık Neden Bu Kadar Tembel?', date: '14 Nisan 2025',
+                    summary: 'Fotonlar neden her zaman ışık hızında gitmek zorunda? Peki ya durmak isteseler?',
+                    body: `<p>Bir keresinde, Caltech'teki odamda otururken pencereden süzülen bir ışık huzmesine takıldı gözüm. Güneş, sekiz dakika önce yola çıkmıştı. Tam sekiz dakika boyunca hiçbir şey onu durduramamıştı. Ne bir toz tanesi, ne bir manyetik alan. Işık, adeta bir görev adamı gibi, hedefine kilitlenmişti.</p>
+                    <p>Ama işin ilginç yanı şu: Işık neden hep aynı hızda gitmek zorunda? Ona "yavaşla" desem ne olur? Cevap: Yavaşlayamaz. Çünkü fotonun kütlesi yok. Kütlesi olmayan bir şey için "hız" bir seçenek değil, bir <em>zorunluluk</em>. Durmak ya da yavaşlamak diye bir lüksü yok.</p>
+                    <blockquote>"Işığa sorarsanız, var olduğu andan itibaren her yere aynı anda varmıştır. Zaman onun için geçmez."</blockquote>
+                    <p>Einstein'ın özel göreliliği bunu söylüyor: Işık hızında giden bir şey için zaman durur. Yani bir foton, Güneş'ten çıkıp gözüme gelene kadar geçen sekiz dakikayı <em>hissetmez</em>. Onun için anlık bir yolculuktur bu.</p>
+                    <div class="feynman-note">
+                        Feynman'ın notu: Bunu düşünmek insanın aklını başından alıyor, değil mi? Bir şey düşünün: var olduğu an, her yere varmış oluyor. Zamanın olmadığı bir varoluş. Kuantum mekaniğinde buna benzer şeyler var — bir parçacık, gözlenene kadar her yerde olabilir. Işık da öyle. Ama fotonu "gözlemlediğiniz" an (yani ona çarptığınız an), işte o zaman bir yere çakılır. Tıpkı hayattaki bazı kararlar gibi.
+                    </div>
+                    <p>Peki ya ışık bir ortamda yavaşlarsa? Suya girdiğinde hızı düşer. Ama bu "yavaşlama" değildir. Foton su moleküllerine çarpar, soğrulur ve yeniden yayılır. Bu süreç gecikme yaratır. Fotonun kendisi hâlâ c hızındadır. Sadece dolambaçlı bir yol izler.</p>
+                    <p>Işık tembel değildir. Işık, evrenin hız sınırını belirleyen trafik polisidir. Ve kuralları asla esnetmez.</p>`
+                },
+                { id: 'f2', title: 'Kuantum Sıçraması: Bir Atomun İntiharı', date: '2 Nisan 2025',
+                    summary: 'Bir elektron yörüngeden yörüngeye atlarken arada nerede? Hiçbir yerde. İşte kuantum bu kadar tuha.',
+                    body: `<p>Kuantum mekaniğini ilk duyduğumda, "Bu saçmalık" demiştim. Sonra kanıtları gördüm. Doğa, bizim saçma bulmamızı umursamıyor. O sadece işliyor.</p>
+                    <p>Bir elektron, atom çekirdeğinin etrafında belirli yörüngelerde bulunur. Ama bu yörüngeler tıpkı bir merdivenin basamakları gibidir — aralarında asla bulunmazsın. Elektron bir basamaktan diğerine "atlar". Ama işin can alıcı noktası: Atlama sırasında nerede olduğunu sorarsanız, cevap "hiçbir yerde"dir. Fiziksel bir konumu yoktur.</p>
+                    <blockquote>"Kuantum mekaniğini anladığınızı düşünüyorsanız, kuantum mekaniğini anlamıyorsunuz demektir."</blockquote>
+                    <p>Bu atlama, klasik fizikteki gibi bir hareket değil. Bir an burada, bir an orada. Arada geçen süre yok. Sanki elektron bir yerden silinip başka bir yerde yaratılıyor. İşte bu yüzden kuantum sıçraması deriz.</p>
+                    <div class="feynman-note">
+                        Bunu bir türlü kabullenemeyenler için bir hikâyem var: Bir öğrencim bana "Ama arada bir yerde olmalı!" diye tutturmuştu. Ona dedim ki: "Doğaya sor. Deney yap. Deney sana 'hayır, arada bir yerde değil' derse, sen de kabul edeceksin." Bilim böyledir. Doğa ne derse o.
+                    </div>
+                    <p>Bu sıçramalar, atomların neden ışık yaydığını da açıklar. Elektron üst enerji seviyesinden alt seviyeye atlarken, aradaki enerji farkını bir foton olarak salar. İşte lambanızdaki ışık, milyarlarca atomun içindeki elektronların bu "intihar atlayışları" sayesinde var olur.</p>
+                    <p>Her gördüğünüz ışık, bir elektronun ölümü ve bir fotonun doğumudur. Ne kadar şiirsel, değil mi?</p>`
+                },
+                { id: 'f3', title: 'Kara Delikler: Uzayın Yırtıldığı Yer', date: '18 Mart 2025',
+                    summary: 'Kütleçekimin o kadar güçlü olduğu bir yer düşün ki ışık bile kaçamasın. İçeride ne var? Bilmiyoruz. Ama tahmin etmek çok eğlenceli.',
+                    body: `<p>Bir yıldız, yakıtını tükettiğinde kendi kütleçekimine yenik düşer. Eğer kütlesi yeterince büyükse, çöküş durdurulamaz. Tüm madde tek bir noktaya sıkışır: tekillik. O noktanın çevresinde, olay ufku denilen bir sınır oluşur. Bu sınırın içinden hiçbir şey, <em>hiçbir şey</em> kaçamaz.</p>
+                    <blockquote>"Bir kara deliğin içinde ne olduğunu bilmiyorum. Ama bilmediğimi bilmek, bilmediğimi sanmaktan iyidir."</blockquote>
+                    <p>İşin en heyecan verici yanı: Kara delikler sandığımız kadar "kara" değil. Stephen Hawking, kara deliklerin aslında bir tür radyasyon yaydığını gösterdi. Hawking radyasyonu. Bu, kara deliklerin yavaşça buharlaştığı anlamına gelir. Milyarlarca yıl sonra, bir kara delik tamamen yok olabilir. Peki içine düşen bilgiye ne olur? İşte bu, fizikçileri hâlâ uğraştıran büyük bir muamma.</p>
+                    <div class="feynman-note">
+                        Bir keresinde bir arkadaşım "Kara deliğe düşsen ne olur?" diye sordu. Dedim ki: "Önce parçalanırsın. Atomlarına ayrılırsın. Sonra da o bilgi nereye gidiyor, onu düşünmeye başlarsın. Ama bunu düşünürken bile başka sorular gelir aklına. İşte bilim böyle bir şey. Bir soru, bin soru doğurur."
+                    </div>
+                    <p>Kara delikler, evrenin en uç noktaları. Belki de başka evrenlere açılan kapılar. Ya da belki sadece birer mezar taşı. Ama kesin olan bir şey var: Onlar, fizik yasalarının sınırlarını zorlamamızı sağlayan en güzel laboratuvarlar.</p>`
+                }
+            ],
+            tarih: [
+                { id: 't1', title: 'Antik Yunan\'da Bir Fizikçi: Demokritos\'un Atomları', date: '10 Nisan 2025',
+                    summary: 'MÖ 400\'lerde bir adam, her şeyin görünmez parçacıklardan oluştuğunu söyledi. Kimse ona inanmadı. Ama haklıydı.',
+                    body: `<p>Demokritos... İsmini duyunca gülümsüyorum. Çünkü o, atom fikrini ortaya atan ilk insan. Hem de bundan 2400 yıl önce. Elinde ne bir mikroskop vardı ne de bir hızlandırıcı. Sadece aklı ve merakı.</p>
+                    <p>Demokritos şöyle düşünmüştü: Bir elmayı defalarca ikiye bölerseniz, en sonunda öyle bir noktaya gelirsiniz ki artık bölemezsiniz. İşte o noktaya "atom" adını verdi. Yunanca "bölünemez" demek.</p>
+                    <blockquote>"Hiçbir şey yoktan var olmaz. Var olan hiçbir şey yok olmaz. Her şey atomların birleşmesi ve ayrışmasından ibarettir." — Demokritos</blockquote>
+                    <div class="feynman-note">
+                        Demokritos'u düşündükçe insanın içi açılıyor. Hiçbir deney yapmadan, sadece mantık yürüterek bu noktaya varmak... İşte bu, gerçek bir bilim insanının nasıl düşünmesi gerektiğini gösteriyor. Tabii ondan sonra gelen Aristoteles "hayır, her şey toprak, hava, ateş ve sudan oluşur" deyince, atom fikri 2000 yıl boyunca rafa kalktı. Ama doğa, yanlış fikirlere uzun süre izin vermez. Dalton, 1800'lerde atomu yeniden keşfetti. Ve haklı olan yine Demokritos'du.
+                    </div>
+                    <p>Demokritos'un atomları, bugün bildiğimiz atomlardan çok farklı. Ama temel fikir aynı: Her şey, görünmeyen küçük yapı taşlarından oluşur. Bugün kuantum mekaniğiyle uğraşırken, 2400 yıl önce bir Yunanlının aklından geçenleri düşünüyorum. Ne kadar ileri görüşlü bir insan.</p>
+                    <p>Onun en sevdiğim sözü: "Bir neden olmaksızın hiçbir şey olmaz. Her şey bir nedene ve zorunluluğa bağlı olarak olur." İşte bilim tam olarak budur. Her şeyin bir nedeni vardır. Sadece onu bulmak gerek.</p>`
+                },
+                { id: 't2', title: 'Bilimin İslam Altın Çağı: Harezmi\'nin Mirası', date: '28 Mart 2025',
+                    summary: 'Cebirin babası, algoritmaların dedesi. 9. yüzyılda Bağdat\'ta bir bilim insanı, modern dünyanın temellerini attı.',
+                    body: `<p>Harezmi. Adını duyunca aklınıza ne geliyor? Muhtemelen "algoritma" kelimesi. Evet, onun ismi, bugün kullandığımız "algorithm" kelimesine dönüştü. Ama Harezmi'nin katkıları bununla sınırlı değil.</p>
+                    <p>9. yüzyılda Bağdat'taki Beyt'ül Hikmet'te (Bilgelik Evi) çalışan Harezmi, Hint rakamlarını (0-9) alıp onları sistematize etti. "El-Kitab'ül Muhtasar fi Hisab'il Cebr ve'l Mukabele" adlı eseri, cebirin temelini attı. Kitabın adındaki "Cebr" kelimesi, bugünkü "algebra"nın kökenidir.</p>
+                    <blockquote>"Cebir, bilinmeyeni bulma sanatıdır. Tıpkı bir bilmeceyi çözer gibi."</blockquote>
+                    <div class="feynman-note">
+                        Harezmi'nin yöntemini çok severim. Bir problemi alır, onu küçük adımlara böler ve her adımda ne yapacağını açıkça söyler. İşte bu, bugün "algoritmik düşünme" dediğimiz şeyin ta kendisi. Bilgisayar biliminin temelinde bu yatar: Karmaşık bir problemi, basit, tekrarlanabilir adımlarla çözmek. Harezmi bunu 1200 yıl önce yapmıştı. Onun dehası, matematiği soyut bir oyundan çıkarıp pratik bir araca dönüştürmesidir.
+                    </div>
+                    <p>İslam Altın Çağı, sadece Harezmi'den ibaret değil. İbn Sina (Avicenna) tıbbın temellerini attı. İbn Heysem (Alhazen) optik bilimini kurdu. Biruni dünyanın yarıçapını neredeyse doğru hesapladı. Bu insanlar, bugün "bilimsel yöntem" dediğimiz şeyi, deney ve gözlemi kullanıyorlardı.</p>
+                    <p>Ne yazık ki, bu altın çağ sona erdi. Ama geride bıraktıkları miras, Avrupa Rönesansı'nın temelini oluşturdu. Bilim, bir medeniyetin tekelinde değildir. O, insanlığın ortak mirasıdır.</p>`
+                }
+            ],
+            ekonomi: [
+                { id: 'e1', title: 'Görünmez El ve Görünür Saçmalıklar', date: '5 Nisan 2025',
+                    summary: 'Adam Smith\'in "görünmez el"i gerçekten piyasaları düzenliyor mu, yoksa bir peri masalı mı?',
+                    body: `<p>Adam Smith, 1776'da "Milletlerin Zenginliği"ni yazdığında, modern ekonominin temelini attı. Ona göre, herkes kendi çıkarının peşinde koşarsa, görünmez bir el tüm bu bencil çabaları toplum yararına yönlendirirdi. Kulağa hoş geliyor, değil mi? Ama gerçek dünyada işler biraz daha karmaşık.</p>
+                    <p>Smith'in fikri, temelde doğru bir gözleme dayanıyordu: İnsanlar kendi çıkarlarını düşünerek hareket ederler. Ama bu, her zaman toplumsal fayda yaratmaz. Bazen bir fabrika, kârını artırmak için nehri kirletir. Bazen bir banka, bonuslarını yükseltmek için sistemi çökertir.</p>
+                    <blockquote>"Görünmez el, bazen bir cezalandırma yumruğuna dönüşür. Bunu 2008'de gördük."</blockquote>
+                    <div class="feynman-note">
+                        Fizikçi olarak ekonomiye bakışım şöyle: Ekonomi, karmaşık bir sistemdir. Tıpkı hava durumu gibi. Milyarlarca karar alıcı, birbiriyle etkileşir. Bu tür sistemlerde, basit modeller genelde işe yaramaz. Smith'in görünmez eli, sürtünmesiz bir yüzeyde hareket eden bir top gibidir. Gerçek dünyada sürtünme vardır, enformasyon asimetrisi vardır, güç dengesizlikleri vardır. Ekonomi, fizikten çok biyolojiye benzer. Evrilir, uyum sağlar ve bazen beklenmedik şekilde çöker.
+                    </div>
+                    <p>Piyasaların kendi kendini düzenlemesi fikri, 20. yüzyılda büyük bir popülerlik kazandı. Ama 1929 Buhranı ve 2008 Krizi, bu fikrin ne kadar kırılgan olduğunu gösterdi. Düzenleme olmadan, piyasalar kumarhaneye dönüşür.</p>
+                    <p>Smith'in asıl söylemek istediği şey, bence şuydu: İnsan doğasını anlamadan ekonomi anlaşılamaz. Ve insan doğası, ne tamamen bencil ne de tamamen fedakârdır. İkisi arasında gidip geliriz. İşte gerçek ekonomi, bu karmaşıklığı kabul ederek başlar.</p>`
+                },
+                { id: 'e2', title: 'Paranın Fiziği: Değer Nedir?', date: '20 Mart 2025',
+                    summary: 'Bir kağıt parçasına neden değer veriyoruz? Altının mı yoksa güvenin mi bir anlamı var?',
+                    body: `<p>Bir keresinde, küçük bir çocuk bana "Para neden değerli?" diye sordu. Cevap vermek için durdum ve düşündüm. Gerçekten, neden? Bir kağıt parçası. Üzerinde birkaç rakam ve bir resim. Ama karşılığında bir ekmek alabiliyorsun. Neden?</p>
+                    <p>Cevap, fizikte değil, psikolojide ve sosyolojide. Paranın değeri, ortak bir yanılsamaya dayanır. Hepimiz, o kağıt parçasının değerli olduğuna inanmayı kabul ederiz. Bu inanç bozulduğunda, enflasyon ya da hiperenflasyon yaşanır. Tıpkı Weimar Almanyası'nda olduğu gibi.</p>
+                    <blockquote>"Para, bir güven sözleşmesidir. Güven gittiğinde, paranın değeri de buharlaşır."</blockquote>
+                    <div class="feynman-note">
+                        Bu, kuantum mekaniğindeki "ölçüm" kavramına benziyor. Bir parçacığın değeri, onu ölçene kadar belirsizdir. Paranın değeri de, ona olan güven ölçülene kadar (yani piyasa işlemleri yapılana kadar) belirsizdir. Ama arada önemli bir fark var: Kuantum mekaniği doğanın bir özelliğidir. Paranın değeri ise tamamen insan yapımı bir kurgu. İkisi de büyüleyici.
+                    </div>
+                    <p>Altına dayalı sistemden, itibari paraya geçiş, insanlık tarihinin en büyük güven sınavlarından biriydi. Artık herhangi bir fiziksel varlığa dayanmayan para, tamamen devletlerin ve merkez bankalarının itibarına dayanıyor. Bu sistem, 1971'de Bretton Woods'un çöküşüyle başladı. Ve şimdi kripto paralarla yeni bir aşamaya geçiyoruz.</p>
+                    <p>Değer, fiziksel bir büyüklük değil. O, zihinsel bir inşa. Ama bu, onu daha az gerçek yapmaz. Tıpkı bir ülkenin sınırları gibi: Fiziksel olarak var olmayan bir çizgi, ama milyonlarca insanın hayatını belirler.</p>`
+                }
+            ],
+            teknoloji: [
+                { id: 'te1', title: 'Transistör: Kumdan Yapılan Beyin', date: '8 Nisan 2025',
+                    summary: 'Bir kum tanesinden milyarlarca anahtar yapıp onlara düşünmeyi öğrettik. Transistörün hikâyesi, insanlık tarihinin en büyük icadıdır.',
+                    body: `<p>1947'de Bell Laboratuvarları'nda John Bardeen, Walter Brattain ve William Shockley, ilk transistörü icat etti. O gün, modern dünyanın temel taşı atıldı. Bugün cebinizdeki telefon, 1969'da Apollo'yu Ay'a götüren bilgisayardan milyonlarca kat daha güçlü. Ve bunu, transistör sayesinde yapıyor.</p>
+                    <p>Transistör, temelde bir anahtar. Ama öyle bir anahtar ki, elektrik sinyaliyle açılıp kapanıyor. Ve bu anahtarları o kadar küçülttük ki, bir mikroişlemcide milyarlarcası bir araya sığabiliyor. Her biri, bir "0" ya da "1" üretiyor. İşte tüm dijital dünya, bu basit ikiliğin üzerine inşa edildi.</p>
+                    <blockquote>"Transistör, insanlığın kumdan düşünce yapmayı öğrenmesidir."</blockquote>
+                    <div class="feynman-note">
+                        Bir keresinde, "Bir transistörün nasıl çalıştığını anlat" demişti bir öğrenci. Şöyle anlattım: Bir su musluğu düşün. Musluğu çevirince su akar. Transistörde de "kapı" denen bir uç var, ona voltaj uygulayınca akım geçmeye başlar. Ama bu musluk o kadar hızlı açılıp kapanabilir ki, saniyede milyarlarca kez. İşte bu hız, bilgisayarların bu kadar hızlı işlem yapmasını sağlar. Basit, değil mi? Ama bu basitlik, bir dahinin eseri.
+                    </div>
+                    <p>Transistörün icadı, bilgi çağını başlattı. Moore Yasası, her 18-24 ayda bir transistör sayısının ikiye katlanacağını öngördü. Bu yasa, 50 yıl boyunca geçerli oldu. Ama fiziksel sınırlara yaklaşıyoruz. Bir transistör, birkaç nanometreye kadar küçüldü. Daha da küçültmek, kuantum etkileriyle baş etmeyi gerektiriyor.</p>
+                    <p>Belki de bir sonraki adım, kuantum bilgisayarları olacak. Ama bu başka bir hikâyenin konusu. Şimdilik, cebinizdeki kum tanelerine bir teşekkür borçlusunuz.</p>`
+                },
+                { id: 'te2', title: 'İnternet Nasıl Çalışır? Bir Mektubun Yolculuğu', date: '22 Mart 2025',
+                    summary: 'Bir e-posta gönderdiğinizde, mesajınız binlerce kilometre yol kateder. Peki bu nasıl oluyor?',
+                    body: `<p>İnternet, temelde bir paket anahtarlama ağıdır. Bunu anlamanın en kolay yolu, bir mektup göndermeyi düşünmek. Ama bu mektup, posta kutusuna atılmaz. Önce küçük parçalara ayrılır. Her parça, üzerinde hedef adresle birlikte ayrı ayrı yola çıkar. Ve hedefe vardığında, bu parçalar birleştirilir.</p>
+                    <p>İşte TCP/IP protokolü tam olarak bunu yapar. TCP, mesajı paketlere böler ve hedefte tekrar birleştirir. IP ise her paketin doğru adrese gitmesini sağlar. Paketler, bir şehirden diğerine, fiber optik kablolar, bakır teller, uydu bağlantıları üzerinden geçer. Her durakta bir yönlendirici, paketin bir sonraki durağını belirler.</p>
+                    <blockquote>"İnternet, dünyanın en büyük anarşisidir. Merkezi bir otoritesi yok, ama yine de çalışır. Nasıl mı? Çünkü herkes aynı protokollere uymayı kabul eder."</blockquote>
+                    <div class="feynman-note">
+                        Bu, bir fizikçi için çok tanıdık bir durum. Tıpkı termodinamiğin ikinci yasası gibi: Düzen, yerel olarak yaratılabilir, ama bunun için enerji harcamak gerekir. İnternette de her paket, enerji harcayarak (yönlendiriciler, kablolar) bir düzen içinde hareket eder. Ama genel sistem, kaotik ve merkeziyetsizdir. İşte bu, karmaşık sistemlerin güzelliği.
+                    </div>
+                    <p>Bugün internet, 5 milyardan fazla insanı birbirine bağlıyor. Her saniye, terabaytlarca veri akıyor. Ve bu sistem, büyük ölçüde 1970'lerde atılan temeller üzerine inşa edildi. Vint Cerf ve Bob Kahn'a teşekkür etmek gerek.</p>
+                    <p>İnternetin en güzel yanı, onu kimsenin tam olarak kontrol etmemesi. Herkesin katkıda bulunabildiği, açık bir ağ. Tıpkı bilim gibi. Ama bu açıklık, beraberinde güvenlik sorunlarını da getiriyor. Ama o da başka bir yazının konusu.</p>`
+                }
+            ],
+            'yapay-zeka': [
+                { id: 'y1', title: 'Makineler Düşünebilir mi? Turing\'in Sorusu', date: '1 Nisan 2025',
+                    summary: 'Alan Turing, 1950\'de "Makineler düşünebilir mi?" diye sordu. 75 yıl sonra hâlâ cevabı bilmiyoruz. Ama çok yaklaştık.',
+                    body: `<p>Alan Turing, 1950'de "Computing Machinery and Intelligence" makalesini yayınladı. İçinde, bugün "Turing Testi" dediğimiz bir test önerdi: Bir insan, bir bilgisayarla ve bir insanla yazılı olarak konuşur. Eğer bilgisayar, hangisinin makine olduğunu ayırt edemeyecek kadar iyi taklit ediyorsa, o makine "düşünüyor" sayılmalıdır.</p>
+                    <p>Turing'in bu önerisi, yapay zekâ tartışmalarının fitilini ateşledi. Ama Turing'in kendisi, bu testin sınırlarını biliyordu. Bir makinenin düşünüp düşünmediğini anlamanın, bir insanın düşünüp düşünmediğini anlamaktan daha zor olduğunu söylerdi. Sonuçta, başka bir insanın gerçekten "düşündüğünü" nasıl biliyoruz? Sadece benzer davrandığı için.</p>
+                    <blockquote>"Bir makinenin düşünüp düşünmediğini sormak, bir denizaltının yüzüp yüzmediğini sormak gibidir." — Edsger Dijkstra</blockquote>
+                    <div class="feynman-note">
+                        Turing'in sorusunu çok severim. Çünkü basit bir soru gibi görünür, ama içinde bir sürü başka soru barındırır: "Düşünmek" nedir? Bilinç nedir? Kendinin farkında olmak ne demektir? Fizikçi olarak, bilinci ölçemeyeceğimiz için bu soruların cevaplarını deneyle bulamayız. Ama bu, onları sormaktan vazgeçeceğimiz anlamına gelmez. Tam tersine, en zor sorular en eğlenceli olanlardır.
+                    </div>
+                    <p>Bugünkü yapay zekâ sistemleri, Turing Testi'ni geçebilecek noktaya geldi. Ama bu, onların "düşündüğü" anlamına gelmiyor. Büyük dil modelleri, milyarlarca cümle üzerinde eğitilmiş istatistiksel modeller. Onlar, bir sonraki kelimeyi tahmin etmekte inanılmaz başarılı. Ama bir şeyi "anladıkları" söylenebilir mi? İşte asıl soru bu.</p>
+                    <p>Benim tahminim: Bilinç, ortaya çıkan bir özellik. Tıpkı bir karınca kolonisinin "zeki" davranışı gibi. Yeterince karmaşık bir sistem, kendiliğinden bilinç benzeri özellikler gösterebilir. Ama bunu kanıtlamak için, önce bilincin ne olduğunu anlamamız gerek. İşte bu da fizik, biyoloji ve felsefenin kesiştiği nokta.</p>`
+                },
+                { id: 'y2', title: 'Büyük Dil Modelleri: İstatistik mi, Anlam mı?', date: '15 Mart 2025',
+                    summary: 'ChatGPT gibi modeller, milyarlarca parametreyle çalışıyor. Ama gerçekten "anlıyor"lar mı, yoksa çok iyi birer papağan mı?',
+                    body: `<p>Bir büyük dil modeli, temelde bir sonraki kelimeyi tahmin etme makinesidir. Ona bir cümle verirsiniz, o da en olası devamını getirir. Ama bu basit işlem, inanılmaz karmaşık bir modelle yapılır. Milyarlarca parametre, terabaytlarca metin üzerinde eğitilir. Sonuç? İnsan gibi konuşan, şiir yazan, kod yazan bir sistem.</p>
+                    <p>Ama "anlamak" nedir? Bir model, "kedi" kelimesini kullandığında, onun bir kedi deneyimi var mıdır? Hayır. Sadece bu kelimenin diğer kelimelerle olan istatistiksel ilişkisini bilir. "Kedi"nin "mama", "tüy", "miyav" gibi kelimelerle sıkça geçtiğini bilir. Ama bir kedi sevmiş midir? Onun sıcaklığını hissetmiş midir? Hayır.</p>
+                    <blockquote>"Bir dil modeli, dünyayı kelimelerin aynasında görür. Ama aynanın arkasında ne olduğunu bilmez."</blockquote>
+                    <div class="feynman-note">
+                        Bir fizikçi olarak, "anlamak" kelimesine çok dikkat ederim. Bir şeyi anlamak, onun hakkında tahmin yürütebilmek demektir. Bir dil modeli, bir cümle verdiğinizde sonraki kelimeyi tahmin edebilir. Ama "bu cümle doğru mu?" sorusuna cevap veremez. Çünkü doğruluk, istatistiksel bir kavram değildir. Doğruluk, dünyayla uyum demektir. Bir modelin dünyayla uyumu yoktur. Sadece metinlerle uyumu vardır. İşte bu yüzden, modeller bazen çok ikna edici bir şekilde yanlış şeyler söyler. Buna "halüsinasyon" diyoruz. Ama aslında, onların tüm çıktıları bir tür halüsinasyondur. Sadece bazıları gerçekle örtüşür.
+                    </div>
+                    <p>Yine de, bu modeller inanılmaz derecede kullanışlı. Onları bir araç olarak görmek en doğrusu. Tıpkı bir hesap makinesi gibi. Hesap makinesi "anlamaz", ama doğru sonuçlar verir. Dil modelleri de öyle. Onlara ne yaptırdığınızı bilirseniz, inanılmaz işler başarabilirsiniz.</p>
+                    <p>Sonuç: Anlamak mı, taklit mi? Farkı bilmek, bu araçları doğru kullanmanın anahtarı.</p>`
+                }
+            ],
+            biyoloji: [
+                { id: 'b1', title: 'DNA: Yaşamın Kuantum Bilgisayarı', date: '6 Nisan 2025',
+                    summary: 'Her hücrenizde, 2 metre uzunluğunda bir molekül var. Üzerinde, sizi siz yapan talimatlar yazılı. DNA\'nın şifresini çözmek, 20. yüzyılın en büyük başarısı.',
+                    body: `<p>1953'te Watson ve Crick, DNA'nın yapısını keşfettiler. Ama asıl önemli katkıyı Rosalind Franklin yapmıştı. Onun X-ışını kırınım görüntüleri, DNA'nın çift sarmal yapısını ortaya çıkardı. Ne yazık ki, Nobel Ödülü'nü göremedi.</p>
+                    <p>DNA, dört harfli bir alfabe kullanır: A, T, G, C. Bu harflerin dizilimi, proteinlerin nasıl yapılacağını belirler. Proteinler de hücrenin işlerini yapar. Yani, DNA bir talimat kitabıdır. Ama bu kitap o kadar sıkıştırılmıştır ki, bir hücrenin çekirdeğine 2 metrelik bir ip sığar.</p>
+                    <blockquote>"DNA, yaşamın kaynak kodudur. Ama bu kodu çalıştırmak için bir işletim sistemine ihtiyacınız var: hücre."</blockquote>
+                    <div class="feynman-note">
+                        DNA'nın yapısını ilk öğrendiğimde, "Bu bir mühendislik harikası!" demiştim. Kendini kopyalayabilen, hataları düzeltebilen, milyarlarca yıldır çalışan bir sistem. Fizikçi olarak, böyle bir sistemi yapmamızı isteselerdi, muhtemelen başaramazdık. Ama doğa, milyarlarca yıllık bir deneyle bunu mükemmelleştirdi. Evrim, en iyi mühendistir.
+                    </div>
+                    <p>DNA'nın en ilginç özelliği, bilgi depolama kapasitesi. Bir gram DNA, yaklaşık 215 petabayt veri depolayabilir. Bu, 10 milyon Blu-ray diske eşdeğer. Üstelik, bu veri milyarlarca yıl dayanabilir. Silikon tabanlı depolama birimlerimiz ise 10-20 yıl içinde bozulmaya başlar.</p>
+                    <p>CRISPR teknolojisiyle artık DNA'yı düzenleyebiliyoruz. Genetik hastalıkları tedavi etmek, tarımı iyileştirmek, hatta soyu tükenmiş türleri geri getirmek mümkün. Ama bu güç, büyük sorumluluk gerektirir. Doğanın kodunu değiştirirken, ne yaptığımızı iyi bilmeliyiz.</p>`
+                },
+                { id: 'b2', title: 'Evrim: Doğanın En Büyük Algoritması', date: '19 Mart 2025',
+                    summary: 'Milyarlarca yıldır çalışan bir optimizasyon algoritması: evrim. Onu anlamak, biyolojiyi anlamaktır.',
+                    body: `<p>Darwin, 1859'da "Türlerin Kökeni"ni yayınladığında, bilim dünyasında bir deprem yarattı. Onun fikri, aslında çok basitti: Doğal seçilim. Çevreye en iyi uyum sağlayan bireyler, hayatta kalır ve ürer. Bu, zamanla türlerin değişmesine ve çeşitlenmesine yol açar.</p>
+                    <p>Evrim, bir algoritmadır. Tıpkı bir bilgisayar programı gibi. Girdi: rastgele mutasyonlar. İşlem: doğal seçilim. Çıktı: çevreye uyumlu organizmalar. Bu algoritma, milyarlarca yıldır çalışıyor. Ve sonuçlarına bakın: bakteriden balinaya, mantardan insana. Her şey bu basit algoritmanın eseri.</p>
+                    <blockquote>"Evrim, bir mühendislik harikası değildir. O, bir yama işidir. Mevcut malzemeyle, eldeki en iyi çözümü bulur."</blockquote>
+                    <div class="feynman-note">
+                        Evrimi anlamak, biyolojiyi anlamanın anahtarıdır. Tıpkı termodinamiğin fiziğin anahtarı olması gibi. Evrim olmadan, biyoloji sadece birbirinden kopuk gerçekler yığınıdır. Evrimle, her şey bir anlam kazanır. Neden gözlerimiz var? Çünkü ışığı algılamak, hayatta kalmamıza yardımcı oldu. Neden parmaklarımız var? Çünkü alet kullanmak, avantaj sağladı. Her şeyin bir nedeni var. İşte bu, bilimin en güzel yanı.
+                    </div>
+                    <p>Evrim, sadece geçmişi açıklamaz. Aynı zamanda geleceği de şekillendirir. Antibiyotik direnci, virüslerin mutasyonu, iklim değişikliğine uyum. Bunların hepsi, evrimin güncel örnekleri. Evrimi anlamazsak, bu sorunlarla baş edemeyiz.</p>
+                    <p>Ve unutmayın: Evrim, bir "amaç" taşımaz. O, sadece bir süreçtir. Ama bu süreç, bizim gibi düşünen varlıklar yaratacak kadar güçlüdür. İşte bu, evrimi anlamanın en büyüleyici yanı.</p>`
+                }
+            ],
+            sanat: [
+                { id: 's1', title: 'Bilim ve Sanat: Aynı Madalyonun İki Yüzü', date: '12 Nisan 2025',
+                    summary: 'Bir fizik denklemiyle bir şiir arasında ne fark var? İkisi de doğayı anlama çabası. Sadece dilleri farklı.',
+                    body: `<p>İnsanlar bana sık sık "Bilim mi, sanat mı?" diye sorar. Ben de cevap veririm: "Neden ikisi de olmasın?" Ben bongo çalarım, resim yaparım ve fizik yaparım. Bunların hepsi aynı şeyin farklı ifadeleri: Merak etmenin, keşfetmenin, yaratmanın.</p>
+                    <p>Bir fizikçi, doğanın yasalarını keşfederken tıpkı bir ressam gibi yaratıcıdır. İkisi de bilinmeyenle yüzleşir, ikisi de desenler arar, ikisi de güzellik peşindedir. Einstein'ın denklemleri, bir Bach fügü kadar güzeldir. Fark, sadece notasyon ve araçlardadır.</p>
+                    <blockquote>"Bilim ve sanat, aynı dağın iki farklı yamacından tırmanıştır. Zirvede buluşurlar."</blockquote>
+                    <div class="feynman-note">
+                        Benim için resim yapmak, fizik yapmakla aynı şeydir. İkisinde de bir problemi çözersiniz: "Bu manzarayı nasıl tuval aktarırım?" ya da "Bu elektron nereye gidecek?" İkisi de gözlem gerektirir, ikisi de sabır gerektirir. Ve ikisi de, doğru yaptığınızda size derin bir tatmin verir. Sanat ve bilim arasında bir ayrım yapmıyorum. Sadece yapıyorum.
+                    </div>
+                    <p>Leonardo da Vinci, belki de bilim ve sanatın en güzel örneği. O, hem bir sanatçıydı hem de bir mühendis. Anatomi çizimleri, bugün hâlâ kullanılır. Uçma makineleri, döneminin çok ötesindeydi. Onun için sanat ve bilim ayrı değildi. İkisi de dünyayı anlamanın yoluydu.</p>
+                    <p>Bugün, bilim ve sanat arasındaki yapay ayrımı yıkmamız gerekiyor. Bir öğrenci, hem şiir yazabilmeli hem de denklem çözebilmeli. Çünkü ikisi de insan olmanın bir parçası. Ve ikisi de, dünyayı daha iyi bir yer yapma gücüne sahip.</p>`
+                },
+                { id: 's2', title: 'Müzik ve Matematik: Sesin Fiziği', date: '26 Mart 2025',
+                    summary: 'Bir notanın ardındaki matematik. Neden bazı sesler kulağa hoş gelirken bazıları gelmez? Cevap, frekans oranlarında.',
+                    body: `<p>Müzik, kulağa hoş gelen seslerin düzenlenmesidir. Ama bu hoşluk, tamamen fiziksel bir temele dayanır. İki nota arasındaki frekans oranı, basit bir rasyonel sayıysa (2:1, 3:2, 4:3), kulağa hoş gelir. Oran karmaşıklaştıkça, sesler uyumsuzlaşır.</p>
+                    <p>Bir oktav, 2:1 oranıdır. Bir nota, frekansı iki katına çıktığında, kulağa aynı notanın tiz bir versiyonu gibi gelir. Beşli, 3:2 oranıdır. Dörtlü, 4:3. Bunlar, Batı müziğinin temel aralıklarıdır. Pythagoras, bunu 2500 yıl önce keşfetmişti.</p>
+                    <blockquote>"Müzik, ruhun matematiğidir." — Gottfried Leibniz</blockquote>
+                    <div class="feynman-note">
+                        Ben bongo çalarken, aslında bir fizik deneyi yapıyorum. Deriye vurduğumda, titreşimler oluşuyor. Bu titreşimler, havada dalgalar halinde yayılıyor. Kulağınıza geldiğinde, beyniniz onu bir ritim olarak algılıyor. Ama aslında, sadece hava moleküllerinin dansı. İşte bu dans, bazen içinizi kıpırdatır, bazen hüzünlendirir. Müziğin gücü, fiziğin şiire dönüşmesidir.
+                    </div>
+                    <p>Batı müziği, eşit tamperaman sistemiyle çalışır. Oktav, 12 eşit yarım adıma bölünür. Bu, matematiksel olarak tam bir beşli (3:2) vermez, ama çok yaklaşır. Bu küçük uzlaşma, tüm tonlarda çalabilmeyi sağlar. Bach'ın "İyi Düzenlenmiş Klavye"si, bu sistemin gücünü gösteren bir başyapıttır.</p>
+                    <p>Müzik ve matematik arasındaki bağ, beni her zaman büyülemiştir. Bir fisyon reaktörüyle bir senfoni arasında, göründüğünden daha fazla ortak nokta vardır. İkisi de desenler, oranlar ve ilişkilerle ilgilidir.</p>`
+                }
+            ],
+            psikoloji: [
+                { id: 'p1', title: 'Algı: Beynin Yaptığı Bir Yorum', date: '9 Nisan 2025',
+                    summary: 'Dünyayı olduğu gibi mi görüyoruz, yoksa beyin bize bir simülasyon mu sunuyor? Algının sırları.',
+                    body: `<p>Gözleriniz, ışığı algılayan birer kamera değildir. Onlar, beyne ham veri gönderen birer aracıdır. Beyin, bu veriyi işler, yorumlar ve size "gerçeklik" olarak sunar. Ama bu gerçeklik, aslında bir inşadır. Beynin en iyi tahminidir.</p>
+                    <p>Optik illüzyonlar, bunu kanıtlar. Aynı gri tonu, farklı arka planlarda farklı görünür. İki çizgi, aynı uzunlukta olmasına rağmen farklı algılanır. Beyin, geçmiş deneyimlerine dayanarak gördüğünüzü yorumlar. Bazen yanılır. Ama genelde, hayatta kalmamızı sağlayacak kadar doğru tahmin eder.</p>
+                    <blockquote>"Gördüğünüz şey, dışarıdakinin bir kopyası değil, beyninizin en iyi tahminidir."</blockquote>
+                    <div class="feynman-note">
+                        Bir fizikçi olarak, algının sınırları beni hep ilgilendirmiştir. Kuantum mekaniğinde, bir parçacığın özellikleri ölçülene kadar belirsizdir. Peki ya gerçeklik? Onu algılamadan önce, gerçeklik nedir? Bu sorular, fiziğin ve psikolojinin kesiştiği noktada. Beynin bir simülasyon yarattığını kabul etmek, bilimde devrim yaratabilir. Çünkü o zaman, "gerçeklik" dediğimiz şeyin sadece bir model olduğunu anlarız. Tıpkı fizikteki modeller gibi.
+                    </div>
+                    <p>Renk algısı da ilginç bir örnektir. Renkler, dış dünyada yoktur. Sadece farklı dalga boylarındaki ışık vardır. Beyin, bu dalga boylarını renk olarak yorumlar. Kırmızı, 700 nanometre civarındaki ışığın yorumudur. Ama bir başka canlı, aynı dalga boyunu farklı görebilir. Arılar, ultraviyoleyi görür. Yılanlar, kızılötesini. Peki hangisi "gerçek"?</p>
+                    <p>Algının sınırlarını anlamak, hem bilim için hem de günlük hayat için önemlidir. Çünkü başkalarının dünyayı farklı gördüğünü kabul etmek, empatinin temelidir.</p>`
+                },
+                { id: 'p2', title: 'Öğrenmenin Bilimi: Feynman Tekniği', date: '24 Mart 2025',
+                    summary: 'Bir konuyu gerçekten öğrenmek için en iyi yöntem: Onu bir çocuğa anlatıyormuş gibi anlat. İşte benim tekniğim.',
+                    body: `<p>İnsanlar bana "Bir konuyu nasıl bu kadar iyi anlıyorsun?" diye sorar. Cevap basit: Anlamadığımı kabul ederek başlıyorum. Sonra, o konuyu bir çocuğa anlatıyormuş gibi anlatmaya çalışıyorum. Eğer basit terimlerle anlatamıyorsam, o konuyu yeterince iyi anlamamışım demektir.</p>
+                    <p>İşte Feynman Tekniği'nin adımları:
+                    <br>1. Konuyu seç ve bir kağıda yaz.
+                    <br>2. Sanki bir çocuğa anlatıyormuş gibi anlat. Basit kelimeler kullan. Jargon yasak.
+                    <br>3. Takıldığın yerleri belirle. O noktaları tekrar çalış.
+                    <br>4. Basitleştir ve birleştir. Karmaşık anlatımlardan kaçın.</p>
+                    <blockquote>"Bir şeyi basitçe açıklayamıyorsan, onu yeterince iyi anlamamışsın demektir."</blockquote>
+                    <div class="feynman-note">
+                        Bu tekniği, Caltech'te öğrencilere ders verirken geliştirdim. Fark ettim ki, öğrenciler bir konuyu anlamadıklarında, karmaşık kelimelerle konuşuyorlardı. Ama gerçekten anladıklarında, her şey basitleşiyordu. Bu, sadece fizik için değil, her şey için geçerlidir. Tarih, ekonomi, psikoloji... Her şey. Eğer bir konuyu 10 yaşındaki bir çocuğa anlatamıyorsanız, o konuyu anlamamışsınız demektir. Kendinizi kandırmayın.
+                    </div>
+                    <p>Bu tekniğin gücü, sizi kendinize karşı dürüst olmaya zorlamasıdır. Karmaşık terimlerin arkasına saklanamazsınız. Ya anlarsınız ya da anlamazsınız. Ve anlamadığınızı kabul etmek, öğrenmenin ilk adımıdır.</p>
+                    <p>Öğrenmek, bir yolculuktur. Ve bu yolculukta en önemli şey, merak etmekten vazgeçmemektir. Soru sormaktan korkmayın. "Neden?" diye sorun. "Nasıl?" diye sorun. Ve cevabı bulana kadar sormaya devam edin. İşte gerçek öğrenme budur.</p>`
+                }
+            ],
+            mitoloji: [
+                { id: 'm1', title: 'Prometheus: Ateşi Çalan İlk Bilim İnsanı', date: '3 Nisan 2025',
+                    summary: 'Bir Titan, tanrılardan ateşi çalıp insanlığa verdi. Ceza olarak bir kayaya zincirlendi. Ama insanlık, onun sayesinde uygarlığı kurdu.',
+                    body: `<p>Prometheus, Yunan mitolojisinde insanlığın yaratıcısı ve koruyucusudur. Tanrılardan ateşi çalıp insanlara verdiğinde, onlara sadece ısı ve ışık vermedi. Bilgi, teknoloji ve uygarlık verdi. Ateş, ilk insanın kontrol ettiği doğa gücüydü. Onunla yemek pişirdi, metalleri işledi, geceyi aydınlattı.</p>
+                    <p>Prometheus'un hikâyesi, bilim insanının hikâyesidir. O, otoriteye (tanrılara) karşı gelir, bilgiyi (ateşi) çalar ve insanlığa getirir. Ceza alır, acı çeker, ama pes etmez. Tıpkı Galileo gibi, tıpkı Darwin gibi, tıpkı tüm bilim insanları gibi.</p>
+                    <blockquote>"Prometheus, bilginin bedelini ödeyen ilk bilim insanıdır. Onun zincirleri, her bilim insanının omuzlarındaki yükün simgesidir."</blockquote>
+                    <div class="feynman-note">
+                        Prometheus'u düşündükçe, bilimin doğası hakkında bir şey anlıyorum: Bilgi, bedelsiz gelmez. Onu elde etmek için çaba harcamalı, risk almalı ve bazen acı çekmelisiniz. Ama ödülü, insanlığın ilerlemesidir. Prometheus'un karşılığında bize verdiği şey, sadece ateş değil, aynı zamanda merak etme cesaretidir. Ve bu cesaret, uygarlığın temelidir.
+                    </div>
+                    <p>Prometheus'un cezası, bir kartalın her gün karaciğerini yemesiydi. Karaciğer, her gece yeniden büyürdü. Bu, bilginin peşinde koşmanın sonsuz bir döngü olduğunu gösterir. Her cevap, yeni sorular doğurur. Her keşif, yeni bir bilinmez getirir. Bilim, hiç bitmeyen bir yolculuktur.</p>
+                    <p>Ve bugün, biz de bir anlamda Prometheus'uz. Bilgiyi keşfediyor, onu paylaşıyor ve bazen bedelini ödüyoruz. Ama insanlığın ilerlemesi için, bu bedeli ödemeye değer.</p>`
+                },
+                { id: 'm2', title: 'İkarus: Uçuşun ve Kibirin Trajedisi', date: '17 Mart 2025',
+                    summary: 'Bal mumu ve tüylerden yapılmış kanatlarla gökyüzüne yükselen bir genç. Ama güneşe çok yaklaştı. İkarus\'un hikâyesi, bilim için bir uyarıdır.',
+                    body: `<p>İkarus ve babası Daedalus, Girit'teki labirentten kaçmak için bal mumu ve tüylerden kanatlar yapar. Daedalus, oğlunu uyarır: "Ne çok alçaktan uç, denizin nemi kanatları ağırlaştırır. Ne de çok yüksekten, güneşin sıcağı mumu eritir." Ama İkarus, uçuşun sarhoşluğuyla güneşe doğru yükselir. Mum erir, tüyler dökülür ve İkarus denize düşer.</p>
+                    <p>Bu hikâye, genelde "kibir" üzerine bir uyarı olarak anlatılır. Ama bence, aynı zamanda bilimin sınırları hakkında bir hikâyedir. Doğanın yasalarını aşmaya çalıştığınızda, bedelini ödersiniz. Ama bu, denemememiz gerektiği anlamına gelmez.</p>
+                    <blockquote>"İkarus, sınırları zorlamanın sembolüdür. Düşer ama yükselirken gördüğü manzara, düşüşe değer."</blockquote>
+                    <div class="feynman-note">
+                        Fizikçi olarak, İkarus'un hikâyesini her zaman ilginç bulmuşumdur. Bir kere, bal mumu ve tüylerden kanat yapma fikri, aerodinamik olarak tamamen saçma. Ama asıl mesele şu: İkarus, sınırları zorladı. Düştü, evet. Ama yükseldi. Bilimde de böyledir. Başarısız oluruz, düşeriz, ama her düşüş bize bir şey öğretir. Bir sonraki uçuşta, daha yükseğe çıkarız. Bugün uçaklarla gökyüzünde süzülüyorsak, bunu İkarus gibi düşenlere borçluyuz.
+                    </div>
+                    <p>Bilim tarihi, İkarus'larla doludur. Başarısız deneyler, çöken teoriler, yanlış hipotezler. Her biri, bir ders. Her biri, bizi biraz daha ileri götürür. Önemli olan, düşmekten korkmamak ve her düştüğünde kalkıp tekrar denemektir.</p>
+                    <p>İkarus, düştü. Ama onun uçuşu, insanlığın gökyüzüne olan özleminin sembolü oldu. Ve bu özlem, bizi Ay'a, Mars'a ve ötesine taşıdı. İkarus olmaktan korkmayın. Sadece, güneşe biraz daha dikkatli yaklaşın.</p>`
+                }
+            ],
+            denemeler: [
+                { id: 'd1', title: 'Neden Her Şeyi Bilmediğimi Kabul Etmek Özgürleştiricidir', date: '11 Nisan 2025',
+                    summary: 'Bilmediğini kabul etmek, zayıflık değil, güçtür. İşte bu yüzden, "Bilmiyorum" demeyi seviyorum.',
+                    body: `<p>Bir keresinde, bir röportajda bana "Fiziğin geleceği hakkında ne düşünüyorsunuz?" diye sordular. Cevap verdim: "Bilmiyorum." Röportajcı şaşırdı. Ama ben ciddiydim. Geleceği bilmiyorum. Kimse bilmiyor. Ve bu, özgürleştirici bir düşünce.</p>
+                    <p>Bilmediğini kabul etmek, zayıflık değildir. Tam tersine, güçtür. Çünkü bilmediğini kabul ettiğinde, öğrenmeye açık olursun. Kendini kandırmazsın. Ve ancak o zaman, gerçekten yeni şeyler keşfedebilirsin.</p>
+                    <blockquote>"Bilmediğimi bilmek, bildiğimi sanmaktan iyidir."</blockquote>
+                    <div class="feynman-note">
+                        Bilimde en tehlikeli şey, kesinliktir. "Bu böyledir, tartışılmaz" dediğiniz an, bilim bitmiştir. Bilim, sürekli sorgulamaktır. Sürekli "Acaba yanılıyor muyum?" diye sormaktır. Ben, Nobel Ödülü aldıktan sonra bile, her sabah uyandığımda "Bugün neyi yanlış biliyorum?" diye sorarım. Çünkü eminim ki, bir şeyleri yanlış biliyorum. Sadece hangileri olduğunu henüz keşfetmedim.
+                    </div>
+                    <p>Toplum, "bilmiyorum" demeyi bir zayıflık olarak görür. Oysa, en bilge insanlar, ne kadar az bildiklerinin farkında olanlardır. Sokrates'in dediği gibi: "Bildiğim tek şey, hiçbir şey bilmediğimdir." Bu, bilgeliktir. Ve bu bilgelik, sizi sürekli öğrenmeye iter.</p>
+                    <p>Ben, her gün yeni bir şey öğreniyorum. Bazen bir fizik denklemi, bazen bir bongo ritmi, bazen bir böceğin davranışı. Her şey ilgimi çekiyor. Çünkü her şeyin altında, keşfedilmeyi bekleyen bir hikâye var. Ve ben, bu hikâyeleri keşfetmek için, bilmediğimi kabul etmekten mutluluk duyuyorum.</p>`
+                },
+                { id: 'd2', title: 'Bir Bongo Davulunun Fiziği', date: '23 Mart 2025',
+                    summary: 'Bir bongo davuluna vurduğumda, aslında bir fizik deneyi yapıyorum. Ses dalgaları, titreşimler, rezonans. Ama aynı zamanda, bir ritim yaratıyorum.',
+                    body: `<p>Bongo çalmayı çok severim. Sadece müzik olduğu için değil, aynı zamanda fizik olduğu için. Deriye vurduğumda, bir titreşim yaratırım. Bu titreşim, davulun içindeki havayı sıkıştırır ve bir ses dalgası oluşur. Bu dalga, kulağa ulaştığında, beynim onu bir ses olarak algılar.</p>
+                    <p>Ama işin ilginç yanı, her vuruşun farklı bir frekans ve tını üretmesidir. Parmağımın nereye vurduğu, ne kadar sert vurduğu, derinin gerginliği... Tüm bunlar, sesi etkiler. Bir bongo davulu, aslında bir müzik aletinden çok, bir fizik deney düzeneğidir.</p>
+                    <blockquote>"Bongo çalarken, fizik yaparım. Ama fizik yaparken de bongo çalarım. İkisi de aynı şey."</blockquote>
+                    <div class="feynman-note">
+                        Bir keresinde, bir konserde bongo çalarken, bir fizikçi arkadaşım yanıma geldi ve "Ne yapıyorsun?" diye sordu. "Fizik yapıyorum" dedim. "Ama bongo çalıyorsun" dedi. "Evet" dedim, "fizik de yapıyorum." O anda, aslında ikisinin de aynı şey olduğunu fark ettim. Bir bongo davulu, bir fizik laboratuvarıdır. Ve bir fizik laboratuvarı, bir müzik aletidir. Sadece nasıl baktığınıza bağlı.
+                    </div>
+                    <p>Ritim, matematiğin bir formudur. Zamanlama, oranlar, döngüler. Bir bongo ritmi, aslında bir matematiksel desendir. Ve bu desen, hem kulağa hoş gelir hem de beyni uyarır. Müzik ve matematiğin bu birleşimi, beni her zaman büyülemiştir.</p>
+                    <p>Bongo çalmak, bana fizik yapmanın eğlenceli olduğunu hatırlatır. Bilim, sadece denklemlerden ibaret değildir. O, aynı zamanda bir oyundur. Bir keşif yolculuğudur. Ve bazen, bu yolculukta bir bongo davulu, bir parçacık hızlandırıcıdan daha fazla şey öğretebilir.</p>`
+                }
+            ],
+            ceviriler: [
+                { id: 'c1', title: 'Feynman\'ın "Cargo Cult Science" Konuşması (Türkçe)', date: '7 Nisan 2025',
+                    summary: 'Bilimsel sahtekârlık üzerine, Caltech\'te 1974 yılında yaptığım konuşmanın çevirisi. Bilim insanı olmanın sorumluluğu üzerine.',
+                    body: `<p>Bu, 1974 yılında Caltech'teki mezuniyet töreninde yaptığım konuşmanın çevirisidir. Orada, "Cargo Cult Science" yani "Kargo Kültü Bilimi" kavramını tanıtmıştım. Bu kavram, Melanezya adalarındaki kargo kültlerinden esinlenmiştir.</p>
+                    <p>II. Dünya Savaşı sırasında, ABD ordusu bu adalara devasa miktarlarda malzeme yığmıştı. Savaş bitip askerler gidince, adalılar bu malzemelerin tanrılar tarafından gönderildiğini düşündü. Onların gelmesini sağlamak için, pistler inşa ettiler, bambudan kulaklıklar yaptılar, tahtadan kontrol kuleleri diktiler. Ama uçaklar gelmedi. Çünkü dışarıdan bakıldığında her şey doğru görünüyordu, ama aslında hiçbir şey doğru değildi.</p>
+                    <blockquote>"Kargo kültü bilimi, bilimin tüm dışsal görünüşlerine sahiptir, ama içsel özü eksiktir: Dürüstlük."</blockquote>
+                    <div class="feynman-note">
+                        Bu konuşmayı yapmamın nedeni, bilimde dürüstlüğün ne kadar önemli olduğunu vurgulamaktı. Bir bilim insanı, kendi teorisini çürütecek kanıtları, onu destekleyen kanıtlardan daha dikkatli incelemelidir. Aksi takdirde, kendimizi kandırırız. Ve bu, bilimin en büyük günahıdır.
+                    </div>
+                    <p>Bilimsel yöntemin temelinde, yanılma olasılığını kabul etmek vardır. Bir teori, ne kadar güzel olursa olsun, eğer deneyle çelişiyorsa yanlıştır. Ve bir bilim insanı, bu gerçeği kabul edecek kadar dürüst olmalıdır. Aksi takdirde, kargo kültü bilimi yapıyor oluruz.</p>
+                    <p>Bu konuşma, bugün hâlâ geçerliliğini koruyor. Belki de her zamankinden daha geçerli. Çünkü bilim, giderek daha karmaşık hale geliyor ve dürüstlük, her zamankinden daha önemli.</p>`
+                },
+                { id: 'c2', title: 'Russell\'ın "Bir Bilim İnsanının Dini" Yazısı (Türkçe)', date: '21 Mart 2025',
+                    summary: 'Bertrand Russell\'ın, bilim ve din arasındaki ilişki üzerine yazdığı bu deneme, ilk kez Türkçede.',
+                    body: `<p>Bertrand Russell, 20. yüzyılın en önemli filozoflarından biriydi. Aynı zamanda bir matematikçi ve mantıkçıydı. Onun "Bir Bilim İnsanının Dini" adlı bu yazısı, bilim ve din arasındaki gerilimi ele alır. Russell, bir bilim insanının nasıl bir dini görüşe sahip olabileceğini sorgular.</p>
+                    <p>Russell'a göre, bir bilim insanı, dogmatik inançlardan kaçınmalıdır. Çünkü bilim, sürekli sorgulamayı gerektirir. Bir bilim insanı, "Bu kesinlikle doğrudur" diyemez. Sadece "Mevcut kanıtlar bunu gösteriyor" diyebilir. Ve bu, dinin kesinlik iddiasıyla çelişir.</p>
+                    <blockquote>"Bir bilim insanı, hiçbir şeyden tam olarak emin olamaz. Bu, onun en büyük erdemidir." — Bertrand Russell</blockquote>
+                    <div class="feynman-note">
+                        Russell'ı çok severim. Onun açık sözlülüğü ve mantıksal keskinliği, bana her zaman ilham vermiştir. Bu yazıda, bilim insanının dünyaya nasıl bakması gerektiğini çok güzel özetler. Biz, kesinlik peşinde değiliz. Biz, sürekli sorgulayan, sürekli test eden, sürekli yanılmayı göze alan insanlarız. Ve bu, bizi özgür kılar.
+                    </div>
+                    <p>Russell'ın bu yazısı, bilim ve din arasındaki diyaloğa önemli bir katkıdır. O, bir bilim insanının dini inançlara saygı duyabileceğini, ama aynı zamanda onları sorgulaması gerektiğini söyler. Çünkü sorgulamak, bilim insanının doğasında vardır.</p>
+                    <p>Bu çeviri, Russell'ın düşüncelerini Türkçe konuşan okurlarla buluşturmayı amaçlıyor. Umarım, bu yazı, bilim ve din arasındaki karmaşık ilişkiyi anlamanıza yardımcı olur.</p>`
+                }
+            ]
+        };
+
+        // ============================================================
+        // STATE
+        // ============================================================
+        let currentView = 'home';
+        let currentCategory = null;
+        let currentArticle = null;
+
+        // ============================================================
+        // DOM REFS
+        // ============================================================
+        const viewHome = document.getElementById('viewHome');
+        const viewCategory = document.getElementById('viewCategory');
+        const viewArticle = document.getElementById('viewArticle');
+        const homeGrid = document.getElementById('homeGrid');
+        const articlesList = document.getElementById('articlesList');
+        const articleContent = document.getElementById('articleContent');
+        const catTitleHeader = document.getElementById('catTitleHeader');
+        const catIconHeader = document.getElementById('catIconHeader');
+        const catBackBtn = document.getElementById('catBackBtn');
+        const artBackBtn = document.getElementById('artBackBtn');
+        const logoBtn = document.getElementById('logoBtn');
+        const navBtns = document.querySelectorAll('.nav-btn');
+        const tickerInner = document.getElementById('tickerInner');
+
+        // ============================================================
+        // QUOTE TICKER
+        // ============================================================
+        function initTicker() {
+            const doubled = [...QUOTES, ...QUOTES];
+            tickerInner.innerHTML = doubled.map(q => `<span>⚛ ${q}</span>`).join('');
+        }
+        initTicker();
+
+        // ============================================================
+        // RENDER HOME GRID
+        // ============================================================
+        function renderHomeGrid() {
+            homeGrid.innerHTML = CATEGORIES.map(cat => `
+                <div class="cat-card" data-category="${cat.id}">
+                    <div class="cat-icon">${cat.icon}</div>
+                    <h3>${cat.label}</h3>
+                    <p>${cat.desc}</p>
+                    <span class="cat-count">${(ARTICLES[cat.id] || []).length} yazı</span>
+                </div>
+            `).join('');
+
+            homeGrid.querySelectorAll('.cat-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const catId = card.dataset.category;
+                    if (ARTICLES[catId] && ARTICLES[catId].length > 0) {
+                        showCategory(catId);
+                    } else {
+                        // show empty state
+                        showCategory(catId);
+                    }
+                });
+            });
+        }
+        renderHomeGrid();
+
+        // ============================================================
+        // NAVIGATION
+        // ============================================================
+        function showHome() {
+            currentView = 'home';
+            currentCategory = null;
+            currentArticle = null;
+            viewHome.style.display = 'block';
+            viewCategory.classList.remove('active');
+            viewArticle.classList.remove('active');
+            viewCategory.style.display = 'none';
+            viewArticle.style.display = 'none';
+            navBtns.forEach(b => b.classList.toggle('active', b.dataset.category === 'home'));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showCategory(catId) {
+            currentView = 'category';
+            currentCategory = catId;
+            currentArticle = null;
+
+            const cat = CATEGORIES.find(c => c.id === catId);
+            if (!cat) return;
+
+            catIconHeader.textContent = cat.icon;
+            catTitleHeader.textContent = cat.label;
+
+            const arts = ARTICLES[catId] || [];
+            if (arts.length === 0) {
+                articlesList.innerHTML = `
+                    <div style="text-align:center; padding:3rem 1rem; color:var(--ink-light);">
+                        <p style="font-family:var(--font-display); font-size:1.5rem;">Henüz yazı yok.</p>
+                        <p>Bu kategoriye yakında yazılar eklenecek. Merak etme, ben yazmayı severim.</p>
+                    </div>
+                `;
+            } else {
+                articlesList.innerHTML = arts.map(art => `
+                    <div class="article-card" data-art-id="${art.id}" data-cat-id="${catId}">
+                        <span class="art-date">${art.date}</span>
+                        <h3>${art.title}</h3>
+                        <p>${art.summary}</p>
+                        <span class="read-more">Okumaya devam et</span>
+                    </div>
+                `).join('');
+
+                articlesList.querySelectorAll('.article-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const artId = card.dataset.artId;
+                        const catId = card.dataset.catId;
+                        showArticle(catId, artId);
+                    });
+                });
+            }
+
+            viewHome.style.display = 'none';
+            viewArticle.classList.remove('active');
+            viewArticle.style.display = 'none';
+            viewCategory.style.display = 'block';
+            // force reflow then add active
+            void viewCategory.offsetWidth;
+            viewCategory.classList.add('active');
+
+            navBtns.forEach(b => b.classList.toggle('active', b.dataset.category === catId));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showArticle(catId, artId) {
+            currentView = 'article';
+            currentCategory = catId;
+            currentArticle = artId;
+
+            const cat = CATEGORIES.find(c => c.id === catId);
+            const arts = ARTICLES[catId] || [];
+            const art = arts.find(a => a.id === artId);
+
+            if (!art) {
+                articleContent.innerHTML = `<p style="text-align:center; color:var(--ink-light);">Yazı bulunamadı.</p>`;
+            } else {
+                articleContent.innerHTML = `
+                    <div class="art-meta">${cat ? cat.icon + ' ' + cat.label : ''} · ${art.date}</div>
+                    <h1>${art.title}</h1>
+                    <div class="art-body">${art.body}</div>
+                `;
+            }
+
+            viewHome.style.display = 'none';
+            viewCategory.classList.remove('active');
+            viewCategory.style.display = 'none';
+            viewArticle.style.display = 'block';
+            void viewArticle.offsetWidth;
+            viewArticle.classList.add('active');
+
+            navBtns.forEach(b => b.classList.toggle('active', b.dataset.category === catId));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ============================================================
+        // EVENT LISTENERS
+        // ============================================================
+        // Nav buttons
+        navBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const cat = btn.dataset.category;
+                if (cat === 'home') {
+                    showHome();
+                } else {
+                    if (ARTICLES[cat] && ARTICLES[cat].length > 0) {
+                        showCategory(cat);
+                    } else {
+                        showCategory(cat);
+                    }
+                }
+            });
+        });
+
+        // Logo
+        logoBtn.addEventListener('click', showHome);
+
+        // Category back
+        catBackBtn.addEventListener('click', showHome);
+
+        // Article back
+        artBackBtn.addEventListener('click', () => {
+            if (currentCategory) {
+                showCategory(currentCategory);
+            } else {
+                showHome();
+            }
+        });
+
+        // Scroll to categories
+        function scrollToCategories() {
+            const el = document.getElementById('catSection');
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+        window.scrollToCategories = scrollToCategories;
+
+        // ============================================================
+        // KEYBOARD SHORTCUTS
+        // ============================================================
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (currentView === 'article' && currentCategory) {
+                    showCategory(currentCategory);
+                } else if (currentView === 'category') {
+                    showHome();
+                }
+            }
+            if (e.key === 'h' && e.ctrlKey) {
+                e.preventDefault();
+                showHome();
+            }
+        });
+
+        // ============================================================
+        // INIT
+        // ============================================================
+        showHome();
+
+        console.log('⚛ Feynman\'ın Bilim Defteri — Merakla yazıldı, merakla okunur.');
+        console.log('%c"Bilmiyorum" demekten korkma. İşte bilim orada başlar.', 'font-style:italic;color:#b8452c;');
+    </script>
+</body>
+</html>
