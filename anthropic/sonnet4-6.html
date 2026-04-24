@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sherlock Holmes — The World's Only Consulting Detective</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=IM+Fell+English:ital@0;1&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1209;
+    --parchment: #f0e8d0;
+    --aged: #d4c89a;
+    --sepia: #8b6914;
+    --rust: #7a3b1e;
+    --fog: rgba(240, 232, 208, 0.15);
+    --shadow: rgba(26, 18, 9, 0.6);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--parchment);
+    font-family: 'IM Fell English', Georgia, serif;
+    overflow-x: hidden;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='4' fill='%23f0e8d0' opacity='0.8'/%3E%3C/svg%3E") 12 12, auto;
+  }
+
+  /* ── FOG LAYER ── */
+  .fog-container {
+    position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden;
+  }
+  .fog-layer {
+    position: absolute; width: 200%; height: 100%;
+    background: radial-gradient(ellipse 60% 40% at 30% 50%, rgba(200,185,140,0.07) 0%, transparent 70%),
+                radial-gradient(ellipse 80% 60% at 70% 30%, rgba(200,185,140,0.05) 0%, transparent 60%);
+    animation: driftFog 25s linear infinite;
+  }
+  .fog-layer:nth-child(2) {
+    animation: driftFog 35s linear infinite reverse;
+    opacity: 0.6;
+  }
+  @keyframes driftFog {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ── NOISE TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.4;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative; min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: flex-start;
+    padding: 8rem 6rem 6rem;
+    overflow: hidden; z-index: 2;
+    border-bottom: 1px solid rgba(212,200,154,0.2);
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute; right: 0; top: 0; bottom: 0; width: 45%;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 700'%3E%3Cdefs%3E%3Cradialgrad id='g' cx='50%25' cy='40%25' r='60%25'%3E%3Cstop offset='0' stop-color='%23d4c89a' stop-opacity='0.08'/%3E%3Cstop offset='1' stop-color='%231a1209' stop-opacity='0'/%3E%3C/radialgrad%3E%3C/defs%3E%3Crect fill='url(%23g)' width='400' height='700'/%3E%3Cg stroke='%23d4c89a' stroke-opacity='0.12' fill='none' stroke-width='0.5'%3E%3Ccircle cx='200' cy='280' r='180'/%3E%3Ccircle cx='200' cy='280' r='140'/%3E%3Ccircle cx='200' cy='280' r='100'/%3E%3Cline x1='20' y1='280' x2='380' y2='280'/%3E%3Cline x1='200' y1='100' x2='200' y2='460'/%3E%3Cline x1='70' y1='150' x2='330' y2='410'/%3E%3Cline x1='330' y1='150' x2='70' y2='410'/%3E%3C/g%3E%3Ctext x='200' y='295' font-family='serif' font-size='180' text-anchor='middle' fill='%23d4c89a' opacity='0.06'%3E🔍%3C/text%3E%3C/svg%3E") center/contain no-repeat;
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.75rem; letter-spacing: 0.4em;
+    text-transform: uppercase; color: var(--sepia);
+    margin-bottom: 2rem;
+    opacity: 0; animation: fadeUp 0.8s 0.2s ease forwards;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(4rem, 9vw, 9rem);
+    font-weight: 900; line-height: 0.9;
+    color: var(--parchment);
+    margin-bottom: 1.5rem;
+    opacity: 0; animation: fadeUp 0.8s 0.5s ease forwards;
+  }
+  .hero-title em {
+    font-style: italic; color: var(--aged);
+    display: block; font-size: 0.55em; font-weight: 400;
+    margin-top: 0.3em;
+  }
+
+  .hero-rule {
+    width: 8rem; height: 1px; background: var(--sepia);
+    margin: 2rem 0;
+    opacity: 0; animation: expandWidth 0.8s 0.8s ease forwards;
+  }
+
+  .hero-desc {
+    max-width: 44ch; font-size: 1.15rem; line-height: 1.85;
+    color: rgba(240,232,208,0.75); font-style: italic;
+    opacity: 0; animation: fadeUp 0.8s 1s ease forwards;
+  }
+
+  .hero-address {
+    margin-top: 3rem;
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.85rem; letter-spacing: 0.15em;
+    color: var(--sepia); border-left: 2px solid var(--sepia);
+    padding-left: 1rem;
+    opacity: 0; animation: fadeUp 0.8s 1.2s ease forwards;
+  }
+
+  /* ── TYPEWRITER QUOTE ── */
+  .quote-strip {
+    position: relative; z-index: 2;
+    padding: 5rem 6rem;
+    border-bottom: 1px solid rgba(212,200,154,0.2);
+    background: rgba(212,200,154,0.03);
+  }
+
+  .typewriter-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    font-style: italic;
+    color: var(--aged);
+    max-width: 70ch;
+    min-height: 2em;
+  }
+  .typewriter-quote::after {
+    content: '|';
+    animation: blink 0.8s step-end infinite;
+    color: var(--sepia);
+  }
+  @keyframes blink { 0%,100% { opacity:1 } 50% { opacity:0 } }
+
+  .quote-attr {
+    margin-top: 1.5rem;
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.8rem; letter-spacing: 0.3em;
+    color: var(--sepia); text-transform: uppercase;
+  }
+
+  /* ── SECTIONS ── */
+  .section {
+    position: relative; z-index: 2;
+    padding: 7rem 6rem;
+    border-bottom: 1px solid rgba(212,200,154,0.15);
+  }
+
+  .section-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.7rem; letter-spacing: 0.5em;
+    text-transform: uppercase; color: var(--sepia);
+    margin-bottom: 3rem;
+    display: flex; align-items: center; gap: 1.5rem;
+  }
+  .section-label::after {
+    content: ''; flex: 1; max-width: 6rem;
+    height: 1px; background: var(--sepia);
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 700; line-height: 1.1;
+    margin-bottom: 3rem;
+  }
+
+  /* ── CASES GRID ── */
+  .cases-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2px;
+  }
+
+  .case-card {
+    padding: 2.5rem;
+    border: 1px solid rgba(212,200,154,0.12);
+    position: relative; overflow: hidden;
+    transition: background 0.3s;
+    cursor: default;
+  }
+  .case-card:hover { background: rgba(212,200,154,0.05); }
+  .case-card::before {
+    content: attr(data-number);
+    position: absolute; right: 1.5rem; top: 1rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem; font-weight: 900;
+    color: rgba(212,200,154,0.05);
+    line-height: 1;
+  }
+
+  .case-tag {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.65rem; letter-spacing: 0.4em;
+    color: var(--rust); text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .case-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem; font-weight: 700;
+    margin-bottom: 1rem; line-height: 1.2;
+  }
+
+  .case-desc {
+    font-size: 0.9rem; line-height: 1.8;
+    color: rgba(240,232,208,0.6); font-style: italic;
+  }
+
+  /* ── METHODS ── */
+  .methods-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .methods-text p {
+    font-size: 1rem; line-height: 2;
+    color: rgba(240,232,208,0.75);
+    margin-bottom: 1.5rem;
+    font-style: italic;
+  }
+
+  .method-list {
+    list-style: none;
+  }
+  .method-list li {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid rgba(212,200,154,0.1);
+    display: grid; grid-template-columns: 3rem 1fr;
+    gap: 1.5rem; align-items: start;
+  }
+  .method-num {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.7rem; color: var(--sepia);
+    letter-spacing: 0.2em; padding-top: 0.2rem;
+  }
+  .method-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem; font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+  .method-desc {
+    font-size: 0.85rem; line-height: 1.7;
+    color: rgba(240,232,208,0.55); font-style: italic;
+  }
+
+  /* ── ASSOCIATES ── */
+  .associates-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+  }
+
+  .associate {
+    text-align: center; padding: 3rem 2rem;
+    border: 1px solid rgba(212,200,154,0.12);
+    position: relative;
+  }
+  .associate::before {
+    content: '';
+    position: absolute; inset: 4px;
+    border: 1px solid rgba(212,200,154,0.05);
+    pointer-events: none;
+  }
+
+  .associate-initial {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem; font-weight: 900;
+    color: rgba(212,200,154,0.15);
+    line-height: 1; margin-bottom: 1.5rem;
+  }
+
+  .associate-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .associate-role {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.7rem; letter-spacing: 0.3em;
+    color: var(--sepia); text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+
+  .associate-desc {
+    font-size: 0.85rem; line-height: 1.8;
+    color: rgba(240,232,208,0.55); font-style: italic;
+  }
+
+  /* ── NEWSPAPER SECTION ── */
+  .newspaper {
+    background: var(--parchment); color: var(--ink);
+    padding: 5rem 6rem;
+    position: relative; z-index: 2;
+  }
+  .newspaper-header {
+    text-align: center;
+    border-top: 3px double var(--ink);
+    border-bottom: 3px double var(--ink);
+    padding: 1rem 0; margin-bottom: 3rem;
+  }
+  .newspaper-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 900; letter-spacing: 0.05em;
+  }
+  .newspaper-sub {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.7rem; letter-spacing: 0.4em;
+    text-transform: uppercase; color: var(--rust);
+    margin-top: 0.3rem;
+  }
+  .newspaper-columns {
+    display: grid; grid-template-columns: 2fr 1fr 1fr;
+    gap: 3rem;
+    border-top: 1px solid var(--ink);
+    padding-top: 2rem;
+  }
+  .newspaper-col h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem; font-weight: 700;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(26,18,9,0.3);
+  }
+  .newspaper-col p {
+    font-family: 'IM Fell English', serif;
+    font-size: 0.88rem; line-height: 1.9;
+    color: rgba(26,18,9,0.8); margin-bottom: 1rem;
+    font-style: italic;
+  }
+  .newspaper-pullquote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; font-style: italic;
+    font-weight: 700;
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    padding: 1rem 0; margin: 1.5rem 0;
+    line-height: 1.4;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative; z-index: 2;
+    padding: 4rem 6rem;
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid rgba(212,200,154,0.2);
+  }
+  .footer-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; font-weight: 900;
+  }
+  .footer-copy {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.7rem; letter-spacing: 0.2em;
+    color: var(--sepia);
+  }
+  .footer-pipe {
+    color: var(--sepia); margin: 0 1rem; opacity: 0.4;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(2rem); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes expandWidth {
+    from { opacity: 0; transform: scaleX(0); transform-origin: left; }
+    to { opacity: 1; transform: scaleX(1); }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(1.5rem);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1.5rem 6rem;
+    display: flex; justify-content: space-between; align-items: center;
+    background: linear-gradient(to bottom, rgba(26,18,9,0.95) 0%, transparent 100%);
+    backdrop-filter: blur(2px);
+  }
+  .nav-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; font-weight: 700; letter-spacing: 0.05em;
+  }
+  .nav-links {
+    display: flex; gap: 2.5rem; list-style: none;
+  }
+  .nav-links a {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.72rem; letter-spacing: 0.3em;
+    text-transform: uppercase; color: rgba(240,232,208,0.6);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--aged); }
+
+  @media (max-width: 900px) {
+    .hero, .section, .quote-strip, .newspaper, footer, nav { padding-left: 2rem; padding-right: 2rem; }
+    .methods-layout, .associates-row, .newspaper-columns { grid-template-columns: 1fr; gap: 2rem; }
+    .hero-title { font-size: clamp(3rem, 12vw, 5rem); }
+    nav { padding: 1rem 2rem; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="fog-container">
+  <div class="fog-layer"></div>
+  <div class="fog-layer"></div>
+</div>
+
+<nav>
+  <div class="nav-brand">S. Holmes</div>
+  <ul class="nav-links">
+    <li><a href="#cases">Cases</a></li>
+    <li><a href="#method">Method</a></li>
+    <li><a href="#associates">Associates</a></li>
+    <li><a href="#gazette">Gazette</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-eyebrow">221B Baker Street · London · Est. 1881</div>
+  <h1 class="hero-title">
+    Sherlock<em>Holmes</em>
+  </h1>
+  <div class="hero-rule"></div>
+  <p class="hero-desc">
+    Consulting Detective. The world's first and only of his kind. Where Scotland Yard falters, where reason eclipses fog, where the smallest detail becomes the final proof.
+  </p>
+  <div class="hero-address">
+    The World's Only Consulting Detective<br>
+    221B Baker Street, Marylebone, London
+  </div>
+</header>
+
+<!-- TYPEWRITER QUOTE -->
+<section class="quote-strip" id="quote-section">
+  <p class="typewriter-quote" id="typewriter"></p>
+  <p class="quote-attr" id="quote-attr">— Loading —</p>
+</section>
+
+<!-- NOTABLE CASES -->
+<section class="section" id="cases">
+  <div class="section-label">Dossier</div>
+  <h2 class="section-title reveal">Notable<br><em style="font-style:italic; color:var(--aged)">Investigations</em></h2>
+  <div class="cases-grid">
+    <div class="case-card reveal" data-number="I">
+      <div class="case-tag">Adventure · 1888</div>
+      <h3 class="case-title">A Study in Scarlet</h3>
+      <p class="case-desc">The first meeting of Holmes and Watson. A murder in an empty house, a word written in blood, and a trail leading to the deserts of Utah.</p>
+    </div>
+    <div class="case-card reveal" data-number="II">
+      <div class="case-tag">Adventure · 1889</div>
+      <h3 class="case-title">The Sign of the Four</h3>
+      <p class="case-desc">A woman in distress, a treasure of Agra, and four men bound by a terrible oath. The Thames runs dark with conspiracy.</p>
+    </div>
+    <div class="case-card reveal" data-number="III">
+      <div class="case-tag">Scandal · 1891</div>
+      <h3 class="case-title">A Scandal in Bohemia</h3>
+      <p class="case-desc">The only woman to have ever outwitted Holmes. Irene Adler — adventuress, and forever <em>the</em> woman.</p>
+    </div>
+    <div class="case-card reveal" data-number="IV">
+      <div class="case-tag">Novel · 1902</div>
+      <h3 class="case-title">The Hound of the Baskervilles</h3>
+      <p class="case-desc">On the fog-drenched moors of Devonshire, a spectral hound stalks the heirs of Baskerville Hall. Reason against legend.</p>
+    </div>
+    <div class="case-card reveal" data-number="V">
+      <div class="case-tag">Adventure · 1892</div>
+      <h3 class="case-title">The Final Problem</h3>
+      <p class="case-desc">The Napoleon of Crime. Professor Moriarty. The Reichenbach Falls. The world believed Holmes dead for three years.</p>
+    </div>
+    <div class="case-card reveal" data-number="VI">
+      <div class="case-tag">Adventure · 1903</div>
+      <h3 class="case-title">The Empty House</h3>
+      <p class="case-desc">Three years after Reichenbach. A return from the dead. Colonel Sebastian Moran and the air-gun in the empty house.</p>
+    </div>
+  </div>
+</section>
+
+<!-- METHOD -->
+<section class="section" id="method">
+  <div class="section-label">Methodology</div>
+  <div class="methods-layout">
+    <div class="methods-text">
+      <h2 class="section-title reveal">The Science<br><em style="font-style:italic; color:var(--aged)">of Deduction</em></h2>
+      <p class="reveal">Holmes operates not on intuition but on rigorous observation — every fibre of clothing, every callus on a hand, every trace of foreign soil speaks a language to those trained to listen.</p>
+      <p class="reveal">"When you have eliminated the impossible, whatever remains, however improbable, must be the truth."</p>
+    </div>
+    <ul class="method-list">
+      <li class="reveal">
+        <span class="method-num">01</span>
+        <div>
+          <div class="method-name">Observation</div>
+          <div class="method-desc">The disciplined, total cataloguing of all available physical evidence before a single hypothesis is formed.</div>
+        </div>
+      </li>
+      <li class="reveal">
+        <span class="method-num">02</span>
+        <div>
+          <div class="method-name">Deduction</div>
+          <div class="method-desc">Linking observed data through logical chains, eliminating all impossible interpretations until only truth remains.</div>
+        </div>
+      </li>
+      <li class="reveal">
+        <span class="method-num">03</span>
+        <div>
+          <div class="method-name">Knowledge Base</div>
+          <div class="method-desc">Chemistry, anatomy, London criminal history, tobacco ash, soil types, cipher codes — a vast and precisely organised mind.</div>
+        </div>
+      </li>
+      <li class="reveal">
+        <span class="method-num">04</span>
+        <div>
+          <div class="method-name">Disguise & Theatre</div>
+          <div class="method-desc">Holmes deploys persona and performance as investigative tools, operating unseen beneath countless identities.</div>
+        </div>
+      </li>
+      <li class="reveal">
+        <span class="method-num">05</span>
+        <div>
+          <div class="method-name">Network</div>
+          <div class="method-desc">The Irregulars, Mycroft, and a web of informants extend Holmes's reach into every corner of the city.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ASSOCIATES -->
+<section class="section" id="associates">
+  <div class="section-label">Inner Circle</div>
+  <h2 class="section-title reveal" style="margin-bottom:3.5rem">Known<br><em style="font-style:italic; color:var(--aged)">Associates</em></h2>
+  <div class="associates-row">
+    <div class="associate reveal">
+      <div class="associate-initial">W</div>
+      <div class="associate-name">Dr. John H. Watson</div>
+      <div class="associate-role">Companion · Chronicler · Physician</div>
+      <p class="associate-desc">Retired Army surgeon, veteran of the Second Anglo-Afghan War. Holmes's indispensable partner, biographer, and moral compass.</p>
+    </div>
+    <div class="associate reveal">
+      <div class="associate-initial">M</div>
+      <div class="associate-name">Mycroft Holmes</div>
+      <div class="associate-role">Brother · Government Auditor</div>
+      <p class="associate-desc">"He is the British government." Mycroft's deductive powers surpass Sherlock's, yet he lacks entirely the will to act upon them.</p>
+    </div>
+    <div class="associate reveal">
+      <div class="associate-initial">L</div>
+      <div class="associate-name">Inspector Lestrade</div>
+      <div class="associate-role">Scotland Yard · Detective Inspector</div>
+      <p class="associate-desc">The most competent of the Yard's men, Lestrade is tenacious but limited — always grateful for Holmes's intervention, rarely admitting it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSPAPER -->
+<section class="newspaper" id="gazette">
+  <div class="newspaper-header">
+    <div class="newspaper-name">The Baker Street Gazette</div>
+    <div class="newspaper-sub">Dispatches from 221B · Est. 1881 · Price: One Penny</div>
+  </div>
+  <div class="newspaper-columns">
+    <div class="newspaper-col">
+      <h3>The Consulting Detective Speaks</h3>
+      <p>It is a capital mistake to theorise before one has data. Insensibly one begins to twist facts to suit theories, instead of theories to suit facts — a habit which leads the reasoner, invariably, into error.</p>
+      <div class="newspaper-pullquote">"You see, but you do not observe. The distinction is clear."</div>
+      <p>Holmes received us in his Baker Street rooms, a pipe of shag tobacco beside him, several volumes of criminal reference scattered across the chemical-stained mantelpiece. He appeared, as always, in a state of intense repose — the coiled spring before its release.</p>
+    </div>
+    <div class="newspaper-col">
+      <h3>Profile</h3>
+      <p>Height: over six feet. Eyes: sharp, piercing grey. Born 6 January 1854, possibly in Yorkshire. Practised for twenty-three years from Baker Street before retirement to a small Sussex farm and the keeping of bees.</p>
+      <p>His monographs include <em>Upon the Distinction Between the Ashes of the Various Tobaccos</em> and <em>The Book of Life</em>, published in the Strand.</p>
+    </div>
+    <div class="newspaper-col">
+      <h3>Baker Street</h3>
+      <p>The famous lodgings at 221B: a first-floor sitting room, two bedrooms above, the landlady Mrs. Hudson below. The mantelpiece bristles with correspondence pinned by a jack-knife.</p>
+      <p>Visitors have noted: a bear-skin rug, a Persian slipper housing tobacco, and a chemical laboratory of considerable disorder.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">S. H.</div>
+  <div class="footer-copy">
+    221B Baker Street<span class="footer-pipe">|</span>London, England<span class="footer-pipe">|</span>The game is afoot
+  </div>
+</footer>
+
+<script>
+// Typewriter
+const quotes = [
+  { text: "When you have eliminated the impossible, whatever remains, however improbable, must be the truth.", attr: "— A. Conan Doyle, The Sign of the Four" },
+  { text: "Elementary, my dear Watson.", attr: "— Popularly attributed to Sherlock Holmes" },
+  { text: "You see, but you do not observe. The distinction is clear.", attr: "— A Study in Scarlet" },
+  { text: "The game is afoot.", attr: "— The Adventure of the Abbey Grange" },
+  { text: "My name is Sherlock Holmes. It is my business to know what other people don't know.", attr: "— The Adventure of the Blue Carbuncle" },
+];
+
+let qIndex = 0, charIndex = 0, deleting = false;
+const el = document.getElementById('typewriter');
+const attrEl = document.getElementById('quote-attr');
+
+function type() {
+  const q = quotes[qIndex];
+  if (!deleting) {
+    el.textContent = q.text.substring(0, charIndex++);
+    attrEl.textContent = charIndex > q.text.length / 2 ? q.attr : '— ···';
+    if (charIndex > q.text.length) {
+      setTimeout(() => { deleting = true; type(); }, 3500);
+      return;
+    }
+    setTimeout(type, 38);
+  } else {
+    el.textContent = q.text.substring(0, charIndex--);
+    if (charIndex <= 0) {
+      deleting = false;
+      qIndex = (qIndex + 1) % quotes.length;
+      setTimeout(type, 600);
+      return;
+    }
+    setTimeout(type, 18);
+  }
+}
+type();
+
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
