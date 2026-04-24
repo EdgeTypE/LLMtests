@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arthur C. Clarke — The Visionary Engineer of Tomorrow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --space-black: #070b14;
+            --deep-navy: #0d1528;
+            --dark-blue: #13203a;
+            --mid-blue: #1e3a8a;
+            --accent-gold: #c9a84c;
+            --warm-white: #e8e4de;
+            --soft-gray: #b8b4ae;
+            --dim-gray: #6a6a72;
+            --glow-blue: rgba(30, 58, 138, 0.3);
+            --font-heading: 'DM Serif Display', serif;
+            --font-body: 'DM Sans', sans-serif;
+            --max-width: 1200px;
+            --section-gap: 8rem;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--space-black);
+            color: var(--warm-white);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ── stars canvas ── */
+        #stars-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        /* ── scrollbar ── */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--space-black);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--mid-blue);
+            border-radius: 3px;
+        }
+
+        /* ── utility ── */
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-label {
+            font-family: var(--font-body);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            margin-bottom: 1.2rem;
+            position: relative;
+            display: inline-block;
+        }
+        .section-label::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 2px;
+            background: var(--accent-gold);
+            margin-top: 0.5rem;
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: clamp(2.2rem, 5vw, 3.6rem);
+            font-weight: 400;
+            line-height: 1.15;
+            color: var(--warm-white);
+            margin-bottom: 1.5rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--soft-gray);
+            max-width: 640px;
+            line-height: 1.8;
+        }
+
+        section {
+            padding: var(--section-gap) 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── reveal animation ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-delay-1 {
+            transition-delay: 0.1s;
+        }
+        .reveal-delay-2 {
+            transition-delay: 0.25s;
+        }
+        .reveal-delay-3 {
+            transition-delay: 0.4s;
+        }
+        .reveal-delay-4 {
+            transition-delay: 0.55s;
+        }
+        .reveal-delay-5 {
+            transition-delay: 0.7s;
+        }
+
+        /* ══════════════════════════════════════
+                   HERO
+                ══════════════════════════════════════ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            border: 1px solid rgba(201, 168, 76, 0.25);
+            padding: 0.4rem 1.2rem;
+            border-radius: 100px;
+            margin-bottom: 2.5rem;
+            backdrop-filter: blur(4px);
+            background: rgba(201, 168, 76, 0.04);
+        }
+
+        .hero h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(3rem, 8vw, 6.5rem);
+            font-weight: 400;
+            line-height: 1.05;
+            color: var(--warm-white);
+            max-width: 900px;
+            margin-bottom: 1.2rem;
+            letter-spacing: -0.02em;
+        }
+        .hero h1 .accent {
+            color: var(--accent-gold);
+            font-style: italic;
+        }
+
+        .hero-sub {
+            font-size: clamp(1rem, 1.6vw, 1.25rem);
+            color: var(--soft-gray);
+            max-width: 600px;
+            margin-bottom: 2.5rem;
+            font-weight: 300;
+        }
+
+        .hero-quote {
+            font-family: var(--font-heading);
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            font-style: italic;
+            color: var(--warm-white);
+            max-width: 780px;
+            line-height: 1.5;
+            padding: 2rem 0;
+            border-top: 1px solid rgba(232, 228, 222, 0.08);
+            border-bottom: 1px solid rgba(232, 228, 222, 0.08);
+            margin-top: 1rem;
+        }
+        .hero-quote .attribution {
+            display: block;
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            font-style: normal;
+            color: var(--dim-gray);
+            margin-top: 0.8rem;
+            letter-spacing: 0.05em;
+        }
+
+        .hero-scroll {
+            margin-top: 3.5rem;
+            animation: float-down 2.4s ease-in-out infinite;
+        }
+        .hero-scroll svg {
+            width: 24px;
+            height: 24px;
+            color: var(--dim-gray);
+        }
+
+        @keyframes float-down {
+            0%,
+            100% {
+                transform: translateY(0);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(8px);
+                opacity: 1;
+            }
+        }
+
+        /* ══════════════════════════════════════
+                   BIOGRAPHY
+                ══════════════════════════════════════ */
+        .bio-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+            margin-top: 2rem;
+        }
+
+        .bio-text p {
+            font-size: 1.05rem;
+            color: var(--soft-gray);
+            margin-bottom: 1.4rem;
+            line-height: 1.9;
+        }
+        .bio-text p strong {
+            color: var(--warm-white);
+            font-weight: 600;
+        }
+
+        .bio-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            background: var(--deep-navy);
+            border: 1px solid rgba(232, 228, 222, 0.06);
+            border-radius: 12px;
+            padding: 2rem 2rem 1.8rem;
+        }
+        .bio-stat-item {
+            text-align: center;
+        }
+        .bio-stat-item .number {
+            font-family: var(--font-heading);
+            font-size: 2.4rem;
+            color: var(--accent-gold);
+            line-height: 1.1;
+            display: block;
+        }
+        .bio-stat-item .label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--dim-gray);
+            margin-top: 0.3rem;
+        }
+        .bio-stat-item.full {
+            grid-column: 1 / -1;
+            padding-top: 0.5rem;
+            border-top: 1px solid rgba(232, 228, 222, 0.06);
+        }
+        .bio-stat-item.full .number {
+            font-size: 1.6rem;
+        }
+        .bio-stat-item.full .label {
+            font-size: 0.7rem;
+        }
+
+        /* ══════════════════════════════════════
+                   THREE LAWS
+                ══════════════════════════════════════ */
+        .laws-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 2.5rem;
+        }
+
+        .law-card {
+            background: var(--deep-navy);
+            border: 1px solid rgba(232, 228, 222, 0.06);
+            border-radius: 12px;
+            padding: 2.5rem 2rem 2rem;
+            transition: border-color 0.3s ease, transform 0.3s ease;
+            position: relative;
+        }
+        .law-card:hover {
+            border-color: var(--mid-blue);
+            transform: translateY(-4px);
+        }
+
+        .law-card .law-number {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            color: var(--mid-blue);
+            line-height: 1;
+            margin-bottom: 0.2rem;
+            opacity: 0.6;
+        }
+        .law-card .law-title {
+            font-family: var(--font-heading);
+            font-size: 1.15rem;
+            color: var(--warm-white);
+            margin-bottom: 0.8rem;
+            font-weight: 400;
+        }
+        .law-card .law-text {
+            font-size: 0.95rem;
+            color: var(--soft-gray);
+            line-height: 1.7;
+        }
+        .law-card .law-text em {
+            color: var(--accent-gold);
+            font-style: italic;
+        }
+
+        /* ══════════════════════════════════════
+                   MAJOR WORKS
+                ══════════════════════════════════════ */
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.8rem;
+            margin-top: 2.5rem;
+        }
+
+        .work-card {
+            background: var(--deep-navy);
+            border: 1px solid rgba(232, 228, 222, 0.06);
+            border-radius: 12px;
+            padding: 2rem 1.8rem 1.8rem;
+            transition: border-color 0.3s ease, transform 0.3s ease;
+            position: relative;
+        }
+        .work-card:hover {
+            border-color: var(--accent-gold);
+            transform: translateY(-3px);
+        }
+
+        .work-card .work-year {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+        .work-card .work-title {
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            color: var(--warm-white);
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+        }
+        .work-card .work-desc {
+            font-size: 0.88rem;
+            color: var(--soft-gray);
+            line-height: 1.7;
+        }
+        .work-card .work-tag {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--mid-blue);
+            border: 1px solid rgba(30, 58, 138, 0.25);
+            padding: 0.2rem 0.8rem;
+            border-radius: 100px;
+            margin-top: 1rem;
+            background: rgba(30, 58, 138, 0.06);
+        }
+
+        /* ══════════════════════════════════════
+                   TIMELINE
+                ══════════════════════════════════════ */
+        .timeline {
+            position: relative;
+            margin-top: 2.5rem;
+            padding-left: 2.5rem;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom,
+                    var(--mid-blue) 0%,
+                    rgba(30, 58, 138, 0.2) 100%);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2.8rem;
+        }
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.5rem;
+            top: 0.3rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--mid-blue);
+            border: 2px solid var(--space-black);
+            outline: 2px solid var(--mid-blue);
+        }
+
+        .timeline-item .tl-year {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            color: var(--accent-gold);
+            line-height: 1.2;
+        }
+        .timeline-item .tl-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--warm-white);
+            margin: 0.2rem 0 0.4rem;
+        }
+        .timeline-item .tl-desc {
+            font-size: 0.9rem;
+            color: var(--soft-gray);
+            line-height: 1.7;
+            max-width: 600px;
+        }
+
+        /* ══════════════════════════════════════
+                   QUOTES / CAROUSEL
+                ══════════════════════════════════════ */
+        .quotes-section {
+            background: var(--deep-navy);
+            border-top: 1px solid rgba(232, 228, 222, 0.05);
+            border-bottom: 1px solid rgba(232, 228, 222, 0.05);
+        }
+
+        .quote-carousel {
+            position: relative;
+            max-width: 800px;
+            margin: 2rem auto 0;
+            text-align: center;
+            min-height: 200px;
+        }
+
+        .quote-slide {
+            display: none;
+            animation: fade-quote 0.6s ease forwards;
+        }
+        .quote-slide.active {
+            display: block;
+        }
+
+        @keyframes fade-quote {
+            0% {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .quote-slide blockquote {
+            font-family: var(--font-heading);
+            font-size: clamp(1.3rem, 2.8vw, 1.9rem);
+            font-style: italic;
+            color: var(--warm-white);
+            line-height: 1.5;
+            margin-bottom: 1.2rem;
+        }
+        .quote-slide .quote-source {
+            font-size: 0.85rem;
+            color: var(--dim-gray);
+            font-style: normal;
+            letter-spacing: 0.04em;
+        }
+        .quote-slide .quote-source::before {
+            content: '— ';
+        }
+
+        .quote-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .quote-controls button {
+            background: none;
+            border: 1px solid rgba(232, 228, 222, 0.12);
+            color: var(--warm-white);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: border-color 0.3s, background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .quote-controls button:hover {
+            border-color: var(--accent-gold);
+            background: rgba(201, 168, 76, 0.06);
+        }
+        .quote-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .quote-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--dim-gray);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .quote-dots span.active {
+            background: var(--accent-gold);
+        }
+
+        /* ══════════════════════════════════════
+                   FOOTER
+                ══════════════════════════════════════ */
+        footer {
+            padding: 3rem 0 4rem;
+            text-align: center;
+            border-top: 1px solid rgba(232, 228, 222, 0.04);
+            position: relative;
+            z-index: 1;
+        }
+        footer p {
+            font-size: 0.8rem;
+            color: var(--dim-gray);
+            letter-spacing: 0.04em;
+        }
+        footer .footer-quote {
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            font-style: italic;
+            color: var(--soft-gray);
+            margin-bottom: 1rem;
+        }
+
+        /* ══════════════════════════════════════
+                   RESPONSIVE
+                ══════════════════════════════════════ */
+        @media (max-width: 900px) {
+            .bio-grid {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+            .laws-grid {
+                grid-template-columns: 1fr;
+            }
+            :root {
+                --section-gap: 5rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 0 1.2rem;
+            }
+            .hero h1 {
+                font-size: clamp(2.2rem, 10vw, 3.6rem);
+            }
+            .hero-quote {
+                font-size: 1rem;
+                padding: 1.5rem 0;
+            }
+            .bio-stats {
+                grid-template-columns: 1fr 1fr;
+                padding: 1.5rem;
+            }
+            .works-grid {
+                grid-template-columns: 1fr;
+            }
+            .timeline {
+                padding-left: 1.8rem;
+            }
+            .timeline-item::before {
+                left: -1.8rem;
+                width: 10px;
+                height: 10px;
+            }
+            .quote-slide blockquote {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ═══ STARS ═══ -->
+    <canvas id="stars-canvas"></canvas>
+
+    <!-- ═══ HERO ═══ -->
+    <section class="hero">
+        <div class="hero-badge reveal visible">1917 — 2008</div>
+        <h1 class="reveal visible reveal-delay-1">
+            Arthur C.<br />
+            <span class="accent">Clarke</span>
+        </h1>
+        <p class="hero-sub reveal visible reveal-delay-2">
+            Visionary engineer of tomorrow &bull; author of <em>2001: A Space Odyssey</em>
+            &bull; inventor of the communications satellite
+        </p>
+        <div class="hero-quote reveal visible reveal-delay-3">
+            “Any sufficiently advanced technology is indistinguishable from magic.”
+            <span class="attribution">— Clarke's Third Law</span>
+        </div>
+        <div class="hero-scroll reveal visible reveal-delay-4">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M12 5v14m0 0l-5-5m5 5l5-5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </div>
+    </section>
+
+    <!-- ═══ BIOGRAPHY ═══ -->
+    <section>
+        <div class="container">
+            <div class="reveal">
+                <span class="section-label">Biography</span>
+                <h2 class="section-title">The Man Who Saw Tomorrow</h2>
+            </div>
+            <div class="bio-grid">
+                <div class="bio-text reveal reveal-delay-1">
+                    <p>
+                        <strong>Sir Arthur Charles Clarke</strong> (1917–2008) was a British science
+                        fiction writer, futurist, inventor, undersea explorer, and television host.
+                        He is best remembered for co-writing the screenplay for <em>2001: A Space
+                        Odyssey</em> with Stanley Kubrick — widely regarded as the most influential
+                        science fiction film ever made.
+                    </p>
+                    <p>
+                        In 1945 — more than a decade before the first satellite — Clarke published
+                        a technical paper proposing <strong>geostationary communications satellites</strong>.
+                        The orbit he described is now named the <strong>Clarke Orbit</strong>. He
+                        received numerous honors, including a knighthood from the British Empire and
+                        the Heinlein Award for lifetime achievement in science fiction.
+                    </p>
+                    <p>
+                        Clarke spent much of his later life in <strong>Sri Lanka</strong> (formerly
+                        Ceylon), where he pursued his twin passions: the ocean and the stars. He
+                        explored the Great Barrier Reef, wrote extensively on the Indian Ocean, and
+                        hosted television series blending science, speculation, and wonder.
+                    </p>
+                </div>
+                <div class="reveal reveal-delay-2">
+                    <div class="bio-stats">
+                        <div class="bio-stat-item">
+                            <span class="number">1917</span>
+                            <span class="label">Born — Somerset, England</span>
+                        </div>
+                        <div class="bio-stat-item">
+                            <span class="number">1945</span>
+                            <span class="label">Satellite Concept</span>
+                        </div>
+                        <div class="bio-stat-item">
+                            <span class="number">100+</span>
+                            <span class="label">Books Published</span>
+                        </div>
+                        <div class="bio-stat-item">
+                            <span class="number">2008</span>
+                            <span class="label">Passed — Colombo, Sri Lanka</span>
+                        </div>
+                        <div class="bio-stat-item full">
+                            <span class="number">"The only way to discover the limits of the possible is to venture a little way past them into the impossible."</span>
+                            <span class="label">— Clarke's Second Law</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ THREE LAWS ═══ -->
+    <section>
+        <div class="container">
+            <div class="reveal">
+                <span class="section-label">The Three Laws</span>
+                <h2 class="section-title">Clarke's Laws of Prediction</h2>
+                <p class="section-subtitle">
+                    Distilled wisdom on the nature of progress, the boundaries of knowledge, and
+                    the threshold where engineering becomes wonder.
+                </p>
+            </div>
+            <div class="laws-grid">
+                <div class="law-card reveal reveal-delay-1">
+                    <div class="law-number">I</div>
+                    <div class="law-title">The Law of Possibility</div>
+                    <div class="law-text">
+                        “When a distinguished but elderly scientist states that something is possible,
+                        he is almost certainly right. When he states that something is impossible,
+                        he is very probably wrong.”
+                    </div>
+                </div>
+                <div class="law-card reveal reveal-delay-2">
+                    <div class="law-number">II</div>
+                    <div class="law-title">The Law of Limits</div>
+                    <div class="law-text">
+                        “The only way of discovering the <em>limits of the possible</em> is to venture
+                        a little way past them into the impossible.”
+                    </div>
+                </div>
+                <div class="law-card reveal reveal-delay-3">
+                    <div class="law-number">III</div>
+                    <div class="law-title">The Law of Magic</div>
+                    <div class="law-text">
+                        “Any sufficiently advanced technology is indistinguishable from magic.”
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ MAJOR WORKS ═══ -->
+    <section>
+        <div class="container">
+            <div class="reveal">
+                <span class="section-label">Bibliography</span>
+                <h2 class="section-title">Major Works</h2>
+                <p class="section-subtitle">
+                    A selection of the novels and stories that redefined science fiction and
+                    shaped how humanity imagines its future.
+                </p>
+            </div>
+            <div class="works-grid">
+                <div class="work-card reveal reveal-delay-1">
+                    <div class="work-year">1953</div>
+                    <div class="work-title">Childhood's End</div>
+                    <div class="work-desc">
+                        A peaceful alien visitation leads humanity toward a transcendent —
+                        and terrifying — evolutionary destiny.
+                    </div>
+                    <span class="work-tag">First Contact</span>
+                </div>
+                <div class="work-card reveal reveal-delay-2">
+                    <div class="work-year">1968</div>
+                    <div class="work-title">2001: A Space Odyssey</div>
+                    <div class="work-desc">
+                        From ape to star-child — a journey across millions of years, powered
+                        by the enigmatic Monolith and the faltering HAL 9000.
+                    </div>
+                    <span class="work-tag">Masterwork</span>
+                </div>
+                <div class="work-card reveal reveal-delay-3">
+                    <div class="work-year">1973</div>
+                    <div class="work-title">Rendezvous with Rama</div>
+                    <div class="work-desc">
+                        A cylindrical alien spacecraft enters the solar system. Humanity
+                        explores it with awe, never understanding its purpose.
+                    </div>
+                    <span class="work-tag">Hard SF</span>
+                </div>
+                <div class="work-card reveal reveal-delay-4">
+                    <div class="work-year">1979</div>
+                    <div class="work-title">The Fountains of Paradise</div>
+                    <div class="work-desc">
+                        The first realistic vision of a space elevator — an orbital tower
+                        rising from a mountain in Sri Lanka.
+                    </div>
+                    <span class="work-tag">Engineering</span>
+                </div>
+                <div class="work-card reveal reveal-delay-5">
+                    <div class="work-year">1982</div>
+                    <div class="work-title">2010: Odyssey Two</div>
+                    <div class="work-desc">
+                        A joint US-Soviet mission to Jupiter discovers what became of
+                        Dave Bowman and the Monolith's true purpose.
+                    </div>
+                    <span class="work-tag">Sequel</span>
+                </div>
+                <div class="work-card reveal reveal-delay-5">
+                    <div class="work-year">1993</div>
+                    <div class="work-title">The Hammer of God</div>
+                    <div class="work-desc">
+                        An asteroid threatens Earth — and humanity must decide whether to
+                        destroy it or let it reshape the world.
+                    </div>
+                    <span class="work-tag">Near-Future</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ TIMELINE ═══ -->
+    <section>
+        <div class="container">
+            <div class="reveal">
+                <span class="section-label">Timeline</span>
+                <h2 class="section-title">Predictions &amp; Milestones</h2>
+                <p class="section-subtitle">
+                    Clarke's ideas often arrived decades before the technology caught up.
+                    Here are the moments when his vision became reality.
+                </p>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item reveal reveal-delay-1">
+                    <div class="tl-year">1945</div>
+                    <div class="tl-title">The Communications Satellite</div>
+                    <div class="tl-desc">
+                        Publishes "Extra-Terrestrial Relays" in <em>Wireless World</em>, describing
+                        geostationary satellites for global communication. The concept becomes
+                        reality in 1964 with Syncom 3.
+                    </div>
+                </div>
+                <div class="timeline-item reveal reveal-delay-2">
+                    <div class="tl-year">1964</div>
+                    <div class="tl-title">Geostationary Orbit Realized</div>
+                    <div class="tl-desc">
+                        Syncom 3 becomes the first geostationary communications satellite,
+                        validating Clarke's 1945 proposal. The orbit is later officially
+                        designated the <strong>Clarke Orbit</strong>.
+                    </div>
+                </div>
+                <div class="timeline-item reveal reveal-delay-3">
+                    <div class="tl-year">1968</div>
+                    <div class="tl-title">2001: A Space Odyssey Premieres</div>
+                    <div class="tl-desc">
+                        Co-written with Stanley Kubrick, the film sets a new standard for
+                        scientific accuracy in cinema — from spinning space stations to
+                        Pan Am space planes and the HAL 9000 AI.
+                    </div>
+                </div>
+                <div class="timeline-item reveal reveal-delay-4">
+                    <div class="tl-year">1979</div>
+                    <div class="tl-title">The Space Elevator Vision</div>
+                    <div class="tl-desc">
+                        <em>The Fountains of Paradise</em> presents the first fully realized
+                        space elevator concept. Today, companies and space agencies actively
+                        research carbon-nanotube tethers for orbital elevators.
+                    </div>
+                </div>
+                <div class="timeline-item reveal reveal-delay-5">
+                    <div class="tl-year">2001</div>
+                    <div class="tl-title">HAL's Year Arrives</div>
+                    <div class="tl-desc">
+                        The year 2001 comes and goes. While HAL 9000 remains fiction, AI
+                        systems begin matching — and in some tasks surpassing — the
+                        capabilities Clarke imagined for his infamous computer.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ QUOTES ═══ -->
+    <section class="quotes-section">
+        <div class="container">
+            <div class="reveal">
+                <span class="section-label">In His Own Words</span>
+                <h2 class="section-title">The Clarke Archive</h2>
+            </div>
+            <div class="quote-carousel reveal reveal-delay-1" id="quoteCarousel">
+                <div class="quote-slide active">
+                    <blockquote>
+                        “The only way of discovering the limits of the possible is to venture a
+                        little way past them into the impossible.”
+                    </blockquote>
+                    <span class="quote-source">Clarke's Second Law</span>
+                </div>
+                <div class="quote-slide">
+                    <blockquote>
+                        “When a distinguished but elderly scientist states that something is
+                        possible, he is almost certainly right. When he states that something is
+                        impossible, he is very probably wrong.”
+                    </blockquote>
+                    <span class="quote-source">Clarke's First Law</span>
+                </div>
+                <div class="quote-slide">
+                    <blockquote>
+                        “Any sufficiently advanced technology is indistinguishable from magic.”
+                    </blockquote>
+                    <span class="quote-source">Clarke's Third Law</span>
+                </div>
+                <div class="quote-slide">
+                    <blockquote>
+                        “Two possibilities exist: either we are alone in the Universe or we are
+                        not. Both are equally terrifying.”
+                    </blockquote>
+                    <span class="quote-source">Profiles of the Future (1962)</span>
+                </div>
+                <div class="quote-slide">
+                    <blockquote>
+                        “The greatest tragedy in mankind's entire history may be the hijacking
+                        of morality by religion.”
+                    </blockquote>
+                    <span class="quote-source">Interview, 2000</span>
+                </div>
+            </div>
+            <div class="quote-controls reveal reveal-delay-2">
+                <button id="quotePrev" aria-label="Previous quote">←</button>
+                <div class="quote-dots" id="quoteDots">
+                    <span class="active"></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <button id="quoteNext" aria-label="Next quote">→</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer>
+        <div class="container">
+            <p class="footer-quote">“The stars are not far away. They are waiting for us to become worthy of them.”</p>
+            <p>Sir Arthur C. Clarke &bull; 1917–2008 &bull; The Visionary Engineer of Tomorrow</p>
+        </div>
+    </footer>
+
+    <!-- ═══ SCRIPTS ═══ -->
+    <script>
+        // ── Stars ──
+        (function() {
+            const canvas = document.getElementById('stars-canvas');
+            const ctx = canvas.getContext('2d');
+            let stars = [];
+            let w, h;
+
+            function resize() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            const STAR_COUNT = 280;
+            for (let i = 0; i < STAR_COUNT; i++) {
+                stars.push({
+                    x: Math.random() * w,
+                    y: Math.random() * h,
+                    r: Math.random() * 1.4 + 0.3,
+                    alpha: Math.random() * 0.6 + 0.2,
+                    speed: Math.random() * 0.02 + 0.005,
+                });
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, w, h);
+                for (const s of stars) {
+                    s.alpha += (Math.random() - 0.5) * 0.02;
+                    s.alpha = Math.max(0.1, Math.min(0.9, s.alpha));
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(232, 228, 222, ${s.alpha})`;
+                    ctx.fill();
+                }
+                requestAnimationFrame(draw);
+            }
+            draw();
+
+            // reposition on resize
+            window.addEventListener('resize', () => {
+                resize();
+                for (const s of stars) {
+                    s.x = Math.random() * w;
+                    s.y = Math.random() * h;
+                }
+            });
+        })();
+
+        // ── Reveal on scroll ──
+        (function() {
+            const reveals = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                for (const e of entries) {
+                    if (e.isIntersecting) {
+                        e.target.classList.add('visible');
+                    }
+                }
+            }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+            for (const el of reveals) observer.observe(el);
+        })();
+
+        // ── Quote Carousel ──
+        (function() {
+            const slides = document.querySelectorAll('.quote-slide');
+            const dots = document.querySelectorAll('.quote-dots span');
+            const prevBtn = document.getElementById('quotePrev');
+            const nextBtn = document.getElementById('quoteNext');
+            let current = 0;
+            const total = slides.length;
+
+            function show(index) {
+                slides.forEach((s, i) => {
+                    s.classList.toggle('active', i === index);
+                });
+                dots.forEach((d, i) => {
+                    d.classList.toggle('active', i === index);
+                });
+                current = index;
+            }
+
+            function next() { show((current + 1) % total); }
+
+            function prev() { show((current - 1 + total) % total); }
+
+            nextBtn.addEventListener('click', next);
+            prevBtn.addEventListener('click', prev);
+            dots.forEach((d, i) => {
+                d.addEventListener('click', () => show(i));
+            });
+
+            // auto-rotate
+            let interval = setInterval(next, 6000);
+            const carousel = document.getElementById('quoteCarousel');
+            carousel.addEventListener('mouseenter', () => clearInterval(interval));
+            carousel.addEventListener('mouseleave', () => {
+                clearInterval(interval);
+                interval = setInterval(next, 6000);
+            });
+        })();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arthur C. Clarke — Visionary of the Space Age</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=DM+Mono:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --space-black: #08080f;
+            --void-deep: #0d0d18;
+            --star-white: #e8e8f0;
+            --text-muted: #9a9ab0;
+            --cosmic-blue: #5b8aab;
+            --halo-blue: #3a6b8f;
+            --monolith-grey: #1a1a28;
+            --accent-pale: #b8c9d8;
+            --ratio-1: calc(1rem * 1);
+            --ratio-4: calc(1rem * 4);
+            --ratio-9: calc(1rem * 9);
+        }{
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+html {
+scroll-behavior: smooth;
+font-size: 16px;
+scrollbar-width: thin;
+scrollbar-color: var(--cosmic-blue) var(--space-black);
+}
+::-webkit-scrollbar {
+width: 6px;
+}
+::-webkit-scrollbar-track {
+background: var(--space-black);
+}
+::-webkit-scrollbar-thumb {
+background: var(--cosmic-blue);
+border-radius: 0;
+}
+body {
+background-color: var(--space-black);
+color: var(--star-white);
+font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+font-weight: 300;
+line-height: 1.7;
+overflow-x: hidden;
+-webkit-font-smoothing: antialiased;
+}
+/* ── Starfield Canvas ── */
+#starfield {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+pointer-events: none;
+z-index: 0;
+}
+/* ── Navigation ── */
+nav {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+z-index: 100;
+padding: 1.5rem 3rem;
+display: flex;
+align-items: center;
+justify-content: space-between;
+mix-blend-mode: difference;
+transition: background 0.4s ease;
+}
+nav.scrolled {
+background: rgba(8, 8, 15, 0.85);
+backdrop-filter: blur(12px);
+mix-blend-mode: normal;
+border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.nav-brand {
+font-family: 'DM Mono', monospace;
+font-size: 0.85rem;
+letter-spacing: 0.25em;
+text-transform: uppercase;
+color: var(--cosmic-blue);
+text-decoration: none;
+}
+.nav-links {
+display: flex;
+gap: 2.5rem;
+list-style: none;
+}
+.nav-links a {
+color: var(--star-white);
+text-decoration: none;
+font-size: 0.8rem;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+font-weight: 400;
+position: relative;
+padding: 0.25rem 0;
+transition: color 0.3s;
+}
+.nav-links a::after {
+content: '';
+position: absolute;
+bottom: -2px;
+left: 0;
+width: 0;
+height: 1px;
+background: var(--cosmic-blue);
+transition: width 0.3s ease;
+}
+.nav-links a:hover {
+color: var(--cosmic-blue);
+}
+.nav-links a:hover::after {
+width: 100%;
+}
+/* ── Hero Section ── */
+.hero {
+position: relative;
+z-index: 1;
+min-height: 100vh;
+display: flex;
+align-items: center;
+padding: 6rem 3rem 4rem;
+gap: 4rem;
+}
+.hero-content {
+flex: 1;
+max-width: 600px;
+}
+.hero-label {
+font-family: 'DM Mono', monospace;
+font-size: 0.7rem;
+letter-spacing: 0.4em;
+text-transform: uppercase;
+color: var(--cosmic-blue);
+margin-bottom: 1.5rem;
+}
+.hero h1 {
+font-family: 'Crimson Pro', serif;
+font-weight: 300;
+font-size: clamp(3.5rem, 7vw, 6.5rem);
+line-height: 0.95;
+letter-spacing: -0.02em;
+color: var(--star-white);
+margin-bottom: 1.5rem;
+}
+.hero h1 .accent {
+color: var(--cosmic-blue);
+font-style: italic;
+}
+.hero-subtitle {
+font-size: 1.15rem;
+color: var(--text-muted);
+font-weight: 300;
+max-width: 440px;
+line-height: 1.6;
+margin-bottom: 2.5rem;
+}
+.hero-monolith {
+flex: 0 0 auto;
+position: relative;
+width: 80px;
+min-height: 420px;
+background: linear-gradient(
+180deg,
+rgba(26, 26, 40, 0.4) 0%,
+rgba(26, 26, 40, 0.9) 40%,
+rgba(26, 26, 40, 1) 100%
+);
+border: 1px solid rgba(255, 255, 255, 0.08);
+animation: monolithFloat 8s ease-in-out infinite;
+box-shadow:
+0 0 60px rgba(91, 138, 171, 0.08),
+inset 0 0 30px rgba(0, 0, 0, 0.4);
+}
+.hero-monolith::before {
+content: '';
+position: absolute;
+top: 10%;
+left: 50%;
+transform: translateX(-50%);
+width: 2px;
+height: 80%;
+background: rgba(255, 255, 255, 0.03);
+}
+@keyframes monolithFloat {
+0%,
+100% {
+transform: translateY(0);
+}
+25% {
+transform: translateY(-12px);
+}
+50% {
+transform: translateY(-4px);
+}
+75% {
+transform: translateY(-16px);
+}
+}
+/* ── Scroll indicator ── */
+.scroll-indicator {
+position: absolute;
+bottom: 2.5rem;
+left: 50%;
+transform: translateX(-50%);
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 0.5rem;
+z-index: 2;
+opacity: 0.6;
+animation: fadePulse 3s ease-in-out infinite;
+}
+.scroll-indicator span {
+font-family: 'DM Mono', monospace;
+font-size: 0.6rem;
+letter-spacing: 0.3em;
+text-transform: uppercase;
+}
+.scroll-line {
+width: 1px;
+height: 50px;
+background: var(--cosmic-blue);
+animation: scrollLine 2s ease-in-out infinite;
+}
+@keyframes scrollLine {
+0%,
+100% {
+transform: scaleY(0.3);
+transform-origin: top;
+}
+50% {
+transform: scaleY(1);
+transform-origin: top;
+}
+}
+@keyframes fadePulse {
+0%,
+100% {
+opacity: 0.4;
+}
+50% {
+opacity: 0.8;
+}
+}
+/* ── Section Common ── */
+section {
+position: relative;
+z-index: 1;
+padding: 8rem 3rem;
+}
+.section-inner {
+max-width: 1100px;
+margin: 0 auto;
+}
+.section-label {
+font-family: 'DM Mono', monospace;
+font-size: 0.65rem;
+letter-spacing: 0.4em;
+text-transform: uppercase;
+color: var(--cosmic-blue);
+margin-bottom: 1rem;
+}
+.section-title {
+font-family: 'Crimson Pro', serif;
+font-weight: 300;
+font-size: clamp(2.2rem, 4vw, 3.4rem);
+letter-spacing: -0.02em;
+color: var(--star-white);
+margin-bottom: 3rem;
+line-height: 1.15;
+}
+.section-title .em {
+font-style: italic;
+color: var(--cosmic-blue);
+}
+/* ── Divider ── */
+.cosmic-divider {
+position: relative;
+z-index: 1;
+height: 1px;
+background: rgba(255, 255, 255, 0.06);
+margin: 0 3rem;
+}
+.cosmic-divider::after {
+content: '◆';
+position: absolute;
+left: 50%;
+top: 50%;
+transform: translate(-50%, -50%);
+font-size: 0.5rem;
+color: var(--cosmic-blue);
+background: var(--space-black);
+padding: 0 1rem;
+}
+/* ── Bio Grid ── */
+.bio-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 3rem;
+align-items: start;
+}
+.bio-text p {
+color: var(--text-muted);
+margin-bottom: 1.5rem;
+font-size: 1.05rem;
+line-height: 1.8;
+}
+.bio-text p strong {
+color: var(--star-white);
+font-weight: 500;
+}
+.bio-stats {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 1.5rem;
+}
+.stat-card {
+background: var(--monolith-grey);
+border: 1px solid rgba(255, 255, 255, 0.05);
+padding: 1.8rem 1.5rem;
+transition: border-color 0.4s, transform 0.4s;
+}
+.stat-card:hover {
+border-color: rgba(91, 138, 171, 0.4);
+transform: translateY(-3px);
+}
+.stat-number {
+font-family: 'Crimson Pro', serif;
+font-size: 2.8rem;
+font-weight: 300;
+color: var(--cosmic-blue);
+line-height: 1;
+margin-bottom: 0.5rem;
+}
+.stat-label {
+font-family: 'DM Mono', monospace;
+font-size: 0.65rem;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: var(--text-muted);
+}
+/* ── Timeline ── */
+.timeline {
+position: relative;
+padding-left: 2rem;
+border-left: 1px solid rgba(255, 255, 255, 0.1);
+margin-top: 2rem;
+}
+.timeline-item {
+position: relative;
+margin-bottom: 2.5rem;
+padding-left: 2rem;
+}
+.timeline-item::before {
+content: '';
+position: absolute;
+left: -2.5rem;
+top: 0.35rem;
+width: 8px;
+height: 8px;
+border-radius: 50%;
+background: var(--cosmic-blue);
+border: 2px solid var(--space-black);
+z-index: 2;
+}
+.timeline-year {
+font-family: 'DM Mono', monospace;
+font-size: 0.75rem;
+letter-spacing: 0.25em;
+color: var(--cosmic-blue);
+margin-bottom: 0.3rem;
+}
+.timeline-text {
+color: var(--text-muted);
+font-size: 0.95rem;
+line-height: 1.6;
+}
+.timeline-text strong {
+color: var(--star-white);
+font-weight: 500;
+}
+/* ── Works Grid ── */
+.works-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+gap: 2rem;
+}
+.work-card {
+background: var(--monolith-grey);
+border: 1px solid rgba(255, 255, 255, 0.05);
+padding: 2rem 1.8rem;
+transition: border-color 0.4s, transform 0.4s, box-shadow 0.4s;
+position: relative;
+overflow: hidden;
+}
+.work-card::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 2px;
+background: var(--cosmic-blue);
+transform: scaleX(0);
+transform-origin: left;
+transition: transform 0.5s ease;
+}
+.work-card:hover {
+border-color: rgba(91, 138, 171, 0.35);
+transform: translateY(-4px);
+box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+.work-card:hover::before {
+transform: scaleX(1);
+}
+.work-year {
+font-family: 'DM Mono', monospace;
+font-size: 0.65rem;
+letter-spacing: 0.3em;
+color: var(--cosmic-blue);
+margin-bottom: 0.75rem;
+}
+.work-title {
+font-family: 'Crimson Pro', serif;
+font-size: 1.5rem;
+font-weight: 400;
+color: var(--star-white);
+margin-bottom: 0.75rem;
+line-height: 1.2;
+}
+.work-desc {
+font-size: 0.85rem;
+color: var(--text-muted);
+line-height: 1.6;
+}
+/* ── Three Laws ── */
+.laws-block {
+display: flex;
+flex-direction: column;
+gap: 2rem;
+counter-reset: law-counter;
+}
+.law-item {
+display: flex;
+gap: 2rem;
+align-items: flex-start;
+padding: 2rem 2.5rem;
+background: var(--monolith-grey);
+border: 1px solid rgba(255, 255, 255, 0.05);
+border-left: 3px solid var(--cosmic-blue);
+transition: background 0.4s;
+counter-increment: law-counter;
+}
+.law-item:hover {
+background: #1e1e32;
+}
+.law-number {
+font-family: 'Crimson Pro', serif;
+font-size: 3.5rem;
+font-weight: 300;
+color: var(--cosmic-blue);
+line-height: 1;
+flex-shrink: 0;
+min-width: 3rem;
+}
+.law-content h3 {
+font-family: 'Crimson Pro', serif;
+font-size: 1.3rem;
+font-weight: 400;
+color: var(--star-white);
+margin-bottom: 0.5rem;
+}
+.law-content p {
+color: var(--text-muted);
+font-size: 0.9rem;
+line-height: 1.7;
+}
+/* ── Quotes ── */
+.quote-block {
+text-align: center;
+padding: 4rem 2rem;
+position: relative;
+}
+.quote-block blockquote {
+font-family: 'Crimson Pro', serif;
+font-size: clamp(1.5rem, 3vw, 2.2rem);
+font-weight: 300;
+font-style: italic;
+color: var(--star-white);
+line-height: 1.4;
+max-width: 700px;
+margin: 0 auto 1.5rem;
+position: relative;
+}
+.quote-block blockquote::before {
+content: '"';
+position: absolute;
+top: -2rem;
+left: -1.5rem;
+font-size: 6rem;
+color: var(--cosmic-blue);
+opacity: 0.3;
+font-style: normal;
+line-height: 1;
+}
+.quote-attribution {
+font-family: 'DM Mono', monospace;
+font-size: 0.7rem;
+letter-spacing: 0.3em;
+text-transform: uppercase;
+color: var(--cosmic-blue);
+}
+/* ── 2001 Section ── */
+.odyssey-section {
+background: var(--void-deep);
+border-top: 1px solid rgba(255, 255, 255, 0.05);
+border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.odyssey-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 4rem;
+align-items: center;
+}
+.odyssey-visual {
+position: relative;
+display: flex;
+justify-content: center;
+align-items: center;
+min-height: 300px;
+}
+.odyssey-monolith-group {
+position: relative;
+}
+.mini-monolith {
+width: 18px;
+height: 160px;
+background: linear-gradient(180deg, rgba(26, 26, 40, 0.5), rgba(26, 26, 40, 1));
+border: 1px solid rgba(255, 255, 255, 0.1);
+animation: miniFloat 5s ease-in-out infinite;
+box-shadow: 0 0 40px rgba(91, 138, 171, 0.15);
+}
+.mini-monolith:nth-child(2) {
+position: absolute;
+top: -10px;
+left: -30px;
+width: 10px;
+height: 90px;
+animation-delay: -1.5s;
+opacity: 0.6;
+}
+.mini-monolith:nth-child(3) {
+position: absolute;
+top: 20px;
+left: 30px;
+width: 12px;
+height: 110px;
+animation-delay: -3s;
+opacity: 0.5;
+}
+@keyframes miniFloat {
+0%,
+100% {
+transform: translateY(0);
+}
+50% {
+transform: translateY(-10px);
+}
+}
+.odyssey-text h3 {
+font-family: 'Crimson Pro', serif;
+font-size: 1.8rem;
+font-weight: 300;
+color: var(--star-white);
+margin-bottom: 1rem;
+}
+.odyssey-text p {
+color: var(--text-muted);
+line-height: 1.8;
+margin-bottom: 1.2rem;
+}
+.hal-eye {
+display: inline-block;
+width: 16px;
+height: 16px;
+border-radius: 50%;
+background: radial-gradient(circle, #ff4444 20%, #880000 70%, #330000 100%);
+margin: 0 0.3rem;
+vertical-align: middle;
+animation: halGlow 2s ease-in-out infinite;
+}
+@keyframes halGlow {
+0%,
+100% {
+box-shadow: 0 0 6px #ff4444, 0 0 12px #880000;
+}
+50% {
+box-shadow: 0 0 12px #ff6666, 0 0 24px #aa0000;
+}
+}
+/* ── Footer ── */
+footer {
+position: relative;
+z-index: 1;
+padding: 4rem 3rem;
+text-align: center;
+border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.footer-quote {
+font-family: 'Crimson Pro', serif;
+font-style: italic;
+font-size: 1.1rem;
+color: var(--text-muted);
+max-width: 500px;
+margin: 0 auto 2rem;
+line-height: 1.5;
+}
+.footer-meta {
+font-family: 'DM Mono', monospace;
+font-size: 0.65rem;
+letter-spacing: 0.3em;
+text-transform: uppercase;
+color: var(--cosmic-blue);
+opacity: 0.6;
+}
+/* ── Responsive ── */
+@media (max-width: 900px) {
+.hero {
+flex-direction: column;
+padding: 5rem 1.5rem 3rem;
+gap: 2rem;
+text-align: center;
+min-height: auto;
+}
+.hero-subtitle {
+max-width: 100%;
+margin-left: auto;
+margin-right: auto;
+}
+.hero-monolith {
+width: 40px;
+min-height: 200px;
+margin: 0 auto;
+}
+.bio-grid,
+.odyssey-grid {
+grid-template-columns: 1fr;
+gap: 2rem;
+}
+.works-grid {
+grid-template-columns: 1fr;
+}
+nav {
+padding: 1rem 1.5rem;
+}
+.nav-links {
+gap: 1.2rem;
+}
+.nav-links a {
+font-size: 0.65rem;
+}
+section {
+padding: 5rem 1.5rem;
+}
+.cosmic-divider {
+margin: 0 1.5rem;
+}
+.law-item {
+flex-direction: column;
+gap: 1rem;
+padding: 1.5rem;
+}
+.quote-block blockquote::before {
+left: 0;
+top: -1.5rem;
+font-size: 4rem;
+}
+.bio-stats {
+grid-template-columns: 1fr 1fr;
+}
+}
+@media (max-width: 500px) {
+.bio-stats {
+grid-template-columns: 1fr;
+}
+.nav-links {
+gap: 0.8rem;
+}
+.nav-links a {
+font-size: 0.55rem;
+letter-spacing: 0.1em;
+}
+.nav-brand {
+font-size: 0.7rem;
+}
+.hero h1 {
+font-size: 2.8rem;
+}
+}
+</style>
+</head>
+<body>    <!-- Starfield Background --><canvas id="starfield"></canvas>
+    <!-- Navigation -->    <nav id="navbar">
+        <a href="#" class="nav-brand">A.C.C.</a>
+        <ul class="nav-links">
+            <li><a href="#bio">Biography</a></li>
+            <li><a href="#works">Works</a></li>
+            <li><a href="#laws">Laws</a></li>
+            <li><a href="#odyssey">2001</a></li>
+        </ul>
+    </nav>    <!-- Hero -->    <section class="hero" id="top">
+        <div class="hero-content">
+            <p class="hero-label">Sir Arthur Charles Clarke</p>
+            <h1>Arthur<br><span class="accent">C.</span> Clarke</h1>
+            <p class="hero-subtitle">
+                Science fiction writer, futurist, inventor, and undersea explorer. The prophet of the space age who taught us to look upward — and inward.
+            </p>
+        </div>
+        <div class="hero-monolith" aria-hidden="true"></div>
+        <div class="scroll-indicator">
+            <span>Explore</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>    <div class="cosmic-divider"></div>    <!-- Biography -->    <section id="bio">
+        <div class="section-inner">
+            <p class="section-label">The Man Behind the Vision</p>
+            <h2 class="section-title">A Life Among <span class="em">the Stars</span></h2>
+            <div class="bio-grid">
+                <div class="bio-text">
+                    <p>
+                        <strong>Arthur Charles Clarke</strong> was born on December 16, 1917, in Minehead, Somerset, England. From a young age he was fascinated by astronomy, reading old copies of <em>Astounding Stories</em> and building his own telescopes from cardboard tubes and lenses.
+                    </p>
+                    <p>
+                        During World War II, Clarke served in the Royal Air Force as a radar instructor. It was during this time that he wrote a paper proposing <strong>geostationary satellites</strong> for global communications — an idea that would become reality two decades later and earn him the title "father of satellite communications."
+                    </p>
+                    <p>
+                        After the war, Clarke earned a first-class degree in mathematics and physics from King's College London. He soon turned to writing full-time, producing some of the most influential works of science fiction ever written, alongside groundbreaking nonfiction about space exploration and the future of humanity.
+                    </p>
+                    <p>
+                        In 1956, Clarke moved to Sri Lanka, where he would live for the rest of his life. There he pursued his other great passion — <strong>undersea exploration</strong> — discovering ancient underwater ruins and founding a diving school. He was knighted in 2000 and passed away on March 19, 2008, leaving behind a legacy that stretches from the ocean floor to the farthest stars.
+                    </p>
+                </div>
+                <div class="bio-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">1917</div>
+                        <div class="stat-label">Born in England</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">1945</div>
+                        <div class="stat-label">Geostationary Orbit Paper</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">90+</div>
+                        <div class="stat-label">Books Published</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">2008</div>
+                        <div class="stat-label">Passed in Sri Lanka</div>
+                    </div>
+                </div>
+            </div>            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">1917</div>
+                    <div class="timeline-text"><strong>Born</strong> in Minehead, Somerset, to a farming family.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">1941–1946</div>
+                    <div class="timeline-text"><strong>RAF Radar Instructor</strong> — Wrote the seminal paper on geostationary satellites in <em>Wireless World</em> (1945).</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">1948</div>
+                    <div class="timeline-text">Published <strong>"The Sentinel"</strong> — the short story that would later evolve into <em>2001: A Space Odyssey</em>.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">1953</div>
+                    <div class="timeline-text">Published <strong><em>Childhood's End</em></strong> — a profound meditation on human evolution and transcendence.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">1956</div>
+                    <div class="timeline-text"><strong>Moved to Sri Lanka</strong> — began a lifelong love affair with the Indian Ocean and undersea archaeology.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">1968</div>
+                    <div class="timeline-text"><strong><em>2001: A Space Odyssey</em></strong> released as a film by Stanley Kubrick; Clarke's novel published simultaneously.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2000</div>
+                    <div class="timeline-text"><strong>Knighted</strong> by Queen Elizabeth II for services to literature.</div>
+                </div>
+            </div>
+        </div>
+    </section>    <div class="cosmic-divider"></div>    <!-- Major Works -->    <section id="works">
+        <div class="section-inner">
+            <p class="section-label">Essential Reading</p>
+            <h2 class="section-title">The <span class="em">Canon</span></h2>
+            <div class="works-grid">
+                <div class="work-card">
+                    <div class="work-year">1953</div>
+                    <div class="work-title">Childhood's<br>End</div>
+                    <div class="work-desc">Alien overlords arrive on Earth to usher in an era of peace — but their true purpose is far stranger and more profound than humanity could imagine.</div>
+                </div>
+                <div class="work-card">
+                    <div class="work-year">1956</div>
+                    <div class="work-title">The City and<br>the Stars</div>
+                    <div class="work-desc">A billion years in the future, the immortal inhabitants of Diaspar confront the truth about their sealed city and humanity's cosmic destiny.</div>
+                </div>
+                <div class="work-card">
+                    <div class="work-year">1968</div>
+                    <div class="work-title">2001: A Space<br>Odyssey</div>
+                    <div class="work-desc">From the dawn of man to Jupiter and beyond — a monolith waits, and humanity takes the next step in its evolution.</div>
+                </div>
+                <div class="work-card">
+                    <div class="work-year">1973</div>
+                    <div class="work-title">Rendezvous with<br>Rama</div>
+                    <div class="work-desc">An enigmatic cylindrical spacecraft enters the solar system. A crew is sent to explore its vast, silent interior — and nothing is as it seems.</div>
+                </div>
+                <div class="work-card">
+                    <div class="work-year">1979</div>
+                    <div class="work-title">The Fountains of<br>Paradise</div>
+                    <div class="work-desc">A visionary engineer dreams of building a space elevator — a tower from Earth to geostationary orbit — on a sacred mountain.</div>
+                </div>
+                <div class="work-card">
+                    <div class="work-year">1982</div>
+                    <div class="work-title">2010: Odyssey<br>Two</div>
+                    <div class="work-desc">The sequel to <em>2001</em>. A joint Soviet-American mission returns to Jupiter to discover what happened to Discovery One — and HAL.</div>
+                </div>
+            </div>
+        </div>
+    </section>    <div class="cosmic-divider"></div>    <!-- Three Laws -->    <section id="laws">
+        <div class="section-inner">
+            <p class="section-label">Enduring Wisdom</p>
+            <h2 class="section-title">Clarke's <span class="em">Three Laws</span></h2>
+            <div class="laws-block">
+                <div class="law-item">
+                    <div class="law-number">01</div>
+                    <div class="law-content">
+                        <h3>First Law</h3>
+                        <p>When a distinguished but elderly scientist states that something is possible, he is almost certainly right. When he states that something is impossible, he is very probably wrong.</p>
+                    </div>
+                </div>
+                <div class="law-item">
+                    <div class="law-number">02</div>
+                    <div class="law-content">
+                        <h3>Second Law</h3>
+                        <p>The only way of discovering the limits of the possible is to venture a little way past them into the impossible.</p>
+                    </div>
+                </div>
+                <div class="law-item">
+                    <div class="law-number">03</div>
+                    <div class="law-content">
+                        <h3>Third Law</h3>
+                        <p>Any sufficiently advanced technology is indistinguishable from magic.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="quote-block" style="margin-top: 3rem;">
+                <blockquote>
+                    I'm sure we would not have had men on the Moon if it had not been for Wells and Verne and the people who write about this and made people think about it.
+                </blockquote>
+                <p class="quote-attribution">— Arthur C. Clarke, 1969</p>
+            </div>
+        </div>
+    </section>    <div class="cosmic-divider"></div>    <!-- 2001: A Space Odyssey -->    <section id="odyssey" class="odyssey-section">
+        <div class="section-inner">
+            <p class="section-label">The Masterpiece</p>
+            <h2 class="section-title">2001: A Space <span class="em">Odyssey</span></h2>
+            <div class="odyssey-grid">
+                <div class="odyssey-visual">
+                    <div class="odyssey-monolith-group">
+                        <div class="mini-monolith"></div>
+                        <div class="mini-monolith"></div>
+                        <div class="mini-monolith"></div>
+                    </div>
+                </div>
+                <div class="odyssey-text">
+                    <h3>The Ultimate Trip</h3>
+                    <p>
+                        What began as a 1948 short story — <em>"The Sentinel"</em> — grew into one of the most celebrated creative collaborations in history. Stanley Kubrick and Arthur C. Clarke spent four years developing the story together, simultaneously writing the novel and producing the film.
+                    </p>
+                    <p>
+                        The result was a work that redefined science fiction cinema and literature. Its depiction of space travel, artificial intelligence — embodied by the unforgettable <span class="hal-eye"></span> HAL 9000 — and humanity's evolutionary leap remains as haunting and profound today as it was in 1968.
+                    </p>
+                    <p>
+                        Clarke went on to write three sequels — <em>2010</em>, <em>2061</em>, and <em>3001</em> — each exploring different facets of the odyssey's cosmic mystery. But the original stands alone: a monolith in the landscape of human imagination.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>    <!-- Footer -->    <footer>
+        <p class="footer-quote">"Two possibilities exist: either we are alone in the Universe or we are not. Both are equally terrifying."</p>
+        <p class="footer-meta">Sir Arthur C. Clarke &nbsp;·&nbsp; 1917–2008 &nbsp;·&nbsp; Per Ardua ad Astra</p>
+    </footer>    <script>
+        // ── Starfield ──
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        let w, h;
+
+        function resize() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+
+        function createStars(count) {
+            stars = [];
+            for (let i = 0; i < count; i++) {
+                stars.push({
+                    x: Math.random() * w,
+                    y: Math.random() * h,
+                    r: Math.random() * 1.4 + 0.2,
+                    twinkleSpeed: Math.random() * 0.015 + 0.005,
+                    twinkleOffset: Math.random() * Math.PI * 2,
+                    driftX: (Math.random() - 0.5) * 0.08,
+                    driftY: (Math.random() - 0.5) * 0.03,
+                });
+            }
+        }
+
+        function drawStars(time) {
+            ctx.clearRect(0, 0, w, h);
+            for (const s of stars) {
+                const alpha = 0.35 + Math.sin(time * s.twinkleSpeed + s.twinkleOffset) * 0.25 + 0.25;
+                ctx.fillStyle = `rgba(220,225,240,${alpha.toFixed(2)})`;
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Slow drift
+                s.x += s.driftX * 0.01;
+                s.y += s.driftY * 0.01;
+                if (s.x < 0) s.x = w;
+                if (s.x > w) s.x = 0;
+                if (s.y < 0) s.y = h;
+                if (s.y > h) s.y = 0;
+            }
+        }
+
+        function animateStars(timestamp) {
+            drawStars(timestamp);
+            requestAnimationFrame(animateStars);
+        }
+
+        resize();
+        createStars(280);
+        requestAnimationFrame(animateStars);
+        window.addEventListener('resize', () => {
+            resize();
+            createStars(280);
+        });
+
+        // ── Nav scroll effect ──
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 80) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // ── Smooth parallax for hero monolith ──
+        const monolith = document.querySelector('.hero-monolith');
+        if (monolith) {
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY;
+                const offset = scrollY * 0.15;
+                monolith.style.transform = `translateY(${-offset}px)`;
+            });
+        }
+
+        // ── Intersection Observer for fade-reveal ──
+        const revealElements = document.querySelectorAll(
+            '.stat-card, .work-card, .law-item, .timeline-item, .odyssey-text p, .odyssey-text h3'
+        );
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -40px 0px',
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        revealElements.forEach((el) => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            observer.observe(el);
+        });
+    </script></body>
+</html>
