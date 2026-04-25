@@ -1,90 +1,638 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>LLM Test File Tree</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Test Results — Sherlock Holmes Benchmark</title>
+    <style>
+        :root {
+            --bg: #fafaf9;
+            --card: #ffffff;
+            --text: #1c1917;
+            --muted: #78716c;
+            --border: #e7e5e4;
+            --accent: #1e3a8a;
+            --accent-light: #dbeafe;
+            --accent-muted: #eff6ff;
+            --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-hover: 0 4px 16px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04);
+            --radius: 10px;
+            --color-deepseek: #4b40c9;
+            --color-anthropic: #d4a574;
+            --color-openai: #10a37f;
+            --color-google: #4285f4;
+            --color-xai: #1c1917;
+            --color-default: #6b7280;
+        }*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+background: var(--bg);
+color: var(--text);
+line-height: 1.6;
+min-height: 100vh;
+}
+.header {
+background: rgba(255,255,255,0.88);
+border-bottom: 1px solid var(--border);
+padding: 28px 24px 20px;
+text-align: center;
+position: sticky;
+top: 0;
+z-index: 20;
+backdrop-filter: blur(14px);
+-webkit-backdrop-filter: blur(14px);
+}
+.header h1 {
+font-size: clamp(1.4rem, 3vw, 2rem);
+font-weight: 700;
+letter-spacing: -0.02em;
+color: var(--text);
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+}
+.header .subtitle {
+color: var(--muted);
+font-size: 0.9rem;
+margin-top: 2px;
+}
+.header .meta-row {
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 12px;
+margin-top: 10px;
+flex-wrap: wrap;
+font-size: 0.82rem;
+color: var(--muted);
+}
+.badge {
+display: inline-flex;
+align-items: center;
+gap: 5px;
+background: var(--accent-light);
+color: var(--accent);
+padding: 4px 12px;
+border-radius: 20px;
+font-weight: 600;
+font-size: 0.78rem;
+transition: opacity 0.3s ease;
+}
+.badge.loading { animation: badgePulse 1.2s ease-in-out infinite; }
+@keyframes badgePulse { 0%,100%{opacity:1;} 50%{opacity:0.45;} }
+/* ── Search ──────────────────── */
+.search-wrap {
+display: flex;
+justify-content: center;
+margin-top: 14px;
+}
+.search-input {
+width: 100%;
+max-width: 420px;
+padding: 9px 16px 9px 38px;
+border: 1px solid var(--border);
+border-radius: 24px;
+font-size: 0.85rem;
+font-family: inherit;
+background: var(--card);
+color: var(--text);
+outline: none;
+transition: border-color 0.2s ease, box-shadow 0.2s ease;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2378716c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='7' cy='7' r='5'/%3E%3Cpath d='M11 11l4 4'/%3E%3C/svg%3E");
+background-repeat: no-repeat;
+background-position: 12px center;
+}
+.search-input:focus {
+border-color: var(--accent);
+box-shadow: 0 0 0 3px rgba(30,58,138,0.08);
+}
+.no-results {
+grid-column: 1 / -1;
+text-align: center;
+padding: 40px 20px;
+color: var(--muted);
+font-size: 0.9rem;
+}
+/* ── Container ───────────────── */
+.container {
+max-width: 1100px;
+margin: 0 auto;
+padding: 28px 20px 60px;
+}
+.providers-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+gap: 20px;
+}
+/* ── Provider Card ───────────── */
+.provider-card {
+background: var(--card);
+border: 1px solid var(--border);
+border-left: 4px solid var(--color-default);
+border-radius: var(--radius);
+box-shadow: var(--shadow);
+overflow: hidden;
+transition: box-shadow 0.2s ease, transform 0.15s ease;
+animation: cardEnter 0.5s ease both;
+}
+.provider-card:hover {
+box-shadow: var(--shadow-hover);
+transform: translateY(-1px);
+}
+@keyframes cardEnter {
+from { opacity: 0; transform: translateY(16px); }
+to { opacity: 1; transform: translateY(0); }
+}
+.provider-card.border-deepseek  { border-left-color: var(--color-deepseek); }
+.provider-card.border-anthropic { border-left-color: var(--color-anthropic); }
+.provider-card.border-openai    { border-left-color: var(--color-openai); }
+.provider-card.border-google    { border-left-color: var(--color-google); }
+.provider-card.border-xai       { border-left-color: var(--color-xai); }
+.provider-card__header {
+display: flex;
+align-items: center;
+gap: 10px;
+padding: 16px 18px;
+border-bottom: 1px solid var(--border);
+background: var(--bg);
+}
+.provider-icon {
+width: 34px;
+height: 34px;
+border-radius: 8px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 1.1rem;
+font-weight: 700;
+color: #fff;
+flex-shrink: 0;
+}
+.pi-deepseek  { background: var(--color-deepseek); }
+.pi-anthropic { background: var(--color-anthropic); }
+.pi-openai    { background: var(--color-openai); }
+.pi-google    { background: var(--color-google); }
+.pi-xai       { background: var(--color-xai); }
+.pi-default   { background: var(--color-default); }
+.provider-name {
+font-weight: 650;
+font-size: 0.95rem;
+text-transform: capitalize;
+letter-spacing: -0.01em;
+}
+.provider-count {
+margin-left: auto;
+font-size: 0.75rem;
+color: var(--muted);
+font-weight: 500;
+}
+/* ── File List ──────────────── */
+.file-list {
+list-style: none;
+padding: 4px 0;
+}
+.file-item {
+border-bottom: 1px solid #f5f5f4;
+}
+.file-item:last-child { border-bottom: none; }
+.file-link {
+display: flex;
+align-items: center;
+gap: 10px;
+padding: 10px 18px;
+text-decoration: none;
+color: var(--text);
+font-size: 0.87rem;
+transition: background 0.1s ease;
+outline: none;
+}
+.file-link:hover {
+background: var(--accent-muted);
+}
+.file-link:focus-visible {
+background: var(--accent-light);
+box-shadow: inset 0 0 0 2px var(--accent);
+border-radius: 4px;
+}
+.file-link .file-icon {
+font-size: 1rem;
+flex-shrink: 0;
+opacity: 0.65;
+}
+.file-link .file-name {
+flex: 1;
+word-break: break-word;
+}
+.file-link .file-arrow {
+color: var(--muted);
+font-size: 0.82rem;
+opacity: 0;
+transition: opacity 0.15s ease, transform 0.15s ease;
+transform: translateX(-6px);
+}
+.file-link:hover .file-arrow {
+opacity: 1;
+transform: translateX(0);
+}
+/* ── Subfolder (collapsible) ── */
+.subfolder-toggle {
+display: flex;
+align-items: center;
+gap: 6px;
+width: 100%;
+padding: 8px 18px 4px;
+font-size: 0.7rem;
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 0.06em;
+color: var(--muted);
+background: none;
+border: none;
+cursor: pointer;
+font-family: inherit;
+text-align: left;
+outline: none;
+transition: color 0.15s ease;
+}
+.subfolder-toggle:hover { color: var(--text); }
+.subfolder-toggle:focus-visible {
+box-shadow: inset 0 0 0 2px var(--accent);
+border-radius: 4px;
+}
+.subfolder-toggle .toggle-arrow {
+display: inline-block;
+font-size: 0.6rem;
+transition: transform 0.2s ease;
+width: 12px;
+text-align: center;
+flex-shrink: 0;
+}
+.subfolder-toggle.collapsed .toggle-arrow {
+transform: rotate(-90deg);
+}
+.subfolder-children {
+overflow: hidden;
+transition: max-height 0.3s ease, opacity 0.25s ease;
+max-height: 2000px;
+opacity: 1;
+}
+.subfolder-children.collapsed {
+max-height: 0;
+opacity: 0;
+}
+.subfolder-count {
+font-weight: 500;
+font-size: 0.65rem;
+color: var(--muted);
+text-transform: none;
+letter-spacing: 0.02em;
+margin-left: auto;
+}
+/* ── States ──────────────────── */
+.empty-state {
+grid-column: 1 / -1;
+text-align: center;
+padding: 56px 20px;
+color: var(--muted);
+}
+.empty-state .icon { font-size: 2.8rem; margin-bottom: 12px; display: block; }
+.error-state {
+grid-column: 1 / -1;
+background: #fef2f2;
+border: 1px solid #fecaca;
+color: #991b1b;
+padding: 18px 22px;
+border-radius: var(--radius);
+font-size: 0.88rem;
+text-align: center;
+line-height: 1.7;
+}
+.error-state strong { display: block; margin-bottom: 4px; }
+/* ── Skeleton ────────────────── */
+.skeleton {
+background: linear-gradient(90deg, #f5f5f4 25%, #e7e5e4 50%, #f5f5f4 75%);
+background-size: 200% 100%;
+animation: shimmer 1.5s ease-in-out infinite;
+border-radius: 6px;
+}
+@keyframes shimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
+.sk-card { height: 200px; border-radius: var(--radius); }
+/* ── Footer ──────────────────── */
+.footer {
+text-align: center;
+padding: 20px;
+color: var(--muted);
+font-size: 0.75rem;
+border-top: 1px solid var(--border);
+margin-top: 16px;
+}
+.footer a { color: var(--accent); text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+/* ── Responsive ──────────────── */
+@media (max-width: 500px) {
+.providers-grid { grid-template-columns: 1fr; }
+.container { padding: 16px 12px 40px; }
+.header { padding: 18px 14px 14px; }
+.provider-card__header { padding: 14px 14px; }
+.file-link { padding: 9px 14px; font-size: 0.82rem; }
+.subfolder-toggle { padding: 8px 14px 4px; }
+.search-input { max-width: 100%; }
+}
+</style>
 </head>
-<body>
-    <h1>LLM Test Results</h1>
-    <p>The list below is dynamically generated via the GitHub API.</p>
-    
-    <div id="file-tree">Loading tree...</div>
+<body><header class="header" role="banner">
+    <h1>&#128269; LLM Test Results</h1>
+    <p class="subtitle">Sherlock Holmes benchmark across frontier models</p>
+    <div class="meta-row">
+        <span id="total-count" class="badge loading">&mdash; pages</span>
+        <span id="provider-count" class="badge loading">&mdash; providers</span>
+    </div>
+    <div class="search-wrap">
+        <input
+            type="text"
+            id="search-input"
+            class="search-input"
+            placeholder="Filter pages or providers..."
+            aria-label="Filter pages or providers"
+            autocomplete="off"
+        />
+    </div>
+</header><main class="container" role="main">
+    <div id="providers-grid" class="providers-grid" role="list" aria-label="Provider test pages">
+        <div class="sk-card skeleton" role="presentation"></div>
+        <div class="sk-card skeleton" role="presentation"></div>
+        <div class="sk-card skeleton" role="presentation"></div>
+        <div class="sk-card skeleton" role="presentation"></div>
+    </div>
+</main><footer class="footer" role="contentinfo">
+    <p>
+        <a href="https://github.com/edgetype/llmtests" target="_blank" rel="noopener">github.com/edgetype/llmtests</a>
+        &middot; Dynamically indexed via GitHub API
+    </p>
+</footer><script>
+    (function() {
+        var GITHUB_USERNAME = 'edgetype';
+        var REPO_NAME = 'llmtests';
+        var BRANCH = 'main';
 
-    <script>
-        const GITHUB_USERNAME = 'edgetype'; 
-        const REPO_NAME = 'llmtests';
-        const BRANCH = 'main';
+        var PROVIDER_CONFIG = {
+            anthropic: { icon: 'A', cssClass: 'pi-anthropic', borderClass: 'border-anthropic' },
+            deepseek:  { icon: 'D', cssClass: 'pi-deepseek',  borderClass: 'border-deepseek' },
+            openai:    { icon: 'O', cssClass: 'pi-openai',    borderClass: 'border-openai' },
+            google:    { icon: 'G', cssClass: 'pi-google',    borderClass: 'border-google' },
+            xai:       { icon: 'X', cssClass: 'pi-xai',       borderClass: 'border-xai' }
+        };
 
-        async function fetchFileTree() {
-            // Fetch the entire repository tree recursively via GitHub API
-            const url = `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/git/trees/${BRANCH}?recursive=1`;
-            
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-
-                if (!data.tree) {
-                    document.getElementById('file-tree').innerText = "Repository not found, API limit exceeded, or the repository is private.";
-                    return;
-                }
-
-                // Filter only HTML files and exclude this root index.html
-                const htmlFiles = data.tree
-                    .filter(file => file.type === 'blob' && file.path.endsWith('.html') && file.path !== 'index.html')
-                    .map(file => file.path);
-
-                const treeData = buildTreeObject(htmlFiles);
-                
-                const treeContainer = document.getElementById('file-tree');
-                treeContainer.innerHTML = ''; // Clear the "Loading tree..." text
-                renderTree(treeData, treeContainer);
-
-            } catch (error) {
-                document.getElementById('file-tree').innerText = "An error occurred: " + error.message;
-            }
+        function getProviderConfig(name) {
+            var key = name.toLowerCase();
+            return PROVIDER_CONFIG[key] || { icon: name[0].toUpperCase(), cssClass: 'pi-default', borderClass: '' };
         }
 
-        // Converts flat file paths (ai_1/test/index.html) into a JSON tree object
-        function buildTreeObject(paths) {
-            const root = {};
-            for (const path of paths) {
-                const parts = path.split('/');
-                let current = root;
-                for (let i = 0; i < parts.length; i++) {
-                    const part = parts[i];
-                    if (!current[part]) {
-                        // If it's the last element, assign the full path as value, otherwise create an empty object for the subfolder
-                        current[part] = (i === parts.length - 1) ? path : {}; 
+        function groupByProvider(paths) {
+            var groups = {};
+            for (var i = 0; i < paths.length; i++) {
+                var p = paths[i];
+                var slashIdx = p.indexOf('/');
+                var provider = slashIdx === -1 ? '(root)' : p.substring(0, slashIdx);
+                var rest = slashIdx === -1 ? p : p.substring(slashIdx + 1);
+                if (!groups[provider]) groups[provider] = [];
+                groups[provider].push(rest);
+            }
+            return groups;
+        }
+
+        function buildTree(paths) {
+            var root = {};
+            for (var i = 0; i < paths.length; i++) {
+                var p = paths[i];
+                var parts = p.split('/');
+                var node = root;
+                for (var j = 0; j < parts.length; j++) {
+                    var part = parts[j];
+                    if (!node[part]) {
+                        node[part] = (j === parts.length - 1) ? p : {};
                     }
-                    current = current[part];
+                    node = node[part];
                 }
             }
             return root;
         }
 
-        // Renders the generated object to the screen recursively using HTML <ul> and <li> tags
-        function renderTree(node, container) {
-            const ul = document.createElement('ul');
-            for (const key in node) {
-                const li = document.createElement('li');
-                
-                if (typeof node[key] === 'string') {
-                    // This is a file (leaf node)
-                    const a = document.createElement('a');
-                    a.href = node[key];
-                    a.textContent = key;
-                    li.appendChild(a);
-                } else {
-                    // This is a folder
-                    li.innerHTML = `<strong>📁 ${key}</strong>`;
-                    renderTree(node[key], li); // Recursive call
-                }
-                ul.appendChild(li);
-            }
-            container.appendChild(ul);
+        function escapeHtml(str) {
+            var div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
         }
 
-        fetchFileTree();
-    </script>
-</body>
+        function countFiles(node) {
+            var c = 0;
+            var keys = Object.keys(node);
+            for (var i = 0; i < keys.length; i++) {
+                var val = node[keys[i]];
+                c += typeof val === 'string' ? 1 : countFiles(val);
+            }
+            return c;
+        }
+
+        function sortKeys(node) {
+            return Object.keys(node).sort(function(a, b) {
+                var aIsDir = typeof node[a] === 'object';
+                var bIsDir = typeof node[b] === 'object';
+                if (aIsDir && !bIsDir) return -1;
+                if (!aIsDir && bIsDir) return 1;
+                return a.localeCompare(b);
+            });
+        }
+
+        function renderTreeNodes(node, parentEl, depth, providerName) {
+            var keys = sortKeys(node);
+
+            for (var k = 0; k < keys.length; k++) {
+                var key = keys[k];
+                var value = node[key];
+                var li = document.createElement('li');
+                li.className = 'file-item';
+
+                if (typeof value === 'string') {
+                    var a = document.createElement('a');
+                    a.className = 'file-link';
+                    a.href = providerName + '/' + value;
+                    a.setAttribute('aria-label', 'Open ' + key + ' test page');
+                    a.innerHTML =
+                        '<span class="file-icon" aria-hidden="true">&#128196;</span>' +
+                        '<span class="file-name">' + escapeHtml(key) + '</span>' +
+                        '<span class="file-arrow" aria-hidden="true">&rarr;</span>';
+                    li.appendChild(a);
+                    parentEl.appendChild(li);
+                } else {
+                    var subCount = countFiles(value);
+                    var groupId = 'sf-' + providerName + '-d' + depth + '-k' + k + '-' + Math.random().toString(36).slice(2,6);
+
+                    var toggle = document.createElement('button');
+                    toggle.className = 'subfolder-toggle';
+                    toggle.setAttribute('aria-expanded', 'true');
+                    toggle.setAttribute('aria-controls', groupId);
+                    toggle.innerHTML =
+                        '<span class="toggle-arrow" aria-hidden="true">&#9660;</span>' +
+                        '<span>&#128193; ' + escapeHtml(key) + '</span>' +
+                        '<span class="subfolder-count">' + subCount + ' file' + (subCount !== 1 ? 's' : '') + '</span>';
+
+                    var childrenWrap = document.createElement('div');
+                    childrenWrap.className = 'subfolder-children';
+                    childrenWrap.id = groupId;
+                    childrenWrap.setAttribute('role', 'group');
+                    childrenWrap.setAttribute('aria-label', key + ' folder contents');
+
+                    var innerList = document.createElement('ul');
+                    innerList.className = 'file-list';
+                    innerList.style.listStyle = 'none';
+                    innerList.style.padding = '0';
+                    renderTreeNodes(value, innerList, depth + 1, providerName);
+                    childrenWrap.appendChild(innerList);
+
+                    toggle.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        var isCollapsed = this.classList.toggle('collapsed');
+                        var target = document.getElementById(this.getAttribute('aria-controls'));
+                        if (target) target.classList.toggle('collapsed');
+                        this.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+                    });
+
+                    li.appendChild(toggle);
+                    li.appendChild(childrenWrap);
+                    parentEl.appendChild(li);
+                }
+            }
+        }
+
+        function renderProviderCard(providerName, relativePaths, cardIndex) {
+            var config = getProviderConfig(providerName);
+            var tree = buildTree(relativePaths);
+
+            var card = document.createElement('div');
+            card.className = 'provider-card ' + config.borderClass;
+            card.setAttribute('role', 'listitem');
+            card.setAttribute('aria-label', providerName + ' test pages');
+            card.setAttribute('data-provider', providerName.toLowerCase());
+            card.style.animationDelay = (cardIndex * 0.05) + 's';
+
+            var header = document.createElement('div');
+            header.className = 'provider-card__header';
+            header.innerHTML =
+                '<div class="provider-icon ' + config.cssClass + '" aria-hidden="true">' + config.icon + '</div>' +
+                '<span class="provider-name">' + escapeHtml(providerName) + '</span>' +
+                '<span class="provider-count">' + relativePaths.length + ' page' + (relativePaths.length !== 1 ? 's' : '') + '</span>';
+            card.appendChild(header);
+
+            var list = document.createElement('ul');
+            list.className = 'file-list';
+            list.setAttribute('role', 'list');
+            renderTreeNodes(tree, list, 0, providerName);
+            card.appendChild(list);
+
+            return card;
+        }
+
+        function setupSearch() {
+            var input = document.getElementById('search-input');
+            var grid = document.getElementById('providers-grid');
+
+            input.addEventListener('input', function() {
+                var query = input.value.toLowerCase().trim();
+                var cards = grid.querySelectorAll('.provider-card');
+                var visibleCount = 0;
+
+                for (var i = 0; i < cards.length; i++) {
+                    var card = cards[i];
+                    var provider = (card.getAttribute('data-provider') || '').toLowerCase();
+                    var text = (card.textContent || '').toLowerCase();
+
+                    if (query === '' || provider.indexOf(query) !== -1 || text.indexOf(query) !== -1) {
+                        card.style.display = '';
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                }
+
+                var existingMsg = grid.querySelector('.no-results');
+                if (visibleCount === 0 && query !== '') {
+                    if (!existingMsg) {
+                        var msg = document.createElement('div');
+                        msg.className = 'no-results';
+                        msg.textContent = 'No pages or providers match "' + query + '"';
+                        grid.appendChild(msg);
+                    } else if (existingMsg.textContent.indexOf(query) === -1) {
+                        existingMsg.textContent = 'No pages or providers match "' + query + '"';
+                    }
+                } else if (existingMsg) {
+                    existingMsg.remove();
+                }
+            });
+        }
+
+        async function init() {
+            var grid = document.getElementById('providers-grid');
+            var totalBadge = document.getElementById('total-count');
+            var providerBadge = document.getElementById('provider-count');
+
+            var url = 'https://api.github.com/repos/' + GITHUB_USERNAME + '/' + REPO_NAME + '/git/trees/' + BRANCH + '?recursive=1';
+
+            try {
+                var resp = await fetch(url);
+                if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                var data = await resp.json();
+
+                if (!data.tree) throw new Error('Empty or invalid repository tree.');
+
+                var htmlFiles = data.tree
+                    .filter(function(f) { return f.type === 'blob' && f.path.endsWith('.html') && f.path !== 'index.html'; })
+                    .map(function(f) { return f.path; });
+
+                if (htmlFiles.length === 0) {
+                    grid.innerHTML = '<div class="empty-state"><span class="icon">&#128236;</span><p>No HTML test pages found in this repository yet.</p></div>';
+                    totalBadge.textContent = '0 pages';
+                    totalBadge.classList.remove('loading');
+                    providerBadge.textContent = '0 providers';
+                    providerBadge.classList.remove('loading');
+                    return;
+                }
+
+                var groups = groupByProvider(htmlFiles);
+                var providerNames = Object.keys(groups).sort();
+
+                totalBadge.textContent = htmlFiles.length + ' page' + (htmlFiles.length !== 1 ? 's' : '');
+                totalBadge.classList.remove('loading');
+                providerBadge.textContent = providerNames.length + ' provider' + (providerNames.length !== 1 ? 's' : '');
+                providerBadge.classList.remove('loading');
+
+                grid.innerHTML = '';
+                grid.setAttribute('role', 'list');
+
+                for (var p = 0; p < providerNames.length; p++) {
+                    var provider = providerNames[p];
+                    var card = renderProviderCard(provider, groups[provider], p);
+                    grid.appendChild(card);
+                }
+
+                setupSearch();
+
+            } catch (err) {
+                grid.innerHTML =
+                    '<div class="error-state" role="alert">' +
+                        '<strong>&#9888; Unable to load project list</strong>' +
+                        '<small>' + escapeHtml(err.message) + '</small>' +
+                        '<small style="display:block;margin-top:8px;">The repository may be private, the API rate limit may be exceeded, or you may be offline.</small>' +
+                    '</div>';
+                totalBadge.textContent = 'error';
+                totalBadge.classList.remove('loading');
+                providerBadge.textContent = '';
+                providerBadge.classList.remove('loading');
+            }
+        }
+
+        init();
+    })();
+</script></body>
 </html>
